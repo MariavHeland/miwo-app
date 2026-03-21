@@ -73,10 +73,91 @@ html, body {
   text-transform: uppercase;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.header-btn:hover {
+  color: var(--copper);
+  border-color: var(--border);
+}
+
+.header-btn.active {
+  color: var(--copper);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
 .tagline {
   font-size: 12px;
   color: var(--text-dim);
   letter-spacing: 0.05em;
+}
+
+/* Voice settings panel */
+.voice-settings {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.2s ease;
+}
+
+.voice-settings-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.voice-options {
+  display: flex;
+  gap: 6px;
+}
+
+.voice-option {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.voice-option:hover:not(:disabled) {
+  border-color: var(--copper-dim);
+  color: var(--text);
+}
+
+.voice-option.active {
+  border-color: var(--copper);
+  color: var(--copper);
+  background: rgba(196, 125, 90, 0.08);
+}
+
+.voice-option:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Messages area */
@@ -130,6 +211,50 @@ html, body {
 .message.assistant .message-content strong {
   color: var(--copper);
   font-weight: 600;
+}
+
+/* Message action buttons (speaker) */
+.message-actions {
+  margin-top: 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.message:hover .message-actions,
+.message-actions:has(.speaking) {
+  opacity: 1;
+}
+
+.msg-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.msg-action-btn:hover {
+  color: var(--copper);
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+.msg-action-btn.speaking {
+  color: var(--copper);
+  border-color: var(--copper-dim);
+  background: rgba(196, 125, 90, 0.1);
+  animation: pulse-speak 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-speak {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 /* Typing indicator */

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
-// Microphone SVG icon
+// SVG Icons
 function MicIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -14,7 +14,6 @@ function MicIcon() {
   )
 }
 
-// Send arrow SVG icon
 function SendIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -24,14 +23,72 @@ function SendIcon() {
   )
 }
 
+function SpeakerIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+  )
+}
+
+function SpeakerOffIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  )
+}
+
+function StopIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <rect x="4" y="4" width="16" height="16" rx="2"/>
+    </svg>
+  )
+}
+
+function SettingsIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+  )
+}
+
 export default function Home() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isListening, setIsListening] = useState(false)
+  const [speakingIndex, setSpeakingIndex] = useState(-1)
+  const [autoRead, setAutoRead] = useState(false)
+  const [voiceMode, setVoiceMode] = useState('browser') // 'browser' or 'chatterbox'
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false)
+  const [chatterboxAvailable, setChatterboxAvailable] = useState(false)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
   const recognitionRef = useRef(null)
+  const synthRef = useRef(null)
+  const audioRef = useRef(null)
+
+  // Initialize speech synthesis
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      synthRef.current = window.speechSynthesis
+    }
+  }, [])
+
+  // Check if Chatterbox endpoint is available
+  useEffect(() => {
+    fetch('/api/tts/health').then(r => {
+      if (r.ok) setChatterboxAvailable(true)
+    }).catch(() => {})
+  }, [])
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -62,32 +119,130 @@ export default function Home() {
             .join('')
           setInput(transcript)
 
-          // If final result, send it
           if (event.results[0].isFinal) {
             setIsListening(false)
-            // Small delay to show the text before sending
             setTimeout(() => {
               sendMessage(transcript)
             }, 300)
           }
         }
 
-        recognition.onend = () => {
-          setIsListening(false)
-        }
-
-        recognition.onerror = () => {
-          setIsListening(false)
-        }
-
+        recognition.onend = () => setIsListening(false)
+        recognition.onerror = () => setIsListening(false)
         recognitionRef.current = recognition
       }
     }
   }, [])
 
+  // Strip markdown for TTS
+  const cleanTextForSpeech = (text) => {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '$1')  // remove bold markers
+      .replace(/\*(.*?)\*/g, '$1')       // remove italic markers
+      .replace(/#{1,6}\s/g, '')          // remove headers
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links → text only
+      .replace(/\n{2,}/g, '. ')          // paragraph breaks → pauses
+      .replace(/\n/g, ' ')
+      .trim()
+  }
+
+  // Browser TTS
+  const speakBrowser = useCallback((text, index) => {
+    if (!synthRef.current) return
+
+    // Stop any current speech
+    synthRef.current.cancel()
+
+    const cleanText = cleanTextForSpeech(text)
+    const utterance = new SpeechSynthesisUtterance(cleanText)
+    utterance.rate = 0.95
+    utterance.pitch = 1.0
+
+    // Try to pick a natural-sounding voice
+    const voices = synthRef.current.getVoices()
+    const preferred = voices.find(v =>
+      v.name.includes('Samantha') || v.name.includes('Karen') ||
+      v.name.includes('Google UK English Female') || v.name.includes('Microsoft Zira')
+    ) || voices.find(v => v.lang.startsWith('en') && v.name.includes('Female'))
+      || voices.find(v => v.lang.startsWith('en'))
+
+    if (preferred) utterance.voice = preferred
+
+    utterance.onstart = () => setSpeakingIndex(index)
+    utterance.onend = () => setSpeakingIndex(-1)
+    utterance.onerror = () => setSpeakingIndex(-1)
+
+    synthRef.current.speak(utterance)
+  }, [])
+
+  // Chatterbox TTS
+  const speakChatterbox = useCallback(async (text, index) => {
+    try {
+      setSpeakingIndex(index)
+      const cleanText = cleanTextForSpeech(text)
+
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText }),
+      })
+
+      if (!res.ok) {
+        // Fallback to browser TTS
+        speakBrowser(text, index)
+        return
+      }
+
+      const audioBlob = await res.blob()
+      const audioUrl = URL.createObjectURL(audioBlob)
+
+      if (audioRef.current) {
+        audioRef.current.pause()
+        URL.revokeObjectURL(audioRef.current.src)
+      }
+
+      const audio = new Audio(audioUrl)
+      audioRef.current = audio
+      audio.onended = () => {
+        setSpeakingIndex(-1)
+        URL.revokeObjectURL(audioUrl)
+      }
+      audio.onerror = () => {
+        setSpeakingIndex(-1)
+        URL.revokeObjectURL(audioUrl)
+      }
+      audio.play()
+    } catch {
+      // Fallback to browser TTS
+      speakBrowser(text, index)
+    }
+  }, [speakBrowser])
+
+  // Speak a message
+  const speak = useCallback((text, index) => {
+    if (voiceMode === 'chatterbox' && chatterboxAvailable) {
+      speakChatterbox(text, index)
+    } else {
+      speakBrowser(text, index)
+    }
+  }, [voiceMode, chatterboxAvailable, speakBrowser, speakChatterbox])
+
+  // Stop speaking
+  const stopSpeaking = useCallback(() => {
+    if (synthRef.current) synthRef.current.cancel()
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    setSpeakingIndex(-1)
+  }, [])
+
   const sendMessage = async (text) => {
     const messageText = text || input
     if (!messageText.trim() || isLoading) return
+
+    // Stop any current speech when user sends a new message
+    stopSpeaking()
 
     const userMessage = { role: 'user', content: messageText.trim() }
     const newMessages = [...messages, userMessage]
@@ -110,10 +265,17 @@ export default function Home() {
           content: 'Something went wrong reaching MIWO. Check the API key configuration.',
         }])
       } else {
-        setMessages([...newMessages, {
-          role: 'assistant',
-          content: data.text,
-        }])
+        const assistantMsg = { role: 'assistant', content: data.text }
+        const updatedMessages = [...newMessages, assistantMsg]
+        setMessages(updatedMessages)
+
+        // Auto-read the response if enabled
+        if (autoRead && data.text) {
+          // Small delay so the UI updates first
+          setTimeout(() => {
+            speak(data.text, updatedMessages.length - 1)
+          }, 200)
+        }
       }
     } catch (err) {
       setMessages([...newMessages, {
@@ -127,7 +289,6 @@ export default function Home() {
 
   const toggleVoice = () => {
     if (!recognitionRef.current) return
-
     if (isListening) {
       recognitionRef.current.stop()
       setIsListening(false)
@@ -150,10 +311,8 @@ export default function Home() {
     sendMessage(text)
   }
 
-  // Format assistant messages with paragraphs
   const formatMessage = (text) => {
     return text.split('\n\n').map((para, i) => {
-      // Bold text between **
       const formatted = para.replace(
         /\*\*(.*?)\*\*/g,
         '<strong>$1</strong>'
@@ -166,8 +325,50 @@ export default function Home() {
     <div className="app">
       <header className="header">
         <img src="/miwo-logo.jpeg" alt="MIWO" className="header-logo" />
-        <span className="tagline">my world my news</span>
+        <div className="header-controls">
+          <button
+            className={`header-btn auto-read-btn ${autoRead ? 'active' : ''}`}
+            onClick={() => {
+              if (autoRead) stopSpeaking()
+              setAutoRead(!autoRead)
+            }}
+            title={autoRead ? 'Auto-read on — click to turn off' : 'Auto-read off — click to turn on'}
+          >
+            {autoRead ? <SpeakerIcon size={16} /> : <SpeakerOffIcon size={16} />}
+          </button>
+          <button
+            className={`header-btn settings-btn ${showVoiceSettings ? 'active' : ''}`}
+            onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+            title="Voice settings"
+          >
+            <SettingsIcon size={16} />
+          </button>
+          <span className="tagline">my world my news</span>
+        </div>
       </header>
+
+      {/* Voice settings panel */}
+      {showVoiceSettings && (
+        <div className="voice-settings">
+          <div className="voice-settings-label">Voice output</div>
+          <div className="voice-options">
+            <button
+              className={`voice-option ${voiceMode === 'browser' ? 'active' : ''}`}
+              onClick={() => setVoiceMode('browser')}
+            >
+              Browser voice
+            </button>
+            <button
+              className={`voice-option ${voiceMode === 'chatterbox' ? 'active' : ''}`}
+              onClick={() => setVoiceMode('chatterbox')}
+              disabled={!chatterboxAvailable}
+              title={chatterboxAvailable ? 'MIWO custom voice' : 'Not yet connected — coming soon'}
+            >
+              MIWO voice {!chatterboxAvailable && '(coming soon)'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {messages.length === 0 && !isLoading ? (
         <div className="welcome">
@@ -177,22 +378,13 @@ export default function Home() {
             go deeper on any story, or verify a claim.
           </p>
           <div className="welcome-prompts">
-            <button
-              className="welcome-prompt"
-              onClick={() => handlePromptClick('What happened today?')}
-            >
+            <button className="welcome-prompt" onClick={() => handlePromptClick('What happened today?')}>
               What happened today?
             </button>
-            <button
-              className="welcome-prompt"
-              onClick={() => handlePromptClick('Give me the global briefing')}
-            >
+            <button className="welcome-prompt" onClick={() => handlePromptClick('Give me the global briefing')}>
               Give me the global briefing
             </button>
-            <button
-              className="welcome-prompt"
-              onClick={() => handlePromptClick('Was ist heute in Deutschland passiert?')}
-            >
+            <button className="welcome-prompt" onClick={() => handlePromptClick('Was ist heute in Deutschland passiert?')}>
               Was ist heute in Deutschland passiert?
             </button>
           </div>
@@ -204,6 +396,27 @@ export default function Home() {
               <div className="message-content">
                 {msg.role === 'assistant' ? formatMessage(msg.content) : msg.content}
               </div>
+              {msg.role === 'assistant' && (
+                <div className="message-actions">
+                  {speakingIndex === i ? (
+                    <button
+                      className="msg-action-btn speaking"
+                      onClick={stopSpeaking}
+                      title="Stop reading"
+                    >
+                      <StopIcon size={14} />
+                    </button>
+                  ) : (
+                    <button
+                      className="msg-action-btn"
+                      onClick={() => speak(msg.content, i)}
+                      title="Read aloud"
+                    >
+                      <SpeakerIcon size={14} />
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
           {isLoading && (
