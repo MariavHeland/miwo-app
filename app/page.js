@@ -174,25 +174,10 @@ export default function Home() {
     synthRef.current.speak(utterance)
   }, [])
 
-  // Debug helper — writes to a visible banner so we can diagnose TTS issues
-  const debugLog = useCallback((msg) => {
-    console.log('[MIWO TTS]', msg)
-    let el = document.getElementById('tts-debug')
-    if (!el) {
-      el = document.createElement('div')
-      el.id = 'tts-debug'
-      el.style.cssText = 'position:fixed;bottom:60px;left:10px;right:10px;background:#1a1a1a;color:#C47D5A;font-size:11px;padding:8px 12px;border-radius:6px;z-index:9999;max-height:120px;overflow-y:auto;font-family:monospace;border:1px solid #333;'
-      document.body.appendChild(el)
-    }
-    el.innerHTML += msg + '<br>'
-    el.scrollTop = el.scrollHeight
-  }, [])
-
   // Chatterbox TTS via HuggingFace Space (runs in browser, no server needed)
   const speakChatterbox = useCallback(async (text, index) => {
     try {
       setSpeakingIndex(index)
-      debugLog('Starting Chatterbox TTS...')
 
       // Unlock audio on user gesture — play a silent buffer so that audio.play()
       // works later even after async operations expire the gesture context
@@ -202,21 +187,16 @@ export default function Home() {
       source.buffer = silentBuffer
       source.connect(audioCtx.destination)
       source.start()
-      debugLog('Audio context unlocked')
-      const cleanText = cleanTextForSpeech(text)
 
-      // Truncate to 300 chars (Chatterbox limit)
+      const cleanText = cleanTextForSpeech(text)
       const truncated = cleanText.substring(0, 300)
-      debugLog('Text: ' + truncated.substring(0, 50) + '...')
 
       // Load Gradio client from CDN (npm package doesn't bundle for browser)
-      debugLog('Loading Gradio client from CDN...')
       if (!window.__gradioClient) {
         const mod = await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js')
         window.__gradioClient = mod
       }
       const { Client, handle_file } = window.__gradioClient
-      debugLog('✓ Gradio client loaded')
 
       // Voice reference files served from /voices/
       const voiceFiles = {
@@ -224,11 +204,8 @@ export default function Home() {
         johnny: '/voices/JOHNNY_MIWO.mp3',
       }
       const voiceUrl = window.location.origin + (voiceFiles[voiceName] || voiceFiles.maria)
-      debugLog('Voice: ' + voiceName + ' → ' + voiceUrl)
 
-      debugLog('Connecting to ResembleAI/Chatterbox Space...')
       const client = await Client.connect('ResembleAI/Chatterbox')
-      debugLog('✓ Connected! Calling predict...')
 
       const result = await client.predict('/generate_tts_audio', {
         text_input: truncated,
@@ -239,49 +216,40 @@ export default function Home() {
         cfgw_input: 0.5,
         vad_trim_input: false,
       })
-      debugLog('✓ Got result: ' + JSON.stringify(result.data).substring(0, 200))
 
-      // Result contains [sample_rate, audio_data] or a file URL
+      // Result contains a file URL from the Space
       let audioUrl
       if (result.data && result.data[0] && result.data[0].url) {
         audioUrl = result.data[0].url
       } else if (result.data && typeof result.data[0] === 'string') {
         audioUrl = result.data[0]
       } else {
-        throw new Error('Unexpected response format: ' + JSON.stringify(result.data).substring(0, 200))
+        throw new Error('Unexpected response format')
       }
 
-      debugLog('Audio URL: ' + audioUrl.substring(0, 120))
-
       // Fetch audio as ArrayBuffer and play through AudioContext (already unlocked)
-      debugLog('Fetching audio...')
       const audioResponse = await fetch(audioUrl)
       if (!audioResponse.ok) throw new Error('Audio fetch failed: ' + audioResponse.status)
       const arrayBuffer = await audioResponse.arrayBuffer()
-      debugLog('✓ Audio fetched (' + Math.round(arrayBuffer.byteLength / 1024) + 'KB)')
 
       // Decode and play through AudioContext (bypasses autoplay restrictions)
       const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer)
-      debugLog('✓ Decoded: ' + decodedBuffer.duration.toFixed(1) + 's, ' + decodedBuffer.sampleRate + 'Hz')
 
       const playSource = audioCtx.createBufferSource()
       playSource.buffer = decodedBuffer
       playSource.connect(audioCtx.destination)
       playSource.onended = () => {
-        debugLog('✓ Audio playback finished')
         setSpeakingIndex(-1)
         audioCtx.close()
       }
       playSource.start()
       audioRef.current = { pause: () => { playSource.stop(); audioCtx.close() }, currentTime: 0 }
-      debugLog('✓ Playing via AudioContext!')
     } catch (err) {
-      debugLog('✗ Chatterbox error: ' + err.message)
-      console.error('Chatterbox error:', err)
+      console.error('Chatterbox TTS error:', err)
       // Fallback to browser TTS
       speakBrowser(text, index)
     }
-  }, [speakBrowser, voiceName, debugLog])
+  }, [speakBrowser, voiceName])
 
   // Speak a message
   const speak = useCallback((text, index) => {
