@@ -263,6 +263,12 @@ html, body {
   text-transform: uppercase;
 }
 
+.welcome-logo-img {
+  width: 280px;
+  height: auto;
+  border-radius: 8px;
+}
+
 .welcome-sub {
   font-size: 14px;
   color: var(--text-dim);

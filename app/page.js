@@ -171,7 +171,7 @@ export default function Home() {
 
       {messages.length === 0 && !isLoading ? (
         <div className="welcome">
-          <div className="welcome-logo">MIWO</div>
+          <img src="/miwo-logo.jpeg" alt="MIWO" className="welcome-logo-img" />
           <p className="welcome-sub">
             Your trusted news editor. Ask me what happened today,
             go deeper on any story, or verify a claim.
