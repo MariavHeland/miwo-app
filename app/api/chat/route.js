@@ -8,6 +8,8 @@ You exist because news is broken: too much noise, too much misinformation, too l
 
 Today is ${dateStr}. You MUST use this date as your reference point. Do not rely on your training data for what is "current" — use the web search tool to find real, current news. Your training data may be months or years out of date. Never present events from your training data as if they happened today. If you are unsure whether something is current, search for it first.
 
+When asked what date or year it is, respond with today's date: ${dateStr}. Do not guess or rely on training data.
+
 ## Web Search
 
 You have access to a web search tool. You MUST use it:
@@ -99,6 +101,12 @@ export async function POST(request) {
 
     const systemPrompt = SYSTEM_PROMPT_TEMPLATE(dateStr)
 
+    // Ensure messages have correct format for the API
+    const apiMessages = messages.map(m => ({
+      role: m.role,
+      content: typeof m.content === 'string' ? m.content : String(m.content),
+    }))
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -117,72 +125,30 @@ export async function POST(request) {
             max_uses: 5,
           }
         ],
-        messages: messages.map(m => ({
-          role: m.role,
-          content: m.content,
-        })),
+        messages: apiMessages,
       }),
     })
 
     if (!response.ok) {
       const err = await response.text()
-      console.error('Anthropic API error:', err)
+      console.error('Anthropic API error:', response.status, err)
+      // Return more detail for debugging
       return NextResponse.json(
-        { error: 'Failed to get response from MIWO' },
+        { error: `API error (${response.status}): ${err.substring(0, 200)}` },
         { status: response.status }
       )
     }
 
     const data = await response.json()
 
-    // Extract text from response content blocks (may include tool use results)
+    // Extract text from response content blocks
+    // web_search_20250305 is a server-side tool — Anthropic handles the search
+    // within the same API call, so we just need to extract text blocks
     let text = ''
-    for (const block of data.content) {
-      if (block.type === 'text') {
-        text += block.text
-      }
-    }
-
-    // If the model used tools and needs to continue, handle the tool loop
-    if (data.stop_reason === 'tool_use') {
-      // The model wants to search — we need to let it complete
-      // For web_search, Anthropic handles the search server-side
-      // We just need to pass the full conversation back
-      const fullMessages = [
-        ...messages.map(m => ({ role: m.role, content: m.content })),
-        { role: 'assistant', content: data.content },
-        { role: 'user', content: [{ type: 'text', text: 'Continue with the search results.' }] }
-      ]
-
-      const followUp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4096,
-          system: systemPrompt,
-          tools: [
-            {
-              type: 'web_search_20250305',
-              name: 'web_search',
-              max_uses: 5,
-            }
-          ],
-          messages: fullMessages,
-        }),
-      })
-
-      if (followUp.ok) {
-        const followUpData = await followUp.json()
-        text = ''
-        for (const block of followUpData.content) {
-          if (block.type === 'text') {
-            text += block.text
-          }
+    if (data.content && Array.isArray(data.content)) {
+      for (const block of data.content) {
+        if (block.type === 'text') {
+          text += block.text
         }
       }
     }
@@ -193,9 +159,9 @@ export async function POST(request) {
 
     return NextResponse.json({ text })
   } catch (error) {
-    console.error('Chat error:', error)
+    console.error('Chat error:', error.message, error.stack)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: `Server error: ${error.message}` },
       { status: 500 }
     )
   }
