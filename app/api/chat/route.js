@@ -80,7 +80,7 @@ Never make something up. Silence is better than fabrication.`
 
 export async function POST(request) {
   try {
-    const { messages } = await request.json()
+    const { messages, systemOverride, section, filter } = await request.json()
     const apiKey = process.env.ANTHROPIC_API_KEY
 
     if (!apiKey) {
@@ -99,7 +99,8 @@ export async function POST(request) {
       day: 'numeric',
     })
 
-    const systemPrompt = SYSTEM_PROMPT_TEMPLATE(dateStr)
+    // Use section-specific system override if provided, otherwise default MIWO prompt
+    const systemPrompt = systemOverride || SYSTEM_PROMPT_TEMPLATE(dateStr)
 
     // Ensure messages have correct format for the API
     const apiMessages = messages.map(m => ({
@@ -157,7 +158,7 @@ export async function POST(request) {
       text = 'I wasn\'t able to retrieve current news right now. Try again in a moment.'
     }
 
-    return NextResponse.json({ text })
+    return NextResponse.json({ text, content: text })
   } catch (error) {
     console.error('Chat error:', error.message, error.stack)
     return NextResponse.json(

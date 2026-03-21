@@ -1,0 +1,208 @@
+/* ═══════════════════════════════════════════════
+   COOK SECTION — Kitchen Space styles
+   ═══════════════════════════════════════════════ */
+
+/* Label color for MIWO COOK messages */
+.message-label.cooking { color: var(--cooking); }
+
+/* ── Cook filter pills (reuse .sport-nav layout) ── */
+.cook-pill {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 9px 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+.cook-pill:hover, .cook-pill.active {
+  background: rgba(196, 90, 90, 0.1);
+  border-color: var(--cooking);
+  color: #E07A7A;
+}
+
+/* ── "What do you have?" button ── */
+.cook-pantry-btn {
+  background: linear-gradient(135deg, var(--cooking), #A04848);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 9px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  letter-spacing: 0.3px;
+}
+.cook-pantry-btn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+/* ── Pantry panel ── */
+.cook-pantry {
+  max-width: 640px;
+  margin: 16px auto 0;
+  padding: 0 24px;
+  animation: pantrySlidein 0.3s ease-out;
+}
+@keyframes pantrySlidein {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cook-pantry-inner {
+  background: var(--card, #111111);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+}
+
+.cook-pantry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cook-pantry-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cook-pantry-find {
+  background: linear-gradient(135deg, var(--cooking), #A04848);
+  border: none;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: all 0.3s;
+}
+.cook-pantry-find:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.cook-pantry-find:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cook-pantry-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.cook-pantry-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.cook-pantry-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  transition: border-color 0.3s;
+}
+.cook-pantry-input::placeholder { color: var(--text-faint); }
+.cook-pantry-input:focus {
+  outline: none;
+  border-color: var(--cooking);
+}
+
+.cook-pantry-add {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--cooking);
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.cook-pantry-add:hover {
+  background: var(--surface-elevated, #1A1A1A);
+  border-color: var(--cooking);
+}
+
+/* Ingredient tags */
+.cook-pantry-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.cook-pantry-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(196, 90, 90, 0.08);
+  border: 1px solid rgba(196, 90, 90, 0.2);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #E07A7A;
+  animation: cookTagIn 0.25s ease-out;
+}
+@keyframes cookTagIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.cook-pantry-tag-x {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.cook-pantry-tag-x:hover { color: var(--cooking); }
+
+/* Quick-add chips */
+.cook-pantry-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cook-pantry-chip {
+  background: none;
+  border: 1px dashed var(--rule);
+  color: var(--text-faint);
+  padding: 4px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s;
+  font-family: var(--font-sans);
+}
+.cook-pantry-chip:hover {
+  border-color: var(--cooking);
+  color: #E07A7A;
+  border-style: solid;
+}

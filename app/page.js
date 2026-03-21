@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 
 // SVG Icons
 function MicIcon() {
@@ -287,6 +288,10 @@ export default function Home() {
       <header className="header">
         <img src="/miwo-logo.jpeg" alt="MIWO" className="header-logo" />
         <div className="header-controls">
+          <Link href="/sports" className="nav-link">Sport</Link>
+          <Link href="/history" className="nav-link">History</Link>
+          <Link href="/arts" className="nav-link">Arts</Link>
+          <Link href="/cook" className="nav-link">Cook</Link>
           <button
             className={`header-btn auto-read-btn ${autoRead ? 'active' : ''}`}
             onClick={() => {
@@ -298,7 +303,6 @@ export default function Home() {
           >
             {autoRead ? <SpeakerIcon size={16} /> : <SpeakerOffIcon size={16} />}
           </button>
-          <span className="tagline">my world my news</span>
         </div>
       </header>
 
