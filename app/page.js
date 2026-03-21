@@ -308,16 +308,28 @@ export default function Home() {
           <div className="voice-settings-label">Voice</div>
           <div className="voice-options">
             <button
-              className={`voice-option ${voiceName === 'maria' ? 'active' : ''}`}
-              onClick={() => setVoiceName('maria')}
+              className={`voice-option ${voiceName === 'nova' ? 'active' : ''}`}
+              onClick={() => setVoiceName('nova')}
             >
               Nova
             </button>
             <button
-              className={`voice-option ${voiceName === 'johnny' ? 'active' : ''}`}
-              onClick={() => setVoiceName('johnny')}
+              className={`voice-option ${voiceName === 'atlas' ? 'active' : ''}`}
+              onClick={() => setVoiceName('atlas')}
             >
               Atlas
+            </button>
+            <button
+              className={`voice-option ${voiceName === 'cleo' ? 'active' : ''}`}
+              onClick={() => setVoiceName('cleo')}
+            >
+              Cleo
+            </button>
+            <button
+              className={`voice-option ${voiceName === 'sol' ? 'active' : ''}`}
+              onClick={() => setVoiceName('sol')}
+            >
+              Sol
             </button>
           </div>
         </div>

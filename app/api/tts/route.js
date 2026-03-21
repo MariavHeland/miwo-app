@@ -17,10 +17,12 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Fish Audio API key not configured' }, { status: 500 })
     }
 
-    // Voice IDs — Nova (female) and Atlas (male)
+    // Voice IDs — display name → Fish Audio reference ID
     const voices = {
       nova: process.env.FISH_VOICE_NOVA || '3c86704b6c1741f4b6d3723397061f04',
       atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
+      cleo: process.env.FISH_VOICE_CLEO || '289cad70b38b4ab890f7c1344b732115',
+      sol: process.env.FISH_VOICE_SOL || '5009c2727b164afe8e4040619cfcc9ab',
     }
 
     const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
