@@ -12,10 +12,15 @@ export async function GET() {
 
   try {
     const res = await fetch(`${chatterboxUrl}/health`, {
-      signal: AbortSignal.timeout(3000)
+      signal: AbortSignal.timeout(5000),
     })
     if (res.ok) {
-      return NextResponse.json({ available: true })
+      const data = await res.json()
+      return NextResponse.json({
+        available: data.available !== false,
+        voices: data.voices || [],
+        device: data.device || 'unknown',
+      })
     }
     return NextResponse.json({ available: false }, { status: 503 })
   } catch {

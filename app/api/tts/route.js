@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
 
-// Chatterbox TTS endpoint — forwards text + voice reference to Railway-hosted Chatterbox
-// Set CHATTERBOX_URL in Vercel env vars once deployed
-// e.g., CHATTERBOX_URL=https://your-chatterbox-service.up.railway.app
+// MIWO TTS proxy — forwards requests to the Chatterbox server on Railway
+// Set CHATTERBOX_URL in Vercel env vars (e.g., https://miwo-tts.up.railway.app)
+// The Chatterbox server has voice references baked in — we just send text + voice name
 
-// Voice reference files stored in /public/voices/
-const VOICE_FILES = {
-  maria: 'Maria_MIWO.wav',
-  johnny: 'JOHNNY_MIWO.mp3',
-}
+export const maxDuration = 60 // Allow up to 60s for synthesis
 
 export async function POST(request) {
   try {
@@ -31,43 +25,27 @@ export async function POST(request) {
       )
     }
 
-    // Select voice reference file
-    const voiceKey = (voice || 'maria').toLowerCase()
-    const voiceFile = VOICE_FILES[voiceKey] || VOICE_FILES.maria
-
-    // Read the voice reference audio and send as base64 to Chatterbox
-    const voicePath = join(process.cwd(), 'public', 'voices', voiceFile)
-    let voiceBase64
-    try {
-      const voiceBuffer = await readFile(voicePath)
-      voiceBase64 = voiceBuffer.toString('base64')
-    } catch {
-      console.error(`Voice file not found: ${voicePath}`)
-      // Continue without voice reference — Chatterbox will use its default
-      voiceBase64 = null
-    }
-
     const response = await fetch(`${chatterboxUrl}/synthesize`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         text: text.trim(),
-        voice_ref: voiceBase64,
-        voice_ref_name: voiceFile,
-        voice: voiceKey,
+        voice: (voice || 'maria').toLowerCase(),
+        exaggeration: 0.3,
+        cfg_weight: 0.5,
       }),
     })
 
     if (!response.ok) {
       const err = await response.text()
-      console.error('Chatterbox error:', err)
+      console.error('Chatterbox error:', response.status, err)
       return NextResponse.json(
         { error: 'TTS synthesis failed' },
         { status: 502 }
       )
     }
 
-    // Chatterbox returns audio/wav — forward it to the client
+    // Forward the audio WAV back to the browser
     const audioBuffer = await response.arrayBuffer()
 
     return new NextResponse(audioBuffer, {
