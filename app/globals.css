@@ -49,11 +49,17 @@ html, body {
 
 /* Header */
 .header {
-  padding: 24px 0 16px;
+  padding: 16px 0 12px;
   border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
+}
+
+.header-logo {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .logo {
@@ -264,9 +270,11 @@ html, body {
 }
 
 .welcome-logo-img {
-  width: 280px;
+  width: 320px;
   height: auto;
-  border-radius: 8px;
+  border-radius: 0;
+  mask-image: radial-gradient(ellipse 85% 75% at center, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at center, black 50%, transparent 100%);
 }
 
 .welcome-sub {

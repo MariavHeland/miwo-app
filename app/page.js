@@ -165,7 +165,7 @@ export default function Home() {
   return (
     <div className="app">
       <header className="header">
-        <span className="logo">MIWO</span>
+        <img src="/miwo-logo.jpeg" alt="MIWO" className="header-logo" />
         <span className="tagline">my world my news</span>
       </header>
 
