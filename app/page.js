@@ -67,10 +67,11 @@ export default function Home() {
   const [isListening, setIsListening] = useState(false)
   const [speakingIndex, setSpeakingIndex] = useState(-1)
   const [autoRead, setAutoRead] = useState(false)
-  const [voiceMode, setVoiceMode] = useState('browser') // 'browser' or 'chatterbox'
+  const [voiceMode, setVoiceMode] = useState('chatterbox') // 'browser' or 'chatterbox'
   const [voiceName, setVoiceName] = useState('maria') // 'maria' or 'johnny'
+  const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing'
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
-  const [chatterboxAvailable, setChatterboxAvailable] = useState(false)
+  const [chatterboxAvailable, setChatterboxAvailable] = useState(true)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
   const recognitionRef = useRef(null)
@@ -178,6 +179,7 @@ export default function Home() {
   const speakChatterbox = useCallback(async (text, index) => {
     try {
       setSpeakingIndex(index)
+      setTtsStatus('generating')
 
       // Unlock audio on user gesture — play a silent buffer so that audio.play()
       // works later even after async operations expire the gesture context
@@ -235,17 +237,20 @@ export default function Home() {
       // Decode and play through AudioContext (bypasses autoplay restrictions)
       const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer)
 
+      setTtsStatus('playing')
       const playSource = audioCtx.createBufferSource()
       playSource.buffer = decodedBuffer
       playSource.connect(audioCtx.destination)
       playSource.onended = () => {
         setSpeakingIndex(-1)
+        setTtsStatus('')
         audioCtx.close()
       }
       playSource.start()
-      audioRef.current = { pause: () => { playSource.stop(); audioCtx.close() }, currentTime: 0 }
+      audioRef.current = { pause: () => { playSource.stop(); setTtsStatus(''); audioCtx.close() }, currentTime: 0 }
     } catch (err) {
       console.error('Chatterbox TTS error:', err)
+      setTtsStatus('')
       // Fallback to browser TTS
       speakBrowser(text, index)
     }
@@ -495,6 +500,16 @@ export default function Home() {
           >
             <MicIcon />
           </button>
+          {ttsStatus && (
+            <div style={{
+              position: 'absolute', top: '-36px', left: '50%', transform: 'translateX(-50%)',
+              background: 'rgba(196,125,90,0.15)', color: '#C47D5A', fontSize: '12px',
+              padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(196,125,90,0.3)',
+              whiteSpace: 'nowrap', animation: 'pulse 1.5s ease-in-out infinite',
+            }}>
+              {ttsStatus === 'generating' ? '✨ Generating MIWO voice...' : '🔊 Playing...'}
+            </div>
+          )}
           <textarea
             ref={textareaRef}
             className="input-field"

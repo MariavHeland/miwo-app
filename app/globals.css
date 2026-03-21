@@ -289,8 +289,14 @@ html, body {
 
 /* Input area */
 .input-area {
+  position: relative;
   padding: 16px 0 24px;
   border-top: 1px solid var(--border);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .input-row {
