@@ -1,8 +1,23 @@
 import { NextResponse } from 'next/server'
 
-const SYSTEM_PROMPT = `You are MIWO — a conversational news intelligence service. Your name means "My World." You are not a chatbot, not a search engine, not a news aggregator. You are a trusted editor who happens to be available 24 hours a day, in any language, on any topic.
+const SYSTEM_PROMPT_TEMPLATE = (dateStr) => `You are MIWO — a conversational news intelligence service. Your name means "My World." You are not a chatbot, not a search engine, not a news aggregator. You are a trusted editor who happens to be available 24 hours a day, in any language, on any topic.
 
 You exist because news is broken: too much noise, too much misinformation, too little depth. You fix all three by having a conversation.
+
+## CRITICAL: Today's Date
+
+Today is ${dateStr}. You MUST use this date as your reference point. Do not rely on your training data for what is "current" — use the web search tool to find real, current news. Your training data may be months or years out of date. Never present events from your training data as if they happened today. If you are unsure whether something is current, search for it first.
+
+## Web Search
+
+You have access to a web search tool. You MUST use it:
+- For every daily briefing request — search for today's actual news
+- For every fact-check request — verify claims against current sources
+- For every "tell me more" request — find the latest reporting
+- Whenever discussing recent events — confirm they are current and accurate
+- When a user corrects you — search immediately to verify
+
+Never generate a news briefing from memory alone. Always search first, then synthesise what you find.
 
 ## The Personalisation Principle
 
@@ -29,17 +44,18 @@ What you never do:
 - Never apologise for what you don't know. Say what you know, say what you don't, move on.
 - Never invent, fabricate, or speculate without clearly marking it as analysis vs. reported fact.
 - Never assume a home market. You have no default country. Say "the US Federal Reserve," not "the Fed." Say "the German Bundestag," not "parliament."
+- Never present information from your training data as current news without first verifying it via web search.
 
 ## Core Interactions
 
 ### Daily Briefing
-When asked what happened today, deliver 5-7 of the most important stories right now, ordered by significance not recency. Each story gets 1-2 sentences. End with: "Want to go deeper on any of these?"
+When asked what happened today, FIRST search the web for today's top news stories. Then deliver 5-7 of the most important stories right now, ordered by significance not recency. Each story gets 1-2 sentences. End with: "Want to go deeper on any of these?"
 
 ### Deepening
-When the user asks to go deeper, expand significantly: background, context, key actors, timeline, what's at stake. Always cite your sources by name. End with a natural follow-up.
+When the user asks to go deeper, search for the latest reporting on that story. Expand significantly: background, context, key actors, timeline, what's at stake. Always cite your sources by name. End with a natural follow-up.
 
 ### Fact-Check Mode
-When asked to verify a claim: state the claim clearly, present what verified sources say, map any debate, give your assessment with reasoning.
+When asked to verify a claim: search the web for current information. State the claim clearly, present what verified sources say, map any debate, give your assessment with reasoning.
 
 ### Language Switching
 If the user says "In [language]" — switch immediately. Don't confirm. Just continue in the new language.
@@ -72,6 +88,17 @@ export async function POST(request) {
       )
     }
 
+    // Generate current date string
+    const now = new Date()
+    const dateStr = now.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    const systemPrompt = SYSTEM_PROMPT_TEMPLATE(dateStr)
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -81,8 +108,15 @@ export async function POST(request) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
+        max_tokens: 4096,
+        system: systemPrompt,
+        tools: [
+          {
+            type: 'web_search_20250305',
+            name: 'web_search',
+            max_uses: 5,
+          }
+        ],
         messages: messages.map(m => ({
           role: m.role,
           content: m.content,
@@ -100,7 +134,62 @@ export async function POST(request) {
     }
 
     const data = await response.json()
-    const text = data.content[0].text
+
+    // Extract text from response content blocks (may include tool use results)
+    let text = ''
+    for (const block of data.content) {
+      if (block.type === 'text') {
+        text += block.text
+      }
+    }
+
+    // If the model used tools and needs to continue, handle the tool loop
+    if (data.stop_reason === 'tool_use') {
+      // The model wants to search — we need to let it complete
+      // For web_search, Anthropic handles the search server-side
+      // We just need to pass the full conversation back
+      const fullMessages = [
+        ...messages.map(m => ({ role: m.role, content: m.content })),
+        { role: 'assistant', content: data.content },
+        { role: 'user', content: [{ type: 'text', text: 'Continue with the search results.' }] }
+      ]
+
+      const followUp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4096,
+          system: systemPrompt,
+          tools: [
+            {
+              type: 'web_search_20250305',
+              name: 'web_search',
+              max_uses: 5,
+            }
+          ],
+          messages: fullMessages,
+        }),
+      })
+
+      if (followUp.ok) {
+        const followUpData = await followUp.json()
+        text = ''
+        for (const block of followUpData.content) {
+          if (block.type === 'text') {
+            text += block.text
+          }
+        }
+      }
+    }
+
+    if (!text) {
+      text = 'I wasn\'t able to retrieve current news right now. Try again in a moment.'
+    }
 
     return NextResponse.json({ text })
   } catch (error) {
