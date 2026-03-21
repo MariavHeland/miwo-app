@@ -23,6 +23,7 @@ export async function POST(request) {
       atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
       cleo: process.env.FISH_VOICE_CLEO || '289cad70b38b4ab890f7c1344b732115',
       sol: process.env.FISH_VOICE_SOL || '5009c2727b164afe8e4040619cfcc9ab',
+      iris: process.env.FISH_VOICE_IRIS || '6d49364c9eaa4d10ae3a01502a79b084',
     }
 
     const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova

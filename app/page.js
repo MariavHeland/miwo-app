@@ -335,6 +335,12 @@ export default function Home() {
             >
               Sol
             </button>
+            <button
+              className={`voice-option ${voiceName === 'iris' ? 'active' : ''}`}
+              onClick={() => setVoiceName('iris')}
+            >
+              Iris
+            </button>
           </div>
         </div>
       </div>
