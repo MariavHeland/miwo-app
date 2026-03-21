@@ -241,26 +241,41 @@ export default function Home() {
         throw new Error('Unexpected response format: ' + JSON.stringify(result.data).substring(0, 200))
       }
 
-      debugLog('Audio URL: ' + audioUrl.substring(0, 100))
+      debugLog('Audio URL: ' + audioUrl.substring(0, 120))
+
+      // Fetch audio as blob to avoid CORS/content-type issues with cross-origin playback
+      debugLog('Fetching audio blob...')
+      const audioResponse = await fetch(audioUrl)
+      if (!audioResponse.ok) throw new Error('Audio fetch failed: ' + audioResponse.status)
+      const audioBlob = await audioResponse.blob()
+      const blobUrl = URL.createObjectURL(new Blob([audioBlob], { type: 'audio/wav' }))
+      debugLog('✓ Blob ready (' + Math.round(audioBlob.size / 1024) + 'KB)')
 
       if (audioRef.current) {
         audioRef.current.pause()
         if (audioRef.current._objectUrl) URL.revokeObjectURL(audioRef.current._objectUrl)
       }
 
-      const audio = new Audio(audioUrl)
+      const audio = new Audio(blobUrl)
+      audio._objectUrl = blobUrl
       audioRef.current = audio
       audio.onended = () => {
         debugLog('✓ Audio playback finished')
         setSpeakingIndex(-1)
       }
       audio.onerror = (e) => {
-        debugLog('✗ Audio playback error: ' + e.type)
+        debugLog('✗ Audio playback error: ' + e.type + ' code:' + (audio.error ? audio.error.code : '?'))
         setSpeakingIndex(-1)
         speakBrowser(text, index)
       }
       debugLog('Playing audio...')
-      audio.play()
+      try {
+        await audio.play()
+        debugLog('✓ Play started')
+      } catch (playErr) {
+        debugLog('✗ Play failed: ' + playErr.message)
+        speakBrowser(text, index)
+      }
     } catch (err) {
       debugLog('✗ Chatterbox error: ' + err.message)
       console.error('Chatterbox error:', err)
