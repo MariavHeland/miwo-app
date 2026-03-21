@@ -68,6 +68,7 @@ export default function Home() {
   const [speakingIndex, setSpeakingIndex] = useState(-1)
   const [autoRead, setAutoRead] = useState(false)
   const [voiceMode, setVoiceMode] = useState('browser') // 'browser' or 'chatterbox'
+  const [voiceName, setVoiceName] = useState('maria') // 'maria' or 'johnny'
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
   const [chatterboxAvailable, setChatterboxAvailable] = useState(false)
   const messagesEndRef = useRef(null)
@@ -184,7 +185,7 @@ export default function Home() {
       const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText }),
+        body: JSON.stringify({ text: cleanText, voice: voiceName }),
       })
 
       if (!res.ok) {
@@ -350,23 +351,44 @@ export default function Home() {
       {/* Voice settings panel */}
       {showVoiceSettings && (
         <div className="voice-settings">
-          <div className="voice-settings-label">Voice output</div>
-          <div className="voice-options">
-            <button
-              className={`voice-option ${voiceMode === 'browser' ? 'active' : ''}`}
-              onClick={() => setVoiceMode('browser')}
-            >
-              Browser voice
-            </button>
-            <button
-              className={`voice-option ${voiceMode === 'chatterbox' ? 'active' : ''}`}
-              onClick={() => setVoiceMode('chatterbox')}
-              disabled={!chatterboxAvailable}
-              title={chatterboxAvailable ? 'MIWO custom voice' : 'Not yet connected — coming soon'}
-            >
-              MIWO voice {!chatterboxAvailable && '(coming soon)'}
-            </button>
+          <div className="voice-settings-row">
+            <div className="voice-settings-label">Engine</div>
+            <div className="voice-options">
+              <button
+                className={`voice-option ${voiceMode === 'browser' ? 'active' : ''}`}
+                onClick={() => setVoiceMode('browser')}
+              >
+                Browser
+              </button>
+              <button
+                className={`voice-option ${voiceMode === 'chatterbox' ? 'active' : ''}`}
+                onClick={() => setVoiceMode('chatterbox')}
+                disabled={!chatterboxAvailable}
+                title={chatterboxAvailable ? 'MIWO custom voice' : 'Not yet connected — coming soon'}
+              >
+                MIWO {!chatterboxAvailable && '(soon)'}
+              </button>
+            </div>
           </div>
+          {chatterboxAvailable && voiceMode === 'chatterbox' && (
+            <div className="voice-settings-row">
+              <div className="voice-settings-label">Voice</div>
+              <div className="voice-options">
+                <button
+                  className={`voice-option ${voiceName === 'maria' ? 'active' : ''}`}
+                  onClick={() => setVoiceName('maria')}
+                >
+                  Maria
+                </button>
+                <button
+                  className={`voice-option ${voiceName === 'johnny' ? 'active' : ''}`}
+                  onClick={() => setVoiceName('johnny')}
+                >
+                  Johnny
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

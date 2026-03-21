@@ -116,8 +116,15 @@ html, body {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   animation: fadeIn 0.2s ease;
+  flex-wrap: wrap;
+}
+
+.voice-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .voice-settings-label {
