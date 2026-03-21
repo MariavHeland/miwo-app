@@ -296,19 +296,14 @@ export default function Home() {
       debugLog('✗ Error: ' + err.message)
       console.error('Chatterbox TTS error:', err)
       setTtsStatus('')
-      // Fallback to browser TTS
-      speakBrowser(text, index)
+      setSpeakingIndex(-1)
     }
-  }, [speakBrowser, voiceName, debugLog, ensureAudioContext])
+  }, [voiceName, debugLog, ensureAudioContext])
 
-  // Speak a message
+  // Speak a message — always use Chatterbox (no browser fallback)
   const speak = useCallback((text, index) => {
-    if (voiceMode === 'chatterbox' && chatterboxAvailable) {
-      speakChatterbox(text, index)
-    } else {
-      speakBrowser(text, index)
-    }
-  }, [voiceMode, chatterboxAvailable, speakBrowser, speakChatterbox])
+    speakChatterbox(text, index)
+  }, [speakChatterbox])
 
   // Stop speaking
   const stopSpeaking = useCallback(() => {
@@ -423,60 +418,30 @@ export default function Home() {
           >
             {autoRead ? <SpeakerIcon size={16} /> : <SpeakerOffIcon size={16} />}
           </button>
-          <button
-            className={`header-btn settings-btn ${showVoiceSettings ? 'active' : ''}`}
-            onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-            title="Voice settings"
-          >
-            <SettingsIcon size={16} />
-          </button>
           <span className="tagline">my world my news</span>
         </div>
       </header>
 
-      {/* Voice settings panel */}
-      {showVoiceSettings && (
-        <div className="voice-settings">
-          <div className="voice-settings-row">
-            <div className="voice-settings-label">Engine</div>
-            <div className="voice-options">
-              <button
-                className={`voice-option ${voiceMode === 'browser' ? 'active' : ''}`}
-                onClick={() => setVoiceMode('browser')}
-              >
-                Browser
-              </button>
-              <button
-                className={`voice-option ${voiceMode === 'chatterbox' ? 'active' : ''}`}
-                onClick={() => setVoiceMode('chatterbox')}
-                disabled={!chatterboxAvailable}
-                title={chatterboxAvailable ? 'MIWO custom voice' : 'Not yet connected — coming soon'}
-              >
-                MIWO {!chatterboxAvailable && '(soon)'}
-              </button>
-            </div>
+      {/* Voice picker — always visible */}
+      <div className="voice-settings">
+        <div className="voice-settings-row">
+          <div className="voice-settings-label">Voice</div>
+          <div className="voice-options">
+            <button
+              className={`voice-option ${voiceName === 'maria' ? 'active' : ''}`}
+              onClick={() => setVoiceName('maria')}
+            >
+              Nova
+            </button>
+            <button
+              className={`voice-option ${voiceName === 'johnny' ? 'active' : ''}`}
+              onClick={() => setVoiceName('johnny')}
+            >
+              Atlas
+            </button>
           </div>
-          {chatterboxAvailable && voiceMode === 'chatterbox' && (
-            <div className="voice-settings-row">
-              <div className="voice-settings-label">Voice</div>
-              <div className="voice-options">
-                <button
-                  className={`voice-option ${voiceName === 'maria' ? 'active' : ''}`}
-                  onClick={() => setVoiceName('maria')}
-                >
-                  Maria
-                </button>
-                <button
-                  className={`voice-option ${voiceName === 'johnny' ? 'active' : ''}`}
-                  onClick={() => setVoiceName('johnny')}
-                >
-                  Johnny
-                </button>
-              </div>
-            </div>
-          )}
         </div>
-      )}
+      </div>
 
       {messages.length === 0 && !isLoading ? (
         <div className="welcome">
