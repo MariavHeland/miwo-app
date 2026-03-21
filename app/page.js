@@ -246,11 +246,11 @@ export default function Home() {
       const result = await client.predict('/generate_tts_audio', {
         text_input: truncated,
         audio_prompt_path_input: handle_file(voiceUrl),
-        exaggeration_input: 0.3,
-        temperature_input: 0.8,
+        exaggeration_input: 0.15,
+        temperature_input: 0.6,
         seed_num_input: 0,
-        cfgw_input: 0.5,
-        vad_trim_input: false,
+        cfgw_input: 0.8,
+        vad_trim_input: true,
       })
       debugLog('✓ Got result')
 
