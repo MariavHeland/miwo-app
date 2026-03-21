@@ -193,6 +193,16 @@ export default function Home() {
     try {
       setSpeakingIndex(index)
       debugLog('Starting Chatterbox TTS...')
+
+      // Unlock audio on user gesture — play a silent buffer so that audio.play()
+      // works later even after async operations expire the gesture context
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+      const silentBuffer = audioCtx.createBuffer(1, 1, 22050)
+      const source = audioCtx.createBufferSource()
+      source.buffer = silentBuffer
+      source.connect(audioCtx.destination)
+      source.start()
+      debugLog('Audio context unlocked')
       const cleanText = cleanTextForSpeech(text)
 
       // Truncate to 300 chars (Chatterbox limit)
