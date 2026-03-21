@@ -1,64 +1,72 @@
 import { NextResponse } from 'next/server'
 
-// MIWO TTS proxy — forwards requests to the Chatterbox server on Railway
-// Set CHATTERBOX_URL in Vercel env vars (e.g., https://miwo-tts.up.railway.app)
-// The Chatterbox server has voice references baked in — we just send text + voice name
-
-export const maxDuration = 60 // Allow up to 60s for synthesis
+// Fish Audio TTS endpoint
+// Takes text + voice name, returns audio as mp3 stream
+export const maxDuration = 60
 
 export async function POST(request) {
   try {
     const { text, voice } = await request.json()
-    const chatterboxUrl = process.env.CHATTERBOX_URL
 
-    if (!chatterboxUrl) {
-      return NextResponse.json(
-        { error: 'Chatterbox TTS not configured' },
-        { status: 503 }
-      )
+    if (!text || !text.trim()) {
+      return NextResponse.json({ error: 'No text provided' }, { status: 400 })
     }
 
-    if (!text || text.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'No text provided' },
-        { status: 400 }
-      )
+    const apiKey = process.env.FISH_AUDIO_API_KEY
+    if (!apiKey) {
+      return NextResponse.json({ error: 'Fish Audio API key not configured' }, { status: 500 })
     }
 
-    const response = await fetch(`${chatterboxUrl}/synthesize`, {
+    // Voice IDs — Nova (female) and Atlas (male)
+    const voices = {
+      nova: process.env.FISH_VOICE_NOVA || '3c86704b6c1741f4b6d3723397061f04',
+      atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
+    }
+
+    const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
+
+    // Fish Audio TTS API
+    const response = await fetch('https://api.fish.audio/v1/tts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
-        text: text.trim(),
-        voice: (voice || 'maria').toLowerCase(),
-        exaggeration: 0.3,
-        cfg_weight: 0.5,
+        text: text.trim().substring(0, 2000),
+        reference_id: voiceId,
+        format: 'mp3',
+        mp3_bitrate: 128,
+        normalize: true,
+        latency: 'balanced',
+        prosody: {
+          speed: 0.92,
+        },
       }),
     })
 
     if (!response.ok) {
       const err = await response.text()
-      console.error('Chatterbox error:', response.status, err)
+      console.error('Fish Audio error:', response.status, err)
       return NextResponse.json(
-        { error: 'TTS synthesis failed' },
-        { status: 502 }
+        { error: `TTS error (${response.status}): ${err.substring(0, 200)}` },
+        { status: response.status }
       )
     }
 
-    // Forward the audio WAV back to the browser
+    // Return the mp3 audio
     const audioBuffer = await response.arrayBuffer()
 
-    return new NextResponse(audioBuffer, {
+    return new Response(audioBuffer, {
+      status: 200,
       headers: {
-        'Content-Type': 'audio/wav',
-        'Cache-Control': 'no-cache',
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': audioBuffer.byteLength.toString(),
+        'Cache-Control': 'public, max-age=3600',
       },
     })
   } catch (error) {
     console.error('TTS error:', error.message)
-    return NextResponse.json(
-      { error: 'TTS service unavailable' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

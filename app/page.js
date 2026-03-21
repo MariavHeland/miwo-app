@@ -67,61 +67,24 @@ export default function Home() {
   const [isListening, setIsListening] = useState(false)
   const [speakingIndex, setSpeakingIndex] = useState(-1)
   const [autoRead, setAutoRead] = useState(false)
-  const [voiceMode, setVoiceMode] = useState('chatterbox') // 'browser' or 'chatterbox'
-  const [voiceName, setVoiceName] = useState('maria') // 'maria' or 'johnny'
-  const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing'
+  const [voiceName, setVoiceName] = useState('nova') // 'nova' or 'atlas'
+  const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing', 'quota'
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
-  const [chatterboxAvailable, setChatterboxAvailable] = useState(true)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
   const recognitionRef = useRef(null)
-  const synthRef = useRef(null)
   const audioRef = useRef(null)
-  const audioCtxRef = useRef(null) // Persistent AudioContext for TTS playback
+  const audioCtxRef = useRef(null)
 
-  // Debug helper — visible banner for diagnosing TTS issues
-  const debugLog = useCallback((msg) => {
-    console.log('[MIWO TTS]', msg)
-    let el = document.getElementById('tts-debug')
-    if (!el) {
-      el = document.createElement('div')
-      el.id = 'tts-debug'
-      el.style.cssText = 'position:fixed;bottom:60px;left:10px;right:10px;background:#1a1a1a;color:#C47D5A;font-size:11px;padding:8px 12px;border-radius:6px;z-index:9999;max-height:120px;overflow-y:auto;font-family:monospace;border:1px solid #333;'
-      document.body.appendChild(el)
-    }
-    el.innerHTML += msg + '<br>'
-    el.scrollTop = el.scrollHeight
-  }, [])
-
-  // Unlock AudioContext on any user gesture so auto-read works later
-  const ensureAudioContext = useCallback(() => {
-    if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
+  // Unlock AudioContext on user gesture so auto-read works after async fetch
+  function ensureAudioContext() {
+    if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
     }
     if (audioCtxRef.current.state === 'suspended') {
       audioCtxRef.current.resume()
     }
-    // Play silent buffer to fully unlock
-    const buf = audioCtxRef.current.createBuffer(1, 1, 22050)
-    const src = audioCtxRef.current.createBufferSource()
-    src.buffer = buf
-    src.connect(audioCtxRef.current.destination)
-    src.start()
-    return audioCtxRef.current
-  }, [])
-
-  // Initialize speech synthesis
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      synthRef.current = window.speechSynthesis
-    }
-  }, [])
-
-  // Chatterbox is available via HuggingFace Space (public, free)
-  useEffect(() => {
-    setChatterboxAvailable(true)
-  }, [])
-
+  }
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -169,157 +132,67 @@ export default function Home() {
   // Strip markdown for TTS
   const cleanTextForSpeech = (text) => {
     return text
-      .replace(/\*\*(.*?)\*\*/g, '$1')  // remove bold markers
-      .replace(/\*(.*?)\*/g, '$1')       // remove italic markers
-      .replace(/#{1,6}\s/g, '')          // remove headers
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links → text only
-      .replace(/\n{2,}/g, '. ')          // paragraph breaks → pauses
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/#{1,6}\s/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/\n{2,}/g, '. ')
       .replace(/\n/g, ' ')
       .trim()
   }
 
-  // Browser TTS
-  const speakBrowser = useCallback((text, index) => {
-    if (!synthRef.current) return
-
-    // Stop any current speech
-    synthRef.current.cancel()
-
-    const cleanText = cleanTextForSpeech(text)
-    const utterance = new SpeechSynthesisUtterance(cleanText)
-    utterance.rate = 0.95
-    utterance.pitch = 1.0
-
-    // Try to pick a natural-sounding voice
-    const voices = synthRef.current.getVoices()
-    const preferred = voices.find(v =>
-      v.name.includes('Samantha') || v.name.includes('Karen') ||
-      v.name.includes('Google UK English Female') || v.name.includes('Microsoft Zira')
-    ) || voices.find(v => v.lang.startsWith('en') && v.name.includes('Female'))
-      || voices.find(v => v.lang.startsWith('en'))
-
-    if (preferred) utterance.voice = preferred
-
-    utterance.onstart = () => setSpeakingIndex(index)
-    utterance.onend = () => setSpeakingIndex(-1)
-    utterance.onerror = () => setSpeakingIndex(-1)
-
-    synthRef.current.speak(utterance)
-  }, [])
-
-  // Chatterbox TTS via HuggingFace Space (runs in browser, no server needed)
-  const speakChatterbox = useCallback(async (text, index) => {
+  // Fish Audio TTS — calls server-side /api/tts, returns mp3
+  const speak = useCallback(async (text, index) => {
     try {
       setSpeakingIndex(index)
       setTtsStatus('generating')
-      debugLog('Starting Chatterbox TTS...')
-
-      // Use persistent AudioContext (pre-unlocked on user gesture)
-      const audioCtx = ensureAudioContext()
-      debugLog('AudioContext state: ' + audioCtx.state)
 
       const cleanText = cleanTextForSpeech(text)
-      const truncated = cleanText.substring(0, 300)
-      debugLog('Text: ' + truncated.substring(0, 50) + '...')
 
-      // Load Gradio client from CDN (npm package doesn't bundle for browser)
-      debugLog('Loading Gradio client...')
-      if (!window.__gradioClient) {
-        const mod = await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js')
-        window.__gradioClient = mod
-      }
-      const { Client, handle_file } = window.__gradioClient
-      debugLog('✓ Gradio loaded')
-
-      // Voice reference files served from /voices/
-      const voiceFiles = {
-        maria: '/voices/Maria_MIWO.wav',
-        johnny: '/voices/JOHNNY_MIWO.mp3',
-      }
-      const voiceUrl = window.location.origin + (voiceFiles[voiceName] || voiceFiles.maria)
-      debugLog('Voice: ' + voiceName)
-
-      debugLog('Connecting to Chatterbox Space...')
-      const client = await Client.connect('ResembleAI/Chatterbox')
-      debugLog('✓ Connected, calling predict...')
-
-      const result = await client.predict('/generate_tts_audio', {
-        text_input: truncated,
-        audio_prompt_path_input: handle_file(voiceUrl),
-        exaggeration_input: 0.15,
-        temperature_input: 0.6,
-        seed_num_input: 0,
-        cfgw_input: 0.8,
-        vad_trim_input: true,
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText, voice: voiceName }),
       })
-      debugLog('✓ Got result')
 
-      // Result contains a file URL from the Space
-      let audioUrl
-      if (result.data && result.data[0] && result.data[0].url) {
-        audioUrl = result.data[0].url
-      } else if (result.data && typeof result.data[0] === 'string') {
-        audioUrl = result.data[0]
-      } else {
-        throw new Error('Unexpected response format: ' + JSON.stringify(result.data).substring(0, 100))
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'TTS failed' }))
+        throw new Error(err.error || `TTS error ${res.status}`)
       }
 
-      // Fetch audio as ArrayBuffer and play through AudioContext
-      debugLog('Fetching audio...')
-      const audioResponse = await fetch(audioUrl)
-      if (!audioResponse.ok) throw new Error('Audio fetch failed: ' + audioResponse.status)
-      const arrayBuffer = await audioResponse.arrayBuffer()
-      debugLog('✓ Fetched ' + Math.round(arrayBuffer.byteLength / 1024) + 'KB')
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
 
-      // Ensure AudioContext is running before decode
-      if (audioCtx.state === 'suspended') {
-        debugLog('Resuming suspended AudioContext...')
-        await audioCtx.resume()
-      }
-
-      const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer)
-      debugLog('✓ Decoded: ' + decodedBuffer.duration.toFixed(1) + 's')
-
-      setTtsStatus('playing')
-      const playSource = audioCtx.createBufferSource()
-      playSource.buffer = decodedBuffer
-      playSource.connect(audioCtx.destination)
-      playSource.onended = () => {
-        debugLog('✓ Playback finished')
+      audio.onplay = () => setTtsStatus('playing')
+      audio.onended = () => {
         setSpeakingIndex(-1)
         setTtsStatus('')
+        URL.revokeObjectURL(url)
       }
-      playSource.start()
-      audioRef.current = { pause: () => { playSource.stop(); setTtsStatus('') }, currentTime: 0 }
-      debugLog('✓ Playing via AudioContext! (state: ' + audioCtx.state + ')')
-    } catch (err) {
-      debugLog('✗ Error: ' + err.message)
-      console.error('Chatterbox TTS error:', err)
-      setSpeakingIndex(-1)
-
-      // Show user-friendly error toast
-      if (err.message && err.message.includes('GPU quota')) {
-        setTtsStatus('quota')
-        setTimeout(() => setTtsStatus(''), 5000)
-      } else {
+      audio.onerror = () => {
+        setSpeakingIndex(-1)
         setTtsStatus('')
+        URL.revokeObjectURL(url)
       }
-    }
-  }, [voiceName, debugLog, ensureAudioContext])
 
-  // Speak a message — always use Chatterbox (no browser fallback)
-  const speak = useCallback((text, index) => {
-    speakChatterbox(text, index)
-  }, [speakChatterbox])
+      audioRef.current = audio
+      await audio.play()
+    } catch (err) {
+      console.error('TTS error:', err)
+      setSpeakingIndex(-1)
+      setTtsStatus('')
+    }
+  }, [voiceName])
 
   // Stop speaking
   const stopSpeaking = useCallback(() => {
-    if (synthRef.current) synthRef.current.cancel()
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
     }
     setSpeakingIndex(-1)
+    setTtsStatus('')
   }, [])
 
   const sendMessage = async (text) => {
