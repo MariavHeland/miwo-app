@@ -77,6 +77,38 @@ export default function Home() {
   const recognitionRef = useRef(null)
   const synthRef = useRef(null)
   const audioRef = useRef(null)
+  const audioCtxRef = useRef(null) // Persistent AudioContext for TTS playback
+
+  // Debug helper — visible banner for diagnosing TTS issues
+  const debugLog = useCallback((msg) => {
+    console.log('[MIWO TTS]', msg)
+    let el = document.getElementById('tts-debug')
+    if (!el) {
+      el = document.createElement('div')
+      el.id = 'tts-debug'
+      el.style.cssText = 'position:fixed;bottom:60px;left:10px;right:10px;background:#1a1a1a;color:#C47D5A;font-size:11px;padding:8px 12px;border-radius:6px;z-index:9999;max-height:120px;overflow-y:auto;font-family:monospace;border:1px solid #333;'
+      document.body.appendChild(el)
+    }
+    el.innerHTML += msg + '<br>'
+    el.scrollTop = el.scrollHeight
+  }, [])
+
+  // Unlock AudioContext on any user gesture so auto-read works later
+  const ensureAudioContext = useCallback(() => {
+    if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
+      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
+    }
+    if (audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume()
+    }
+    // Play silent buffer to fully unlock
+    const buf = audioCtxRef.current.createBuffer(1, 1, 22050)
+    const src = audioCtxRef.current.createBufferSource()
+    src.buffer = buf
+    src.connect(audioCtxRef.current.destination)
+    src.start()
+    return audioCtxRef.current
+  }, [])
 
   // Initialize speech synthesis
   useEffect(() => {
@@ -180,25 +212,24 @@ export default function Home() {
     try {
       setSpeakingIndex(index)
       setTtsStatus('generating')
+      debugLog('Starting Chatterbox TTS...')
 
-      // Unlock audio on user gesture — play a silent buffer so that audio.play()
-      // works later even after async operations expire the gesture context
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-      const silentBuffer = audioCtx.createBuffer(1, 1, 22050)
-      const source = audioCtx.createBufferSource()
-      source.buffer = silentBuffer
-      source.connect(audioCtx.destination)
-      source.start()
+      // Use persistent AudioContext (pre-unlocked on user gesture)
+      const audioCtx = ensureAudioContext()
+      debugLog('AudioContext state: ' + audioCtx.state)
 
       const cleanText = cleanTextForSpeech(text)
       const truncated = cleanText.substring(0, 300)
+      debugLog('Text: ' + truncated.substring(0, 50) + '...')
 
       // Load Gradio client from CDN (npm package doesn't bundle for browser)
+      debugLog('Loading Gradio client...')
       if (!window.__gradioClient) {
         const mod = await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js')
         window.__gradioClient = mod
       }
       const { Client, handle_file } = window.__gradioClient
+      debugLog('✓ Gradio loaded')
 
       // Voice reference files served from /voices/
       const voiceFiles = {
@@ -206,8 +237,11 @@ export default function Home() {
         johnny: '/voices/JOHNNY_MIWO.mp3',
       }
       const voiceUrl = window.location.origin + (voiceFiles[voiceName] || voiceFiles.maria)
+      debugLog('Voice: ' + voiceName)
 
+      debugLog('Connecting to Chatterbox Space...')
       const client = await Client.connect('ResembleAI/Chatterbox')
+      debugLog('✓ Connected, calling predict...')
 
       const result = await client.predict('/generate_tts_audio', {
         text_input: truncated,
@@ -218,6 +252,7 @@ export default function Home() {
         cfgw_input: 0.5,
         vad_trim_input: false,
       })
+      debugLog('✓ Got result')
 
       // Result contains a file URL from the Space
       let audioUrl
@@ -226,35 +261,45 @@ export default function Home() {
       } else if (result.data && typeof result.data[0] === 'string') {
         audioUrl = result.data[0]
       } else {
-        throw new Error('Unexpected response format')
+        throw new Error('Unexpected response format: ' + JSON.stringify(result.data).substring(0, 100))
       }
 
-      // Fetch audio as ArrayBuffer and play through AudioContext (already unlocked)
+      // Fetch audio as ArrayBuffer and play through AudioContext
+      debugLog('Fetching audio...')
       const audioResponse = await fetch(audioUrl)
       if (!audioResponse.ok) throw new Error('Audio fetch failed: ' + audioResponse.status)
       const arrayBuffer = await audioResponse.arrayBuffer()
+      debugLog('✓ Fetched ' + Math.round(arrayBuffer.byteLength / 1024) + 'KB')
 
-      // Decode and play through AudioContext (bypasses autoplay restrictions)
+      // Ensure AudioContext is running before decode
+      if (audioCtx.state === 'suspended') {
+        debugLog('Resuming suspended AudioContext...')
+        await audioCtx.resume()
+      }
+
       const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer)
+      debugLog('✓ Decoded: ' + decodedBuffer.duration.toFixed(1) + 's')
 
       setTtsStatus('playing')
       const playSource = audioCtx.createBufferSource()
       playSource.buffer = decodedBuffer
       playSource.connect(audioCtx.destination)
       playSource.onended = () => {
+        debugLog('✓ Playback finished')
         setSpeakingIndex(-1)
         setTtsStatus('')
-        audioCtx.close()
       }
       playSource.start()
-      audioRef.current = { pause: () => { playSource.stop(); setTtsStatus(''); audioCtx.close() }, currentTime: 0 }
+      audioRef.current = { pause: () => { playSource.stop(); setTtsStatus('') }, currentTime: 0 }
+      debugLog('✓ Playing via AudioContext! (state: ' + audioCtx.state + ')')
     } catch (err) {
+      debugLog('✗ Error: ' + err.message)
       console.error('Chatterbox TTS error:', err)
       setTtsStatus('')
       // Fallback to browser TTS
       speakBrowser(text, index)
     }
-  }, [speakBrowser, voiceName])
+  }, [speakBrowser, voiceName, debugLog, ensureAudioContext])
 
   // Speak a message
   const speak = useCallback((text, index) => {
@@ -278,6 +323,9 @@ export default function Home() {
   const sendMessage = async (text) => {
     const messageText = text || input
     if (!messageText.trim() || isLoading) return
+
+    // Pre-unlock AudioContext on this user gesture so auto-read works after response
+    if (autoRead) ensureAudioContext()
 
     // Stop any current speech when user sends a new message
     stopSpeaking()
@@ -368,6 +416,7 @@ export default function Home() {
             className={`header-btn auto-read-btn ${autoRead ? 'active' : ''}`}
             onClick={() => {
               if (autoRead) stopSpeaking()
+              else ensureAudioContext() // Unlock audio on user gesture
               setAutoRead(!autoRead)
             }}
             title={autoRead ? 'Auto-read on — click to turn off' : 'Auto-read off — click to turn on'}
@@ -468,7 +517,7 @@ export default function Home() {
                   ) : (
                     <button
                       className="msg-action-btn"
-                      onClick={() => speak(msg.content, i)}
+                      onClick={() => { ensureAudioContext(); speak(msg.content, i) }}
                       title="Read aloud"
                     >
                       <SpeakerIcon size={14} />
