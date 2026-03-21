@@ -57,9 +57,11 @@ html, body {
 }
 
 .header-logo {
-  height: 32px;
+  height: 28px;
   width: auto;
   display: block;
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 
 .logo {
@@ -270,11 +272,11 @@ html, body {
 }
 
 .welcome-logo-img {
-  width: 320px;
+  width: 360px;
   height: auto;
   border-radius: 0;
-  mask-image: radial-gradient(ellipse 85% 75% at center, black 50%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 75% at center, black 50%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at center, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at center, black 40%, transparent 85%);
 }
 
 .welcome-sub {
