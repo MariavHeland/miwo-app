@@ -199,9 +199,13 @@ export default function Home() {
       const truncated = cleanText.substring(0, 300)
       debugLog('Text: ' + truncated.substring(0, 50) + '...')
 
-      // Dynamically import Gradio client (only loaded when needed)
-      debugLog('Importing @gradio/client...')
-      const { Client, handle_file } = await import('@gradio/client')
+      // Load Gradio client from CDN (npm package doesn't bundle for browser)
+      debugLog('Loading Gradio client from CDN...')
+      if (!window.__gradioClient) {
+        const mod = await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js')
+        window.__gradioClient = mod
+      }
+      const { Client, handle_file } = window.__gradioClient
       debugLog('✓ Gradio client loaded')
 
       // Voice reference files served from /voices/
