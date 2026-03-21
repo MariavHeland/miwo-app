@@ -295,8 +295,15 @@ export default function Home() {
     } catch (err) {
       debugLog('✗ Error: ' + err.message)
       console.error('Chatterbox TTS error:', err)
-      setTtsStatus('')
       setSpeakingIndex(-1)
+
+      // Show user-friendly error toast
+      if (err.message && err.message.includes('GPU quota')) {
+        setTtsStatus('quota')
+        setTimeout(() => setTtsStatus(''), 5000)
+      } else {
+        setTtsStatus('')
+      }
     }
   }, [voiceName, debugLog, ensureAudioContext])
 
@@ -521,7 +528,7 @@ export default function Home() {
               padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(196,125,90,0.3)',
               whiteSpace: 'nowrap', animation: 'pulse 1.5s ease-in-out infinite',
             }}>
-              {ttsStatus === 'generating' ? '✨ Generating MIWO voice...' : '🔊 Playing...'}
+              {ttsStatus === 'generating' ? '✨ Generating MIWO voice...' : ttsStatus === 'quota' ? '⏳ Voice quota reached — try again in a minute' : '🔊 Playing...'}
             </div>
           )}
           <textarea
