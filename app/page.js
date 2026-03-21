@@ -84,11 +84,9 @@ export default function Home() {
     }
   }, [])
 
-  // Check if Chatterbox endpoint is available
+  // Chatterbox is available via HuggingFace Space (public, free)
   useEffect(() => {
-    fetch('/api/tts/health').then(r => {
-      if (r.ok) setChatterboxAvailable(true)
-    }).catch(() => {})
+    setChatterboxAvailable(true)
   }, [])
 
   // Auto-scroll to bottom
@@ -176,48 +174,66 @@ export default function Home() {
     synthRef.current.speak(utterance)
   }, [])
 
-  // Chatterbox TTS
+  // Chatterbox TTS via HuggingFace Space (runs in browser, no server needed)
   const speakChatterbox = useCallback(async (text, index) => {
     try {
       setSpeakingIndex(index)
       const cleanText = cleanTextForSpeech(text)
 
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText, voice: voiceName }),
+      // Truncate to 300 chars (Chatterbox limit)
+      const truncated = cleanText.substring(0, 300)
+
+      // Dynamically import Gradio client (only loaded when needed)
+      const { Client, handle_file } = await import('@gradio/client')
+
+      // Voice reference files served from /voices/
+      const voiceFiles = {
+        maria: '/voices/Maria_MIWO.wav',
+        johnny: '/voices/JOHNNY_MIWO.mp3',
+      }
+      const voiceUrl = window.location.origin + (voiceFiles[voiceName] || voiceFiles.maria)
+
+      const client = await Client.connect('ResembleAI/Chatterbox')
+      const result = await client.predict('/generate_tts_audio', {
+        text_input: truncated,
+        audio_prompt_path_input: handle_file(voiceUrl),
+        exaggeration_input: 0.3,
+        temperature_input: 0.8,
+        seed_num_input: 0,
+        cfgw_input: 0.5,
+        vad_trim_input: false,
       })
 
-      if (!res.ok) {
-        // Fallback to browser TTS
-        speakBrowser(text, index)
-        return
+      // Result contains [sample_rate, audio_data] or a file URL
+      let audioUrl
+      if (result.data && result.data[0] && result.data[0].url) {
+        audioUrl = result.data[0].url
+      } else if (result.data && typeof result.data[0] === 'string') {
+        audioUrl = result.data[0]
+      } else {
+        throw new Error('Unexpected response format')
       }
-
-      const audioBlob = await res.blob()
-      const audioUrl = URL.createObjectURL(audioBlob)
 
       if (audioRef.current) {
         audioRef.current.pause()
-        URL.revokeObjectURL(audioRef.current.src)
+        if (audioRef.current._objectUrl) URL.revokeObjectURL(audioRef.current._objectUrl)
       }
 
       const audio = new Audio(audioUrl)
       audioRef.current = audio
-      audio.onended = () => {
-        setSpeakingIndex(-1)
-        URL.revokeObjectURL(audioUrl)
-      }
+      audio.onended = () => setSpeakingIndex(-1)
       audio.onerror = () => {
         setSpeakingIndex(-1)
-        URL.revokeObjectURL(audioUrl)
+        // Fallback to browser TTS
+        speakBrowser(text, index)
       }
       audio.play()
-    } catch {
+    } catch (err) {
+      console.error('Chatterbox error:', err)
       // Fallback to browser TTS
       speakBrowser(text, index)
     }
-  }, [speakBrowser])
+  }, [speakBrowser, voiceName])
 
   // Speak a message
   const speak = useCallback((text, index) => {
