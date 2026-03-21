@@ -253,39 +253,28 @@ export default function Home() {
 
       debugLog('Audio URL: ' + audioUrl.substring(0, 120))
 
-      // Fetch audio as blob to avoid CORS/content-type issues with cross-origin playback
-      debugLog('Fetching audio blob...')
+      // Fetch audio as ArrayBuffer and play through AudioContext (already unlocked)
+      debugLog('Fetching audio...')
       const audioResponse = await fetch(audioUrl)
       if (!audioResponse.ok) throw new Error('Audio fetch failed: ' + audioResponse.status)
-      const audioBlob = await audioResponse.blob()
-      const blobUrl = URL.createObjectURL(new Blob([audioBlob], { type: 'audio/wav' }))
-      debugLog('✓ Blob ready (' + Math.round(audioBlob.size / 1024) + 'KB)')
+      const arrayBuffer = await audioResponse.arrayBuffer()
+      debugLog('✓ Audio fetched (' + Math.round(arrayBuffer.byteLength / 1024) + 'KB)')
 
-      if (audioRef.current) {
-        audioRef.current.pause()
-        if (audioRef.current._objectUrl) URL.revokeObjectURL(audioRef.current._objectUrl)
-      }
+      // Decode and play through AudioContext (bypasses autoplay restrictions)
+      const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer)
+      debugLog('✓ Decoded: ' + decodedBuffer.duration.toFixed(1) + 's, ' + decodedBuffer.sampleRate + 'Hz')
 
-      const audio = new Audio(blobUrl)
-      audio._objectUrl = blobUrl
-      audioRef.current = audio
-      audio.onended = () => {
+      const playSource = audioCtx.createBufferSource()
+      playSource.buffer = decodedBuffer
+      playSource.connect(audioCtx.destination)
+      playSource.onended = () => {
         debugLog('✓ Audio playback finished')
         setSpeakingIndex(-1)
+        audioCtx.close()
       }
-      audio.onerror = (e) => {
-        debugLog('✗ Audio playback error: ' + e.type + ' code:' + (audio.error ? audio.error.code : '?'))
-        setSpeakingIndex(-1)
-        speakBrowser(text, index)
-      }
-      debugLog('Playing audio...')
-      try {
-        await audio.play()
-        debugLog('✓ Play started')
-      } catch (playErr) {
-        debugLog('✗ Play failed: ' + playErr.message)
-        speakBrowser(text, index)
-      }
+      playSource.start()
+      audioRef.current = { pause: () => { playSource.stop(); audioCtx.close() }, currentTime: 0 }
+      debugLog('✓ Playing via AudioContext!')
     } catch (err) {
       debugLog('✗ Chatterbox error: ' + err.message)
       console.error('Chatterbox error:', err)
