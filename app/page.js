@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useLang, LangPicker } from './i18n'
 
 // SVG Icons
 function MicIcon() {
@@ -70,6 +71,7 @@ const GLOBE_VIEWS = [
 ]
 
 export default function Home() {
+  const { t } = useLang()
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -302,11 +304,12 @@ export default function Home() {
       <header className="header">
         <img src="/miwo-nav.png" alt="MIWO" className="header-logo" />
         <div className="header-controls">
-          <Link href="/sports" className="nav-link">Sport</Link>
-          <Link href="/history" className="nav-link">History</Link>
-          <Link href="/arts" className="nav-link">Arts</Link>
-          <Link href="/nature" className="nav-link">Nature</Link>
-          <Link href="/cook" className="nav-link">Cook</Link>
+          <Link href="/sports" className="nav-link">{t('sport')}</Link>
+          <Link href="/history" className="nav-link">{t('history')}</Link>
+          <Link href="/arts" className="nav-link">{t('arts')}</Link>
+          <Link href="/nature" className="nav-link">{t('nature')}</Link>
+          <Link href="/cook" className="nav-link">{t('cook')}</Link>
+          <LangPicker />
           <button
             className={`header-btn auto-read-btn ${autoRead ? 'active' : ''}`}
             onClick={() => {
@@ -324,7 +327,7 @@ export default function Home() {
       {/* Voice picker — always visible */}
       <div className="voice-settings">
         <div className="voice-settings-row">
-          <div className="voice-settings-label">Voice</div>
+          <div className="voice-settings-label">{t('voice')}</div>
           <div className="voice-options">
             <button
               className={`voice-option ${voiceName === 'nova' ? 'active' : ''}`}
@@ -367,18 +370,17 @@ export default function Home() {
             <div className="welcome-right">
               <img src="/miwo-brand.png" alt="MIWO" className="welcome-brand-img" />
               <p className="welcome-sub">
-                Your trusted news editor. Ask me what happened today,
-                go deeper on any story, or verify a claim.
+                {t('tagline')}
               </p>
               <div className="welcome-prompts">
-                <button className="welcome-prompt" onClick={() => handlePromptClick('What happened today?')}>
-                  What happened today?
+                <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt1'))}>
+                  {t('prompt1')}
                 </button>
-                <button className="welcome-prompt" onClick={() => handlePromptClick('Give me the global briefing')}>
-                  Give me the global briefing
+                <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt2'))}>
+                  {t('prompt2')}
                 </button>
-                <button className="welcome-prompt" onClick={() => handlePromptClick('Was ist heute in Deutschland passiert?')}>
-                  Was ist heute in Deutschland passiert?
+                <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt3'))}>
+                  {t('prompt3')}
                 </button>
               </div>
             </div>
@@ -449,7 +451,7 @@ export default function Home() {
           <textarea
             ref={textareaRef}
             className="input-field"
-            placeholder={isListening ? 'Listening...' : 'Talk to MIWO...'}
+            placeholder={isListening ? '...' : t('talkTo')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
