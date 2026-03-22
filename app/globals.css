@@ -919,3 +919,26 @@ html, body {
   line-height: 1.6;
   color: var(--text-muted);
 }
+
+/* Site footer */
+.site-footer {
+  border-top: 1px solid var(--rule);
+  padding: 16px 24px;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+.site-footer .footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.site-footer .footer-link:hover {
+  color: var(--copper);
+}
+.site-footer .footer-sep {
+  margin: 0 8px;
+  opacity: 0.5;
+}
