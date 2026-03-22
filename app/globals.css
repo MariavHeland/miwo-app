@@ -409,43 +409,59 @@ html, body {
 .welcome {
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 16px;
   padding-bottom: 80px;
 }
 
-.welcome-logo {
-  font-family: 'Inter', sans-serif;
-  font-size: 36px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: var(--copper);
-  text-transform: uppercase;
+.welcome-hero {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  max-width: 760px;
+  width: 100%;
 }
 
-.welcome-logo-img {
-  width: 360px;
-  height: auto;
-  border-radius: 0;
-  mask-image: radial-gradient(ellipse 70% 60% at center, black 40%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at center, black 40%, transparent 85%);
+.welcome-globe {
+  width: 260px;
+  height: 260px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 40px rgba(196, 125, 90, 0.15));
+}
+
+.welcome-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.welcome-brand {
+  font-family: 'Inter', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: linear-gradient(160deg, #D4956A 0%, #C47D5A 40%, #A0654A 70%, #8B5540 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
 }
 
 .welcome-sub {
-  font-size: 14px;
+  font-family: var(--font-serif);
+  font-size: 15px;
   color: var(--text-dim);
-  max-width: 360px;
-  line-height: 1.6;
+  max-width: 340px;
+  line-height: 1.7;
 }
 
 .welcome-prompts {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .welcome-prompt {
@@ -472,6 +488,25 @@ html, body {
   }
   .message.user {
     max-width: 90%;
+  }
+  .welcome-hero {
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+    align-items: center;
+  }
+  .welcome-globe {
+    width: 180px;
+    height: 180px;
+  }
+  .welcome-brand {
+    font-size: 36px;
+  }
+  .welcome-right {
+    align-items: center;
+  }
+  .welcome-sub {
+    text-align: center;
   }
   .nav { padding: 0 16px; }
   .nav-btn { padding: 6px 10px; font-size: 11px; }

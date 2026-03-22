@@ -61,6 +61,14 @@ function SettingsIcon({ size = 18 }) {
   )
 }
 
+// Globe views — rotate randomly to avoid Western-centric default
+// TODO: Add globe-asia.jpg and globe-pacific.jpg when files are available
+const GLOBE_VIEWS = [
+  '/globe.png',          // Africa & Europe (current)
+  // '/globe-asia.jpg',  // East Asia & Oceania — add file to /public
+  // '/globe-pacific.jpg', // Asia-Pacific & Indian Ocean — add file to /public
+]
+
 export default function Home() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
@@ -70,12 +78,18 @@ export default function Home() {
   const [autoRead, setAutoRead] = useState(false)
   const [voiceName, setVoiceName] = useState('nova') // 'nova' or 'atlas'
   const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing', 'quota'
+  const [globeSrc, setGlobeSrc] = useState('/globe.png') // fallback
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
   const recognitionRef = useRef(null)
   const audioRef = useRef(null)
   const audioCtxRef = useRef(null)
+
+  // Pick a random globe view on mount
+  useEffect(() => {
+    setGlobeSrc(GLOBE_VIEWS[Math.floor(Math.random() * GLOBE_VIEWS.length)])
+  }, [])
 
   // Unlock AudioContext on user gesture so auto-read works after async fetch
   function ensureAudioContext() {
@@ -347,21 +361,26 @@ export default function Home() {
 
       {messages.length === 0 && !isLoading ? (
         <div className="welcome">
-          <img src="/miwo-logo.jpeg" alt="MIWO" className="welcome-logo-img" />
-          <p className="welcome-sub">
-            Your trusted news editor. Ask me what happened today,
-            go deeper on any story, or verify a claim.
-          </p>
-          <div className="welcome-prompts">
-            <button className="welcome-prompt" onClick={() => handlePromptClick('What happened today?')}>
-              What happened today?
-            </button>
-            <button className="welcome-prompt" onClick={() => handlePromptClick('Give me the global briefing')}>
-              Give me the global briefing
-            </button>
-            <button className="welcome-prompt" onClick={() => handlePromptClick('Was ist heute in Deutschland passiert?')}>
-              Was ist heute in Deutschland passiert?
-            </button>
+          <div className="welcome-hero">
+            <img src={globeSrc} alt="" className="welcome-globe" />
+            <div className="welcome-right">
+              <div className="welcome-brand">MIWO</div>
+              <p className="welcome-sub">
+                Your trusted news editor. Ask me what happened today,
+                go deeper on any story, or verify a claim.
+              </p>
+              <div className="welcome-prompts">
+                <button className="welcome-prompt" onClick={() => handlePromptClick('What happened today?')}>
+                  What happened today?
+                </button>
+                <button className="welcome-prompt" onClick={() => handlePromptClick('Give me the global briefing')}>
+                  Give me the global briefing
+                </button>
+                <button className="welcome-prompt" onClick={() => handlePromptClick('Was ist heute in Deutschland passiert?')}>
+                  Was ist heute in Deutschland passiert?
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
