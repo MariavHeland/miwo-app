@@ -320,7 +320,7 @@ export default function CookPage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder="Ask about any recipe, technique, cuisine, or ingredient..."
+            placeholder={t('cookPlaceholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
