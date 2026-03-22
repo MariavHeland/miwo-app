@@ -91,13 +91,12 @@ export default function NaturePage() {
   const suggestedPrompts = [
     'What\u2019s happening with the climate this week?',
     'Latest on deforestation and rewilding',
-    'Ocean temperatures and marine biodiversity',
     'Renewable energy breakthroughs in 2026',
   ];
 
   return (
     <>
-      {/* Navigation */}
+      {/* Navigation — text links, matching homepage */}
       <nav className="nav">
         <div className="nav-left">
           <Link href="/">
@@ -106,82 +105,65 @@ export default function NaturePage() {
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--nature)' }}>{t('natureLabel')}</div>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+          <Link href="/sports" className="nav-btn">{t('sport')}</Link>
+          <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/arts" className="nav-btn">{t('arts')}</Link>
+          <Link href="/cook" className="nav-btn">{t('cook')}</Link>
           <LangPicker />
-          <Link href="/sports">
-            <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              {t('sport')}
-            </button>
-          </Link>
-          <Link href="/history">
-            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              {t('history')}
-            </button>
-          </Link>
-          <Link href="/arts">
-            <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              {t('arts')}
-            </button>
-          </Link>
-          <Link href="/cook">
-            <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
-              {t('cook')}
-            </button>
-          </Link>
-          <Link href="/">
-            <button className="nav-btn">
-              {t('home')}
-            </button>
-          </Link>
+          <Link href="/" className="nav-btn">{t('home')}</Link>
         </div>
       </nav>
 
-      {/* Section filters */}
-      {messages.length === 0 && (
-        <div style={{ paddingTop: '80px' }}>
-          <div className="sport-nav">
-            {filters.map((f) => (
-              <button
-                key={f.id}
-                className={`sport-pill ${activeFilter === f.id ? 'active' : ''}`}
-                onClick={() => setActiveFilter(f.id)}
-                style={
-                  activeFilter === f.id
-                    ? { background: 'rgba(74, 139, 106, 0.12)', borderColor: 'var(--nature)', color: 'var(--nature)' }
-                    : {}
-                }
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Chat area */}
-      <div className="chat-container" style={messages.length === 0 ? { paddingTop: '20px' } : {}}>
+      <div className="chat-container">
         {messages.length === 0 ? (
           <div className="welcome">
-            <div className="welcome-label" style={{ color: 'var(--nature)' }}>
-              {t('natureLabel')}
-            </div>
-            <h1 className="welcome-title">
-              {t('natureTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
-            </h1>
-            <p className="welcome-sub">
-              {t('natureSub')}
-            </p>
-            <div className="prompt-pills">
-              {suggestedPrompts.map((prompt) => (
-                <button
-                  key={prompt}
-                  className="prompt-pill"
-                  onClick={() => sendMessage(prompt)}
-                  style={{ '--hover-bg': 'rgba(74, 139, 106, 0.08)' }}
-                >
-                  {prompt}
-                </button>
-              ))}
+            {/* Hero layout — globe + right column, like homepage */}
+            <div className="subpage-hero">
+              <img src="/globe.png" alt="" className="welcome-globe" />
+              <div className="subpage-hero-right">
+                <div className="welcome-label" style={{ color: 'var(--nature)' }}>
+                  {t('natureLabel')}
+                </div>
+                <h1 className="welcome-title">
+                  {t('natureTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
+                </h1>
+                <p className="welcome-sub">
+                  {t('natureSub')}
+                </p>
+
+                {/* Filters — compact, inline */}
+                <div className="subpage-filters">
+                  {filters.map((f) => (
+                    <button
+                      key={f.id}
+                      className={`subpage-filter ${activeFilter === f.id ? 'active' : ''}`}
+                      onClick={() => setActiveFilter(f.id)}
+                      style={
+                        activeFilter === f.id
+                          ? { borderColor: 'var(--nature)', color: 'var(--nature)', background: 'rgba(74, 139, 106, 0.08)' }
+                          : {}
+                      }
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Stacked prompts — like homepage */}
+                <div className="subpage-prompts">
+                  {suggestedPrompts.map((prompt) => (
+                    <button
+                      key={prompt}
+                      className="subpage-prompt"
+                      onClick={() => sendMessage(prompt)}
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         ) : (
@@ -189,7 +171,7 @@ export default function NaturePage() {
             {messages.map((msg, i) => (
               <div key={i} className={`message message-${msg.role}`}>
                 <div
-                  className={`message-label ${msg.role === 'assistant' ? 'miwo' : ''}`}
+                  className={`message-label`}
                   style={
                     msg.role === 'user'
                       ? { textAlign: 'right', color: 'var(--text-faint)' }

@@ -24,10 +24,6 @@ export default function CookPage() {
     scrollToBottom();
   }, [messages]);
 
-  const today = new Date().toLocaleDateString('en-GB', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-  });
-
   const sendMessage = async (text) => {
     const userMessage = text || input;
     if (!userMessage.trim() || isLoading) return;
@@ -142,13 +138,12 @@ export default function CookPage() {
   const suggestedPrompts = [
     'What should I cook tonight?',
     'Teach me a technique I probably don\u2019t know',
-    'What\u2019s in season right now?',
     'Give me a 15-minute dinner idea',
   ];
 
   return (
     <>
-      {/* Navigation */}
+      {/* Navigation — text links, matching homepage */}
       <nav className="nav">
         <div className="nav-left">
           <Link href="/">
@@ -157,128 +152,118 @@ export default function CookPage() {
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--cooking)' }}>{t('cookLabel')}</div>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+          <Link href="/sports" className="nav-btn">{t('sport')}</Link>
+          <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/arts" className="nav-btn">{t('arts')}</Link>
+          <Link href="/nature" className="nav-btn">{t('nature')}</Link>
           <LangPicker />
-          <Link href="/sports">
-            <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              {t('sport')}
-            </button>
-          </Link>
-          <Link href="/arts">
-            <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              {t('arts')}
-            </button>
-          </Link>
-          <Link href="/nature">
-            <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              {t('nature')}
-            </button>
-          </Link>
-          <Link href="/history">
-            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              {t('history')}
-            </button>
-          </Link>
-          <Link href="/">
-            <button className="nav-btn">{t('home')}</button>
-          </Link>
+          <Link href="/" className="nav-btn">{t('home')}</Link>
         </div>
       </nav>
 
-      {/* Filters + "What do you have?" button */}
-      {messages.length === 0 && (
-        <div style={{ paddingTop: '80px' }}>
-          <div className="sport-nav">
-            {filters.map((f) => (
-              <button
-                key={f.id}
-                className={`cook-pill ${activeFilter === f.id ? 'active' : ''}`}
-                onClick={() => setActiveFilter(f.id)}
-              >
-                {f.label}
-              </button>
-            ))}
-            <button
-              className="cook-pantry-btn"
-              onClick={() => setPantryOpen(!pantryOpen)}
-            >
-              {t('whatDoYouHave')}
-            </button>
-          </div>
+      {/* Chat area */}
+      <div className="chat-container">
+        {messages.length === 0 ? (
+          <div className="welcome">
+            {/* Hero layout — globe + right column, like homepage */}
+            <div className="subpage-hero">
+              <img src="/globe.png" alt="" className="welcome-globe" />
+              <div className="subpage-hero-right">
+                <div className="welcome-label" style={{ color: 'var(--cooking)' }}>
+                  {t('cookLabel')}
+                </div>
+                <h1 className="welcome-title">
+                  {t('cookTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
+                </h1>
+                <p className="welcome-sub">
+                  {t('cookSub')}
+                </p>
 
-          {/* Pantry panel */}
-          {pantryOpen && (
-            <div className="cook-pantry">
-              <div className="cook-pantry-inner">
-                <div className="cook-pantry-header">
-                  <h3 className="cook-pantry-title">{t('pantryTitle')}</h3>
+                {/* Filters — compact, inline */}
+                <div className="subpage-filters">
+                  {filters.map((f) => (
+                    <button
+                      key={f.id}
+                      className={`subpage-filter ${activeFilter === f.id ? 'active' : ''}`}
+                      onClick={() => setActiveFilter(f.id)}
+                      style={
+                        activeFilter === f.id
+                          ? { borderColor: 'var(--cooking)', color: 'var(--cooking)', background: 'rgba(196, 90, 90, 0.08)' }
+                          : {}
+                      }
+                    >
+                      {f.label}
+                    </button>
+                  ))}
                   <button
-                    className="cook-pantry-find"
-                    onClick={findRecipesFromPantry}
-                    disabled={pantryIngredients.length === 0}
+                    className="subpage-filter"
+                    onClick={() => setPantryOpen(!pantryOpen)}
+                    style={pantryOpen ? { borderColor: 'var(--cooking)', color: 'var(--cooking)' } : {}}
                   >
-                    {t('pantryFind')}
+                    {t('whatDoYouHave')}
                   </button>
                 </div>
-                <p className="cook-pantry-desc">
-                  {t('pantrySub')}
-                </p>
-                <div className="cook-pantry-input-row">
-                  <input
-                    className="cook-pantry-input"
-                    value={pantryInput}
-                    onChange={(e) => setPantryInput(e.target.value)}
-                    onKeyDown={pantryHandleKey}
-                    placeholder={t('cookPlaceholder')}
-                  />
-                  <button className="cook-pantry-add" onClick={addPantryItem}>{t('pantryAdd')}</button>
-                </div>
-                {pantryIngredients.length > 0 && (
-                  <div className="cook-pantry-tags">
-                    {pantryIngredients.map((item) => (
-                      <span key={item} className="cook-pantry-tag">
-                        {item}
-                        <button className="cook-pantry-tag-x" onClick={() => removePantryItem(item)}>&times;</button>
-                      </span>
-                    ))}
+
+                {/* Pantry panel */}
+                {pantryOpen && (
+                  <div className="cook-pantry" style={{ marginTop: '8px' }}>
+                    <div className="cook-pantry-inner">
+                      <div className="cook-pantry-header">
+                        <h3 className="cook-pantry-title">{t('pantryTitle')}</h3>
+                        <button
+                          className="cook-pantry-find"
+                          onClick={findRecipesFromPantry}
+                          disabled={pantryIngredients.length === 0}
+                        >
+                          {t('pantryFind')}
+                        </button>
+                      </div>
+                      <p className="cook-pantry-desc">{t('pantrySub')}</p>
+                      <div className="cook-pantry-input-row">
+                        <input
+                          className="cook-pantry-input"
+                          value={pantryInput}
+                          onChange={(e) => setPantryInput(e.target.value)}
+                          onKeyDown={pantryHandleKey}
+                          placeholder={t('cookPlaceholder')}
+                        />
+                        <button className="cook-pantry-add" onClick={addPantryItem}>{t('pantryAdd')}</button>
+                      </div>
+                      {pantryIngredients.length > 0 && (
+                        <div className="cook-pantry-tags">
+                          {pantryIngredients.map((item) => (
+                            <span key={item} className="cook-pantry-tag">
+                              {item}
+                              <button className="cook-pantry-tag-x" onClick={() => removePantryItem(item)}>&times;</button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="cook-pantry-chips">
+                        {quickChips.filter(c => !pantryIngredients.includes(c)).slice(0, 12).map((chip) => (
+                          <button key={chip} className="cook-pantry-chip" onClick={() => pantryQuickAdd(chip)}>
+                            {chip}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
-                <div className="cook-pantry-chips">
-                  {quickChips.filter(c => !pantryIngredients.includes(c)).slice(0, 12).map((chip) => (
-                    <button key={chip} className="cook-pantry-chip" onClick={() => pantryQuickAdd(chip)}>
-                      {chip}
+
+                {/* Stacked prompts — like homepage */}
+                <div className="subpage-prompts">
+                  {suggestedPrompts.map((prompt) => (
+                    <button
+                      key={prompt}
+                      className="subpage-prompt"
+                      onClick={() => sendMessage(prompt)}
+                    >
+                      {prompt}
                     </button>
                   ))}
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Chat area */}
-      <div className="chat-container" style={messages.length === 0 ? { paddingTop: '20px' } : {}}>
-        {messages.length === 0 ? (
-          <div className="welcome">
-            <div className="welcome-label" style={{ color: 'var(--cooking)' }}>
-              {t('cookLabel')}
-            </div>
-            <h1 className="welcome-title">
-              {t('cookTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
-            </h1>
-            <p className="welcome-sub">
-              {t('cookSub')}
-            </p>
-            <div className="prompt-pills">
-              {suggestedPrompts.map((prompt) => (
-                <button
-                  key={prompt}
-                  className="prompt-pill"
-                  onClick={() => sendMessage(prompt)}
-                >
-                  {prompt}
-                </button>
-              ))}
             </div>
           </div>
         ) : (

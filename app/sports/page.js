@@ -281,49 +281,29 @@ export default function SportsPage() {
 
   return (
     <>
-      {/* ── Navigation ── */}
+      {/* ── Navigation — text links, matching homepage ── */}
       <nav className="nav">
         <div className="nav-left">
           <Link href="/"><div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div></Link>
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--sport)' }}>{t('sportLabel')}</div>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           {view === 'chat' ? (
-            <button
-              className="nav-btn"
-              style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}
-              onClick={() => setView('feed')}
-            >
+            <button className="nav-btn" style={{ color: 'var(--sport)' }} onClick={() => setView('feed')}>
               {t('stories')}
             </button>
           ) : (
-            <button
-              className="nav-btn"
-              style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}
-              onClick={() => setView('chat')}
-            >
+            <button className="nav-btn" style={{ color: 'var(--sport)' }} onClick={() => setView('chat')}>
               {t('askMiwo')}
             </button>
           )}
-          <Link href="/history">
-            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>{t('history')}</button>
-          </Link>
-          <Link href="/arts">
-            <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>{t('arts')}</button>
-          </Link>
-          <Link href="/nature">
-            <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              {t('nature')}
-            </button>
-          </Link>
-          <Link href="/cook">
-            <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>{t('cook')}</button>
-          </Link>
+          <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/arts" className="nav-btn">{t('arts')}</Link>
+          <Link href="/nature" className="nav-btn">{t('nature')}</Link>
+          <Link href="/cook" className="nav-btn">{t('cook')}</Link>
           <LangPicker />
-          <Link href="/">
-            <button className="nav-btn">{t('home')}</button>
-          </Link>
+          <Link href="/" className="nav-btn">{t('home')}</Link>
         </div>
       </nav>
 

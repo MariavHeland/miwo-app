@@ -571,12 +571,15 @@ html, body {
   letter-spacing: 0.02em;
 }
 
+/* Nav buttons — now styled as text links to match homepage */
 .nav-btn {
   background: transparent;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   font-family: var(--font-sans);
   color: var(--text-dim);
   cursor: pointer;
@@ -585,8 +588,8 @@ html, body {
 }
 
 .nav-btn:hover {
-  border-color: var(--copper-dim);
-  color: var(--text);
+  color: var(--copper);
+  background: var(--surface);
 }
 
 /* Nav links in main page header */
@@ -777,6 +780,103 @@ html, body {
   margin-bottom: 16px;
 }
 
+/* Subpage hero — mirrors homepage globe + right column layout */
+.subpage-hero {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  text-align: left;
+  padding: 0;
+}
+
+.subpage-hero .welcome-globe {
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+}
+
+.subpage-hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+  flex-shrink: 0;
+}
+
+.subpage-hero-right .welcome-label {
+  margin-bottom: 0;
+}
+
+.subpage-hero-right .welcome-title {
+  font-size: 38px;
+  margin-bottom: 4px;
+}
+
+.subpage-hero-right .welcome-sub {
+  font-size: 15px;
+  margin-top: 0;
+}
+
+/* Subpage filter row — compact, inline */
+.subpage-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.subpage-filter {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.subpage-filter:hover {
+  border-color: var(--copper-dim);
+  color: var(--text);
+}
+
+.subpage-filter.active {
+  border-color: var(--copper);
+  color: var(--copper);
+  background: rgba(196, 125, 90, 0.08);
+}
+
+/* Stacked prompts — matches homepage exactly */
+.subpage-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  align-self: stretch;
+}
+
+.subpage-prompt {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 16px;
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.subpage-prompt:hover {
+  border-color: var(--copper-dim);
+  color: var(--text);
+  background: var(--surface);
+}
+
+/* Legacy pill styles (kept for sport feed) */
 .prompt-pills {
   display: flex;
   flex-wrap: wrap;
@@ -800,6 +900,34 @@ html, body {
 .prompt-pill:hover {
   border-color: var(--copper-dim);
   color: var(--text);
+}
+
+/* Subpage mobile */
+@media (max-width: 700px) {
+  .subpage-hero {
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+    align-items: center;
+  }
+  .subpage-hero .welcome-globe {
+    width: 140px;
+    height: 140px;
+  }
+  .subpage-hero-right {
+    align-items: center;
+    max-width: 100%;
+  }
+  .subpage-hero-right .welcome-title {
+    font-size: 32px;
+    text-align: center;
+  }
+  .subpage-hero-right .welcome-sub {
+    text-align: center;
+  }
+  .subpage-prompts {
+    align-items: stretch;
+  }
 }
 
 /* Typing indicator (subpages version) */
