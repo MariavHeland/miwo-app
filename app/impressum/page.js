@@ -218,17 +218,6 @@ export default function ImpressumPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer style={{
-        borderTop: '1px solid var(--rule)',
-        padding: '20px 24px',
-        textAlign: 'center',
-        fontFamily: 'var(--font-sans)',
-        fontSize: '12px',
-        color: 'var(--text-faint)',
-      }}>
-        &copy; {new Date().getFullYear()} Tindra Film GbR &middot; MIWO&thinsp;&trade; &middot; Berlin
-      </footer>
     </>
   );
 }
