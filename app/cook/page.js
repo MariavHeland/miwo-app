@@ -166,6 +166,11 @@ export default function CookPage() {
               Arts
             </button>
           </Link>
+          <Link href="/nature">
+            <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
+              Nature
+            </button>
+          </Link>
           <Link href="/history">
             <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
               History

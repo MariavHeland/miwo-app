@@ -3,7 +3,25 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
-export default function HistoryPage() {
+const NATURE_SYSTEM_PROMPT = `You are MIWO Nature — the environment and climate desk of MIWO, a conversational news intelligence service.
+
+Your role: Cover the greenhouse crisis, biodiversity loss, conservation, renewable energy, oceans, forests, and wildlife with depth, nuance, and global scope. You are not an activist — you are a rigorous environmental journalist who follows the science and holds power accountable.
+
+Editorial principles:
+1. Lead with science. Cite studies, data, IPCC findings. Distinguish between settled science and active research.
+2. Cover the WHOLE planet — not just Western environmentalism. Report on the Amazon, the Congo Basin, the Great Barrier Reef, the Arctic, Southeast Asian deforestation, Pacific island nations, Indian monsoons, African desertification equally.
+3. Name who is responsible. Identify the companies, governments, and policies behind emissions, deforestation, and pollution. Don't hide behind passive voice.
+4. Show solutions alongside problems. Cover renewable energy breakthroughs, rewilding successes, indigenous land management, policy wins.
+5. Humanise the story. Connect climate data to real communities — farmers, fisherfolk, displaced populations, young activists.
+6. Be honest about uncertainty. Climate modelling involves ranges and probabilities. Present them accurately.
+7. Challenge greenwashing. Scrutinise corporate sustainability claims with the same rigour as any other reporting.
+8. Representation matters: at least 50% of highlighted scientists, activists, and leaders should not be from Western nations. Elevate voices from the Global South, indigenous communities, and underrepresented regions.
+
+Always use web_search to find the latest data. Environmental news changes rapidly.
+
+Format: clear paragraphs, bold key findings and names. Include source attribution. Use metric units.`;
+
+export default function NaturePage() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,10 +35,6 @@ export default function HistoryPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const today = new Date().toLocaleDateString('en-GB', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-  });
 
   const sendMessage = async (text) => {
     const userMessage = text || input;
@@ -37,8 +51,9 @@ export default function HistoryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: newMessages,
-          section: 'history',
+          section: 'nature',
           filter: activeFilter,
+          systemOverride: NATURE_SYSTEM_PROMPT,
         }),
       });
 
@@ -62,22 +77,21 @@ export default function HistoryPage() {
   };
 
   const filters = [
-    { id: 'all', label: 'All History' },
-    { id: 'ancient', label: 'Ancient' },
-    { id: 'medieval', label: 'Medieval' },
-    { id: 'modern', label: 'Modern' },
-    { id: 'onthisday', label: 'On This Day' },
-    { id: 'myths', label: 'Myths & Legends' },
+    { id: 'all', label: 'All Nature' },
+    { id: 'climate', label: 'Climate' },
+    { id: 'biodiversity', label: 'Biodiversity' },
+    { id: 'oceans', label: 'Oceans' },
+    { id: 'forests', label: 'Forests' },
+    { id: 'energy', label: 'Energy' },
+    { id: 'wildlife', label: 'Wildlife' },
   ];
 
   const suggestedPrompts = [
-    'What happened on this day in history?',
-    'Tell me a fascinating story from ancient Rome',
-    'Explain a turning point that shaped the modern world',
-    'What\u2019s a common historical myth that\u2019s wrong?',
+    'What\u2019s happening with the climate this week?',
+    'Latest on deforestation and rewilding',
+    'Ocean temperatures and marine biodiversity',
+    'Renewable energy breakthroughs in 2026',
   ];
-
-  const cowardPrompt = `Today's "Coward We Should Remember." History celebrates heroes endlessly. But cowardice — acts of moral failure, betrayal, capitulation, or craven self-interest by people in positions of power — shaped the world just as much. Tell me about one historical figure whose cowardice had significant consequences. Not a villain or a tyrant (they had conviction, however twisted). A coward: someone who knew what was right, had the power to act, and chose not to — or who betrayed others to save themselves. Give me their name, what they did (or failed to do), and why it mattered. Be specific, be fair, and don't soften it. End with a single sentence on what we should learn from their failure. Pick someone different each day — draw from any era, any civilisation. At least half the time, choose someone who is not a white man. Cowardice is universal — make sure your selections reflect that.`;
 
   return (
     <>
@@ -88,7 +102,7 @@ export default function HistoryPage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--history)' }}>History</div>
+          <div className="nav-section" style={{ color: 'var(--nature)' }}>Nature</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Link href="/sports">
@@ -96,14 +110,14 @@ export default function HistoryPage() {
               Sport
             </button>
           </Link>
+          <Link href="/history">
+            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
+              History
+            </button>
+          </Link>
           <Link href="/arts">
             <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
               Arts
-            </button>
-          </Link>
-          <Link href="/nature">
-            <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              Nature
             </button>
           </Link>
           <Link href="/cook">
@@ -130,7 +144,7 @@ export default function HistoryPage() {
                 onClick={() => setActiveFilter(f.id)}
                 style={
                   activeFilter === f.id
-                    ? { background: 'rgba(160, 136, 96, 0.1)', borderColor: 'var(--history)', color: 'var(--history)' }
+                    ? { background: 'rgba(74, 139, 106, 0.12)', borderColor: 'var(--nature)', color: 'var(--nature)' }
                     : {}
                 }
               >
@@ -145,62 +159,24 @@ export default function HistoryPage() {
       <div className="chat-container" style={messages.length === 0 ? { paddingTop: '20px' } : {}}>
         {messages.length === 0 ? (
           <div className="welcome">
-            <div className="welcome-label" style={{ color: 'var(--history)' }}>
-              History
+            <div className="welcome-label" style={{ color: 'var(--nature)' }}>
+              Nature
             </div>
             <h1 className="welcome-title">
-              The past is<br />never dead.
+              The planet doesn&rsquo;t<br />spin in silence.
             </h1>
             <p className="welcome-sub">
-              From ancient civilisations to yesterday&rsquo;s turning points &mdash;
-              the stories that shaped the world, told fresh each day.
+              Climate, biodiversity, oceans, forests, energy &mdash;
+              the environmental stories that shape everything,
+              told with science and without greenwash.
             </p>
-            {/* Daily feature: Cowards We Should Remember */}
-            <div
-              className="coward-card"
-              onClick={() => sendMessage(cowardPrompt)}
-              style={{
-                background: 'var(--surface)',
-                border: '1px solid rgba(160, 136, 96, 0.25)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '24px 28px',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                textAlign: 'left',
-                maxWidth: '440px',
-                marginTop: '28px',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--history)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(160, 136, 96, 0.25)'; }}
-            >
-              <div style={{
-                fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600,
-                letterSpacing: '0.1em', textTransform: 'uppercase',
-                color: 'var(--history)', marginBottom: '8px',
-              }}>
-                Daily Feature
-              </div>
-              <div style={{
-                fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 600,
-                color: 'var(--text)', lineHeight: 1.3, marginBottom: '8px',
-              }}>
-                Cowards We Should Remember
-              </div>
-              <div style={{
-                fontFamily: 'var(--font-serif)', fontSize: '14px',
-                color: 'var(--text-muted)', lineHeight: 1.6,
-              }}>
-                History is full of heroes. It&rsquo;s also full of people who knew what was right,
-                had the power to act, and chose not to. Today&rsquo;s story &rarr;
-              </div>
-            </div>
-
             <div className="prompt-pills">
               {suggestedPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   className="prompt-pill"
                   onClick={() => sendMessage(prompt)}
+                  style={{ '--hover-bg': 'rgba(74, 139, 106, 0.08)' }}
                 >
                   {prompt}
                 </button>
@@ -212,14 +188,14 @@ export default function HistoryPage() {
             {messages.map((msg, i) => (
               <div key={i} className={`message message-${msg.role}`}>
                 <div
-                  className={`message-label`}
+                  className={`message-label ${msg.role === 'assistant' ? 'miwo' : ''}`}
                   style={
                     msg.role === 'user'
                       ? { textAlign: 'right', color: 'var(--text-faint)' }
-                      : { color: 'var(--history)' }
+                      : { color: 'var(--nature)' }
                   }
                 >
-                  {msg.role === 'assistant' ? 'MIWO HISTORY' : 'You'}
+                  {msg.role === 'assistant' ? 'MIWO NATURE' : 'You'}
                 </div>
                 <div className="message-bubble">
                   {msg.role === 'assistant'
@@ -230,7 +206,7 @@ export default function HistoryPage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label" style={{ color: 'var(--history)' }}>MIWO HISTORY</div>
+                <div className="message-label" style={{ color: 'var(--nature)' }}>MIWO NATURE</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
@@ -246,7 +222,7 @@ export default function HistoryPage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder="Ask about any era, event, or figure in history..."
+            placeholder="Ask about climate, biodiversity, energy, nature..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -256,7 +232,7 @@ export default function HistoryPage() {
             className="chat-send"
             onClick={() => sendMessage()}
             disabled={isLoading || !input.trim()}
-            style={{ background: 'var(--history)' }}
+            style={{ background: 'var(--nature)' }}
           >
             &rarr;
           </button>

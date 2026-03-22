@@ -305,6 +305,7 @@ export default function Home() {
           <Link href="/sports" className="nav-link">Sport</Link>
           <Link href="/history" className="nav-link">History</Link>
           <Link href="/arts" className="nav-link">Arts</Link>
+          <Link href="/nature" className="nav-link">Nature</Link>
           <Link href="/cook" className="nav-link">Cook</Link>
           <button
             className={`header-btn auto-read-btn ${autoRead ? 'active' : ''}`}

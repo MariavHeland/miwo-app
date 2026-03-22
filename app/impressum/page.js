@@ -30,6 +30,11 @@ export default function ImpressumPage() {
               Arts
             </button>
           </Link>
+          <Link href="/nature">
+            <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
+              Nature
+            </button>
+          </Link>
           <Link href="/cook">
             <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
               Cook
