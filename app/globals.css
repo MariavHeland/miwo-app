@@ -409,8 +409,11 @@ html, body {
 .welcome {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  gap: 12px;
   padding: 0 24px 80px;
 }
 
@@ -418,6 +421,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 48px;
+  text-align: left;
 }
 
 .welcome-globe {
