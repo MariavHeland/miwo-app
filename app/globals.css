@@ -415,25 +415,24 @@ html, body {
 .welcome-hero {
   display: flex;
   align-items: center;
-  gap: 56px;
-  max-width: 680px;
-  width: 100%;
+  gap: 48px;
 }
 
 .welcome-globe {
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   flex-shrink: 0;
-  mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
-  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+  mask-image: radial-gradient(circle at center, black 35%, transparent 50%);
+  -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 50%);
 }
 
 .welcome-right {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-width: 300px;
+  width: 280px;
+  flex-shrink: 0;
 }
 
 .welcome-brand-img {
