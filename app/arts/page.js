@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useLang, LangPicker } from '../i18n';
 
 export default function ArtsPage() {
+  const { t } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +49,7 @@ export default function ArtsPage() {
     } catch (err) {
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: 'Something went wrong. Try again in a moment.' },
+        { role: 'assistant', content: t('errorMessage') },
       ]);
     } finally {
       setIsLoading(false);
@@ -86,32 +88,33 @@ export default function ArtsPage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--art)' }}>Arts &amp; Culture</div>
+          <div className="nav-section" style={{ color: 'var(--art)' }}>{t('artsLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <LangPicker />
           <Link href="/sports">
             <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              Sport
+              {t('sport')}
             </button>
           </Link>
           <Link href="/history">
             <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              History
+              {t('history')}
             </button>
           </Link>
           <Link href="/nature">
             <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              Nature
+              {t('nature')}
             </button>
           </Link>
           <Link href="/cook">
             <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
-              Cook
+              {t('cook')}
             </button>
           </Link>
           <Link href="/">
             <button className="nav-btn">
-              Home
+              {t('home')}
             </button>
           </Link>
         </div>
@@ -144,14 +147,13 @@ export default function ArtsPage() {
         {messages.length === 0 ? (
           <div className="welcome">
             <div className="welcome-label" style={{ color: 'var(--art)' }}>
-              Arts &amp; Culture
+              {t('artsLabel')}
             </div>
             <h1 className="welcome-title">
-              The canvas of<br />today&rsquo;s world.
+              {t('artsTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
             </h1>
             <p className="welcome-sub">
-              Visual arts, music, theatre, film and cultural news &mdash;
-              curated and explained, from gallery openings to global movements.
+              {t('artsSub')}
             </p>
             <div className="prompt-pills">
               {suggestedPrompts.map((prompt) => (
@@ -178,7 +180,7 @@ export default function ArtsPage() {
                       : { color: 'var(--art)' }
                   }
                 >
-                  {msg.role === 'assistant' ? 'MIWO ARTS' : 'You'}
+                  {msg.role === 'assistant' ? `MIWO ${t('artsLabel').toUpperCase()}` : t('you')}
                 </div>
                 <div className="message-bubble">
                   {msg.role === 'assistant'
@@ -189,7 +191,7 @@ export default function ArtsPage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label" style={{ color: 'var(--art)' }}>MIWO ARTS</div>
+                <div className="message-label" style={{ color: 'var(--art)' }}>MIWO {t('artsLabel').toUpperCase()}</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
@@ -205,7 +207,7 @@ export default function ArtsPage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder="Ask about arts, music, theatre, culture..."
+            placeholder={t('artsPlaceholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

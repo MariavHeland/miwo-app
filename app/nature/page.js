@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useLang, LangPicker } from '../i18n';
 
 const NATURE_SYSTEM_PROMPT = `You are MIWO Nature — the environment and climate desk of MIWO, a conversational news intelligence service.
 
@@ -22,6 +23,7 @@ Always use web_search to find the latest data. Environmental news changes rapidl
 Format: clear paragraphs, bold key findings and names. Include source attribution. Use metric units.`;
 
 export default function NaturePage() {
+  const { t } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +64,7 @@ export default function NaturePage() {
     } catch (err) {
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: 'Something went wrong. Try again in a moment.' },
+        { role: 'assistant', content: t('errorMessage') },
       ]);
     } finally {
       setIsLoading(false);
@@ -102,32 +104,33 @@ export default function NaturePage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--nature)' }}>Nature</div>
+          <div className="nav-section" style={{ color: 'var(--nature)' }}>{t('natureLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <LangPicker />
           <Link href="/sports">
             <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              Sport
+              {t('sport')}
             </button>
           </Link>
           <Link href="/history">
             <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              History
+              {t('history')}
             </button>
           </Link>
           <Link href="/arts">
             <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              Arts
+              {t('arts')}
             </button>
           </Link>
           <Link href="/cook">
             <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
-              Cook
+              {t('cook')}
             </button>
           </Link>
           <Link href="/">
             <button className="nav-btn">
-              Home
+              {t('home')}
             </button>
           </Link>
         </div>
@@ -160,15 +163,13 @@ export default function NaturePage() {
         {messages.length === 0 ? (
           <div className="welcome">
             <div className="welcome-label" style={{ color: 'var(--nature)' }}>
-              Nature
+              {t('natureLabel')}
             </div>
             <h1 className="welcome-title">
-              The planet doesn&rsquo;t<br />spin in silence.
+              {t('natureTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
             </h1>
             <p className="welcome-sub">
-              Climate, biodiversity, oceans, forests, energy &mdash;
-              the environmental stories that shape everything,
-              told with science and without greenwash.
+              {t('natureSub')}
             </p>
             <div className="prompt-pills">
               {suggestedPrompts.map((prompt) => (
@@ -195,7 +196,7 @@ export default function NaturePage() {
                       : { color: 'var(--nature)' }
                   }
                 >
-                  {msg.role === 'assistant' ? 'MIWO NATURE' : 'You'}
+                  {msg.role === 'assistant' ? `MIWO ${t('natureLabel').toUpperCase()}` : t('you')}
                 </div>
                 <div className="message-bubble">
                   {msg.role === 'assistant'
@@ -206,7 +207,7 @@ export default function NaturePage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label" style={{ color: 'var(--nature)' }}>MIWO NATURE</div>
+                <div className="message-label" style={{ color: 'var(--nature)' }}>{`MIWO ${t('natureLabel').toUpperCase()}`}</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
@@ -222,7 +223,7 @@ export default function NaturePage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder="Ask about climate, biodiversity, energy, nature..."
+            placeholder={t('naturePlaceholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

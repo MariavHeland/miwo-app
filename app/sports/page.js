@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useLang, LangPicker } from '../i18n';
 
 /* ═══════════════════════════════════════════════
    SPORTS EDITORIAL PERSONA
@@ -152,6 +153,7 @@ const SPORT_FILTERS = [
    COMPONENT
    ═══════════════════════════════════════════════ */
 export default function SportsPage() {
+  const { t } = useLang();
   const [view, setView] = useState('feed');
   const [activeSport, setActiveSport] = useState('all');
   const [expandedCards, setExpandedCards] = useState(new Set());
@@ -197,7 +199,7 @@ export default function SportsPage() {
     } catch (err) {
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: 'Something went wrong. Try again in a moment.' },
+        { role: 'assistant', content: t('errorMessage') },
       ]);
     } finally {
       setIsLoading(false);
@@ -229,7 +231,7 @@ export default function SportsPage() {
   };
 
   const askAbout = (headline) => {
-    sendMessage('Tell me more about: ' + headline);
+    sendMessage(t('askMiwoAbout') + ' ' + headline);
   };
 
   /* ── Filtering ── */
@@ -261,12 +263,12 @@ export default function SportsPage() {
                     <div className="story-detail" style={{ display: 'block' }}>{story.detail}</div>
                     <div className="story-aside" style={{ display: 'block' }}>{story.aside}</div>
                     <button className="story-ask" onClick={(e) => { e.stopPropagation(); askAbout(story.headline); }}>
-                      Ask MIWO about this &rarr;
+                      {t('askMiwoAbout')} &rarr;
                     </button>
                   </>
                 ) : (
                   <div style={{ fontSize: '13px', color: sportColor(story.sport), marginTop: '10px' }}>
-                    Read more &darr;
+                    {t('readMore')} &darr;
                   </div>
                 )}
               </div>
@@ -284,7 +286,7 @@ export default function SportsPage() {
         <div className="nav-left">
           <Link href="/"><div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div></Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--sport)' }}>Sport</div>
+          <div className="nav-section" style={{ color: 'var(--sport)' }}>{t('sportLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           {view === 'chat' ? (
@@ -293,7 +295,7 @@ export default function SportsPage() {
               style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}
               onClick={() => setView('feed')}
             >
-              Stories
+              {t('stories')}
             </button>
           ) : (
             <button
@@ -301,25 +303,26 @@ export default function SportsPage() {
               style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}
               onClick={() => setView('chat')}
             >
-              Ask MIWO
+              {t('askMiwo')}
             </button>
           )}
           <Link href="/history">
-            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>History</button>
+            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>{t('history')}</button>
           </Link>
           <Link href="/arts">
-            <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>Arts</button>
+            <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>{t('arts')}</button>
           </Link>
           <Link href="/nature">
             <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              Nature
+              {t('nature')}
             </button>
           </Link>
           <Link href="/cook">
-            <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>Cook</button>
+            <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>{t('cook')}</button>
           </Link>
+          <LangPicker />
           <Link href="/">
-            <button className="nav-btn">Home</button>
+            <button className="nav-btn">{t('home')}</button>
           </Link>
         </div>
       </nav>
@@ -340,12 +343,11 @@ export default function SportsPage() {
               pointerEvents: 'none',
             }} />
             <div className="welcome-label" style={{ color: 'var(--sport)' }}>
-              Sport &middot; {today}
+              {t('sportLabel')} &middot; {today}
             </div>
-            <h1 className="welcome-title">The week in sport</h1>
+            <h1 className="welcome-title">{t('sportTitle')}</h1>
             <p className="welcome-sub">
-              The scores, the stories, and a few sports you didn&rsquo;t know existed.
-              Ask me anything &mdash; I&rsquo;ll go as deep as you want.
+              {t('sportSub')}
             </p>
           </section>
 
@@ -406,8 +408,8 @@ export default function SportsPage() {
               fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
               borderTop: '1px solid var(--rule)',
             }}>
-              MIWO Sport &middot; Sources include Reuters, AP, ESPN, BBC Sport, The Athletic, ICC, NFL, NHL, ATP, WTA, PGA Tour, F1, World Rugby &middot;{' '}
-              <Link href="/" style={{ color: 'var(--copper-dim)' }}>Back to briefing</Link>
+              MIWO {t('sportLabel').toUpperCase()} &middot; Sources include Reuters, AP, ESPN, BBC Sport, The Athletic, ICC, NFL, NHL, ATP, WTA, PGA Tour, F1, World Rugby &middot;{' '}
+              <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
             </div>
           </div>
         </>
@@ -421,14 +423,13 @@ export default function SportsPage() {
           {messages.length === 0 ? (
             <div className="welcome">
               <div className="welcome-label" style={{ color: 'var(--sport)' }}>
-                MIWO Sport
+                MIWO {t('sportLabel')}
               </div>
               <h1 className="welcome-title">
-                The sports desk is open.
+                {t('sportTitle')}
               </h1>
               <p className="welcome-sub">
-                Every match, every league, every corner of sport &mdash; from Champions League
-                quarter-finals to Kazakh buzkashi. Ask anything.
+                {t('sportSub')}
               </p>
               <div className="prompt-pills">
                 {[
@@ -463,7 +464,7 @@ export default function SportsPage() {
                     className={'message-label' + (msg.role === 'assistant' ? ' sport' : '')}
                     style={msg.role === 'user' ? { textAlign: 'right', color: 'var(--text-faint)' } : {}}
                   >
-                    {msg.role === 'assistant' ? 'MIWO SPORT' : 'You'}
+                    {msg.role === 'assistant' ? `MIWO ${t('sportLabel').toUpperCase()}` : t('you')}
                   </div>
                   <div className="message-bubble">
                     {msg.role === 'assistant'
@@ -474,7 +475,7 @@ export default function SportsPage() {
               ))}
               {isLoading && (
                 <div className="message message-assistant">
-                  <div className="message-label sport">MIWO SPORT</div>
+                  <div className="message-label sport">MIWO {t('sportLabel').toUpperCase()}</div>
                   <div className="typing-indicator">
                     <span /><span /><span />
                   </div>
@@ -491,7 +492,7 @@ export default function SportsPage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder="Ask me about any sport, any team, any match..."
+            placeholder={t('sportPlaceholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

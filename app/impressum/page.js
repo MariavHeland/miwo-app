@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { useLang, LangPicker } from '../i18n';
 
 export default function ImpressumPage() {
+  const { t } = useLang();
   return (
     <>
       {/* Navigation */}
@@ -12,37 +14,38 @@ export default function ImpressumPage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--copper)' }}>Impressum</div>
+          <div className="nav-section" style={{ color: 'var(--copper)' }}>{t('impressum')}</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Link href="/sports">
             <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              Sport
+              {t('sport')}
             </button>
           </Link>
           <Link href="/history">
             <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              History
+              {t('history')}
             </button>
           </Link>
           <Link href="/arts">
             <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              Arts
+              {t('arts')}
             </button>
           </Link>
           <Link href="/nature">
             <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              Nature
+              {t('nature')}
             </button>
           </Link>
           <Link href="/cook">
             <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
-              Cook
+              {t('cook')}
             </button>
           </Link>
+          <LangPicker />
           <Link href="/">
             <button className="nav-btn">
-              Home
+              {t('home')}
             </button>
           </Link>
         </div>

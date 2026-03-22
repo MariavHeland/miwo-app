@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useLang, LangPicker } from '../i18n';
 
 export default function HistoryPage() {
+  const { t } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +49,7 @@ export default function HistoryPage() {
     } catch (err) {
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: 'Something went wrong. Try again in a moment.' },
+        { role: 'assistant', content: t('errorMessage') },
       ]);
     } finally {
       setIsLoading(false);
@@ -88,32 +90,33 @@ export default function HistoryPage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--history)' }}>History</div>
+          <div className="nav-section" style={{ color: 'var(--history)' }}>{t('historyLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <LangPicker />
           <Link href="/sports">
             <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              Sport
+              {t('sport')}
             </button>
           </Link>
           <Link href="/arts">
             <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              Arts
+              {t('arts')}
             </button>
           </Link>
           <Link href="/nature">
             <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              Nature
+              {t('nature')}
             </button>
           </Link>
           <Link href="/cook">
             <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
-              Cook
+              {t('cook')}
             </button>
           </Link>
           <Link href="/">
             <button className="nav-btn">
-              Home
+              {t('home')}
             </button>
           </Link>
         </div>
@@ -146,14 +149,13 @@ export default function HistoryPage() {
         {messages.length === 0 ? (
           <div className="welcome">
             <div className="welcome-label" style={{ color: 'var(--history)' }}>
-              History
+              {t('historyLabel')}
             </div>
             <h1 className="welcome-title">
-              The past is<br />never dead.
+              {t('historyTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
             </h1>
             <p className="welcome-sub">
-              From ancient civilisations to yesterday&rsquo;s turning points &mdash;
-              the stories that shaped the world, told fresh each day.
+              {t('historySub')}
             </p>
             {/* Daily feature: Cowards We Should Remember */}
             <div
@@ -178,20 +180,19 @@ export default function HistoryPage() {
                 letterSpacing: '0.1em', textTransform: 'uppercase',
                 color: 'var(--history)', marginBottom: '8px',
               }}>
-                Daily Feature
+                {t('dailyFeature')}
               </div>
               <div style={{
                 fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 600,
                 color: 'var(--text)', lineHeight: 1.3, marginBottom: '8px',
               }}>
-                Cowards We Should Remember
+                {t('cowardsTitle')}
               </div>
               <div style={{
                 fontFamily: 'var(--font-serif)', fontSize: '14px',
                 color: 'var(--text-muted)', lineHeight: 1.6,
               }}>
-                History is full of heroes. It&rsquo;s also full of people who knew what was right,
-                had the power to act, and chose not to. Today&rsquo;s story &rarr;
+                {t('cowardsSub')} →
               </div>
             </div>
 
@@ -219,7 +220,7 @@ export default function HistoryPage() {
                       : { color: 'var(--history)' }
                   }
                 >
-                  {msg.role === 'assistant' ? 'MIWO HISTORY' : 'You'}
+                  {msg.role === 'assistant' ? `MIWO ${t('historyLabel').toUpperCase()}` : t('you')}
                 </div>
                 <div className="message-bubble">
                   {msg.role === 'assistant'
@@ -230,7 +231,7 @@ export default function HistoryPage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label" style={{ color: 'var(--history)' }}>MIWO HISTORY</div>
+                <div className="message-label" style={{ color: 'var(--history)' }}>MIWO {t('historyLabel').toUpperCase()}</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
@@ -246,7 +247,7 @@ export default function HistoryPage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder="Ask about any era, event, or figure in history..."
+            placeholder={t('historyPlaceholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

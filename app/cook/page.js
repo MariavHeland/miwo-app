@@ -2,9 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useLang, LangPicker } from '../i18n';
 import './cook.css';
 
 export default function CookPage() {
+  const { t } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +54,7 @@ export default function CookPage() {
     } catch (err) {
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: 'Something went wrong. Try again in a moment.' },
+        { role: 'assistant', content: t('errorMessage') },
       ]);
     } finally {
       setIsLoading(false);
@@ -153,31 +155,32 @@ export default function CookPage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--cooking)' }}>Cook</div>
+          <div className="nav-section" style={{ color: 'var(--cooking)' }}>{t('cookLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <LangPicker />
           <Link href="/sports">
             <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              Sport
+              {t('sport')}
             </button>
           </Link>
           <Link href="/arts">
             <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              Arts
+              {t('arts')}
             </button>
           </Link>
           <Link href="/nature">
             <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              Nature
+              {t('nature')}
             </button>
           </Link>
           <Link href="/history">
             <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              History
+              {t('history')}
             </button>
           </Link>
           <Link href="/">
-            <button className="nav-btn">Home</button>
+            <button className="nav-btn">{t('home')}</button>
           </Link>
         </div>
       </nav>
@@ -199,7 +202,7 @@ export default function CookPage() {
               className="cook-pantry-btn"
               onClick={() => setPantryOpen(!pantryOpen)}
             >
-              What do you have?
+              {t('whatDoYouHave')}
             </button>
           </div>
 
@@ -208,17 +211,17 @@ export default function CookPage() {
             <div className="cook-pantry">
               <div className="cook-pantry-inner">
                 <div className="cook-pantry-header">
-                  <h3 className="cook-pantry-title">What&rsquo;s in your kitchen?</h3>
+                  <h3 className="cook-pantry-title">{t('pantryTitle')}</h3>
                   <button
                     className="cook-pantry-find"
                     onClick={findRecipesFromPantry}
                     disabled={pantryIngredients.length === 0}
                   >
-                    Find Recipes
+                    {t('pantryFind')}
                   </button>
                 </div>
                 <p className="cook-pantry-desc">
-                  Type your ingredients separated by commas, or tap the chips below. We&rsquo;ll suggest what you can cook right now.
+                  {t('pantrySub')}
                 </p>
                 <div className="cook-pantry-input-row">
                   <input
@@ -226,9 +229,9 @@ export default function CookPage() {
                     value={pantryInput}
                     onChange={(e) => setPantryInput(e.target.value)}
                     onKeyDown={pantryHandleKey}
-                    placeholder="e.g. chicken, potatoes, garlic, lemon"
+                    placeholder={t('cookPlaceholder')}
                   />
-                  <button className="cook-pantry-add" onClick={addPantryItem}>+ Add</button>
+                  <button className="cook-pantry-add" onClick={addPantryItem}>{t('pantryAdd')}</button>
                 </div>
                 {pantryIngredients.length > 0 && (
                   <div className="cook-pantry-tags">
@@ -258,14 +261,13 @@ export default function CookPage() {
         {messages.length === 0 ? (
           <div className="welcome">
             <div className="welcome-label" style={{ color: 'var(--cooking)' }}>
-              Cook
+              {t('cookLabel')}
             </div>
             <h1 className="welcome-title">
-              Every dish<br />has a story.
+              {t('cookTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
             </h1>
             <p className="welcome-sub">
-              Recipes, techniques, ingredients, and the culture behind what we eat &mdash;
-              from quick weeknight meals to the deep traditions of world cuisine.
+              {t('cookSub')}
             </p>
             <div className="prompt-pills">
               {suggestedPrompts.map((prompt) => (
@@ -291,7 +293,7 @@ export default function CookPage() {
                       : {}
                   }
                 >
-                  {msg.role === 'assistant' ? 'MIWO COOK' : 'You'}
+                  {msg.role === 'assistant' ? `MIWO ${t('cookLabel').toUpperCase()}` : t('you')}
                 </div>
                 <div className="message-bubble">
                   {msg.role === 'assistant'
@@ -302,7 +304,7 @@ export default function CookPage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label cooking">MIWO COOK</div>
+                <div className="message-label cooking">{`MIWO ${t('cookLabel').toUpperCase()}`}</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
