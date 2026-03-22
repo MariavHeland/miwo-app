@@ -282,7 +282,7 @@ export default function SportsPage() {
       {/* ── Navigation ── */}
       <nav className="nav">
         <div className="nav-left">
-          <Link href="/"><div className="nav-brand">MIWO</div></Link>
+          <Link href="/"><div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div></Link>
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--sport)' }}>Sport</div>
         </div>

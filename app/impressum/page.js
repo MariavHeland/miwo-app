@@ -9,7 +9,7 @@ export default function ImpressumPage() {
       <nav className="nav">
         <div className="nav-left">
           <Link href="/">
-            <div className="nav-brand">MIWO</div>
+            <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--copper)' }}>Impressum</div>
@@ -125,15 +125,8 @@ export default function ImpressumPage() {
         </div>
 
         {/* MIWO description */}
-        <div style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: '28px',
-          fontWeight: 600,
-          color: 'var(--text)',
-          marginBottom: '16px',
-          lineHeight: 1.3,
-        }}>
-          MIWO&thinsp;&trade;
+        <div style={{ marginBottom: '16px' }}>
+          <img src="/miwo-brand.png" alt="MIWO" style={{ width: '160px', height: 'auto', display: 'block' }} />
         </div>
         <p style={{
           fontFamily: 'var(--font-serif)',

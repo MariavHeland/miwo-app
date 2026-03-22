@@ -74,11 +74,9 @@ html, body {
 }
 
 .header-logo {
-  height: 28px;
+  height: 22px;
   width: auto;
   display: block;
-  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 
 .logo {
@@ -428,6 +426,8 @@ html, body {
   object-fit: contain;
   flex-shrink: 0;
   filter: drop-shadow(0 4px 60px rgba(196, 125, 90, 0.12));
+  mask-image: radial-gradient(circle at center, black 55%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 55%, transparent 80%);
 }
 
 .welcome-right {
@@ -438,17 +438,12 @@ html, body {
   min-width: 0;
 }
 
-.welcome-brand {
-  font-family: 'Inter', sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  background: linear-gradient(155deg, #E0A87A 0%, #C47D5A 35%, #A0654A 65%, #7A4F38 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
+.welcome-brand-img {
+  width: 260px;
+  height: auto;
+  display: block;
+  mask-image: linear-gradient(to right, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 10%, black 90%, transparent 100%);
 }
 
 .welcome-sub {
@@ -505,9 +500,8 @@ html, body {
     width: 160px;
     height: 160px;
   }
-  .welcome-brand {
-    font-size: 32px;
-    letter-spacing: 0.18em;
+  .welcome-brand-img {
+    width: 180px;
   }
   .welcome-right {
     align-items: center;
@@ -552,13 +546,16 @@ html, body {
 }
 
 .nav-brand {
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--copper);
-  text-transform: uppercase;
+  display: block;
+  height: 22px;
+  width: auto;
   cursor: pointer;
+}
+
+.nav-brand img {
+  height: 22px;
+  width: auto;
+  display: block;
 }
 
 .nav-div {

@@ -83,7 +83,7 @@ export default function ArtsPage() {
       <nav className="nav">
         <div className="nav-left">
           <Link href="/">
-            <div className="nav-brand">MIWO</div>
+            <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--art)' }}>Arts &amp; Culture</div>

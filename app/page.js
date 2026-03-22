@@ -300,7 +300,7 @@ export default function Home() {
   return (
     <div className="app">
       <header className="header">
-        <img src="/miwo-logo.jpeg" alt="MIWO" className="header-logo" />
+        <img src="/miwo-nav.png" alt="MIWO" className="header-logo" />
         <div className="header-controls">
           <Link href="/sports" className="nav-link">Sport</Link>
           <Link href="/history" className="nav-link">History</Link>
@@ -364,7 +364,7 @@ export default function Home() {
           <div className="welcome-hero">
             <img src={globeSrc} alt="" className="welcome-globe" />
             <div className="welcome-right">
-              <div className="welcome-brand">MIWO</div>
+              <img src="/miwo-brand.png" alt="MIWO" className="welcome-brand-img" />
               <p className="welcome-sub">
                 Your trusted news editor. Ask me what happened today,
                 go deeper on any story, or verify a claim.
