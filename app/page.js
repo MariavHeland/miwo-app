@@ -88,6 +88,7 @@ export default function Home() {
   const [autoRead, setAutoRead] = useState(false)
   const [voiceName, setVoiceName] = useState('nova') // 'nova' or 'atlas'
   const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing', 'quota'
+  const [speakingParaIndex, setSpeakingParaIndex] = useState(-1) // which paragraph is currently being read aloud
   const [globeSrc, setGlobeSrc] = useState('/globe.png') // fallback
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
   const messagesEndRef = useRef(null)
@@ -200,12 +201,13 @@ export default function Home() {
     if (ttsPlayingRef.current || ttsCancelledRef.current) return
     if (ttsQueueRef.current.length === 0) {
       setSpeakingIndex(-1)
+      setSpeakingParaIndex(-1)
       setTtsStatus('')
       return
     }
 
     ttsPlayingRef.current = true
-    const { url, resolve } = ttsQueueRef.current.shift()
+    const { url, resolve, paraIndex } = ttsQueueRef.current.shift()
 
     if (!url) {
       ttsPlayingRef.current = false
@@ -217,7 +219,10 @@ export default function Home() {
     const audio = new Audio(url)
     audioRef.current = audio
 
-    audio.onplay = () => setTtsStatus('playing')
+    audio.onplay = () => {
+      setTtsStatus('playing')
+      if (paraIndex >= 0) setSpeakingParaIndex(paraIndex)
+    }
     audio.onended = () => {
       URL.revokeObjectURL(url)
       ttsPlayingRef.current = false
@@ -237,10 +242,15 @@ export default function Home() {
     }
   }, [])
 
+  // Track paragraph counter for TTS queue
+  const ttsParaCounterRef = useRef(0)
+
   // Add a paragraph to the TTS queue and start playing if idle
-  const queueParagraph = useCallback(async (text, msgIndex) => {
+  const queueParagraph = useCallback(async (text, msgIndex, paraIndex) => {
     setSpeakingIndex(msgIndex)
     setTtsStatus('generating')
+
+    const pIdx = paraIndex >= 0 ? paraIndex : ttsParaCounterRef.current++
 
     const url = await generateAudio(text)
     if (ttsCancelledRef.current) {
@@ -248,7 +258,7 @@ export default function Home() {
       return
     }
 
-    ttsQueueRef.current.push({ url })
+    ttsQueueRef.current.push({ url, paraIndex: pIdx })
     if (!ttsPlayingRef.current) playNextInQueue()
   }, [generateAudio, playNextInQueue])
 
@@ -257,20 +267,22 @@ export default function Home() {
     ttsCancelledRef.current = false
     ttsQueueRef.current = []
     ttsPlayingRef.current = false
+    ttsParaCounterRef.current = 0
 
     setSpeakingIndex(index)
+    setSpeakingParaIndex(0)
     setTtsStatus('generating')
 
     // Split into paragraphs and queue them
     const paragraphs = text.split(/\n\n+/).filter(p => p.trim())
-    for (const para of paragraphs) {
+    for (let pi = 0; pi < paragraphs.length; pi++) {
       if (ttsCancelledRef.current) break
-      const url = await generateAudio(para)
+      const url = await generateAudio(paragraphs[pi])
       if (ttsCancelledRef.current) {
         if (url) URL.revokeObjectURL(url)
         break
       }
-      ttsQueueRef.current.push({ url })
+      ttsQueueRef.current.push({ url, paraIndex: pi })
       if (!ttsPlayingRef.current) playNextInQueue()
     }
   }, [generateAudio, playNextInQueue])
@@ -280,11 +292,13 @@ export default function Home() {
     ttsCancelledRef.current = true
     ttsQueueRef.current = []
     ttsPlayingRef.current = false
+    ttsParaCounterRef.current = 0
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
     }
     setSpeakingIndex(-1)
+    setSpeakingParaIndex(-1)
     setTtsStatus('')
   }, [])
 
@@ -333,10 +347,12 @@ export default function Home() {
         let spokenUpTo = 0 // track how much text we've sent to TTS
 
         // Reset TTS queue for auto-read during streaming
+        let paraCounter = 0
         if (autoRead) {
           ttsCancelledRef.current = false
           ttsQueueRef.current = []
           ttsPlayingRef.current = false
+          ttsParaCounterRef.current = 0
         }
 
         setMessages([...newMessages, { role: 'assistant', content: '' }])
@@ -358,7 +374,8 @@ export default function Home() {
             if (completeText.length > spokenUpTo) {
               const newText = fullText.substring(spokenUpTo, completeText.length)
               spokenUpTo = completeText.length
-              queueParagraph(newText, newMessages.length)
+              queueParagraph(newText, newMessages.length, paraCounter)
+              paraCounter++
             }
           }
         }
@@ -367,7 +384,7 @@ export default function Home() {
         if (autoRead && fullText.length > spokenUpTo) {
           const remaining = fullText.substring(spokenUpTo)
           if (remaining.trim()) {
-            queueParagraph(remaining, newMessages.length)
+            queueParagraph(remaining, newMessages.length, paraCounter)
           }
         }
         return
@@ -412,13 +429,20 @@ export default function Home() {
     sendMessage(text)
   }
 
-  const formatMessage = (text) => {
+  const formatMessage = (text, isSpeakingMsg) => {
     return text.split('\n\n').map((para, i) => {
       const formatted = para.replace(
         /\*\*(.*?)\*\*/g,
         '<strong>$1</strong>'
       )
-      return <p key={i} dangerouslySetInnerHTML={{ __html: formatted }} />
+      const isActivePara = isSpeakingMsg && speakingParaIndex === i
+      return (
+        <p
+          key={i}
+          className={isActivePara ? 'speaking-paragraph' : ''}
+          dangerouslySetInnerHTML={{ __html: formatted }}
+        />
+      )
     })
   }
 
@@ -521,7 +545,7 @@ export default function Home() {
           {messages.map((msg, i) => (
             <div key={i} className={`message ${msg.role}`}>
               <div className="message-content">
-                {msg.role === 'assistant' ? formatMessage(msg.content) : msg.content}
+                {msg.role === 'assistant' ? formatMessage(msg.content, speakingIndex === i) : msg.content}
               </div>
               {msg.role === 'assistant' && (
                 <div className="message-actions">
