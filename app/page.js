@@ -174,52 +174,112 @@ export default function Home() {
       .trim()
   }
 
-  // Fish Audio TTS — calls server-side /api/tts, returns mp3
-  const speak = useCallback(async (text, index) => {
-    try {
-      setSpeakingIndex(index)
-      setTtsStatus('generating')
+  // TTS queue — speaks paragraph by paragraph so voice starts fast
+  const ttsQueueRef = useRef([])
+  const ttsPlayingRef = useRef(false)
+  const ttsCancelledRef = useRef(false)
 
-      const cleanText = cleanTextForSpeech(text)
+  // Generate audio for one chunk of text
+  const generateAudio = useCallback(async (text) => {
+    const cleanText = cleanTextForSpeech(text)
+    if (!cleanText) return null
 
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText, voice: voiceName }),
-      })
+    const res = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: cleanText, voice: voiceName }),
+    })
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'TTS failed' }))
-        throw new Error(err.error || `TTS error ${res.status}`)
-      }
+    if (!res.ok) return null
+    const blob = await res.blob()
+    return URL.createObjectURL(blob)
+  }, [voiceName])
 
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
-
-      audio.onplay = () => setTtsStatus('playing')
-      audio.onended = () => {
-        setSpeakingIndex(-1)
-        setTtsStatus('')
-        URL.revokeObjectURL(url)
-      }
-      audio.onerror = () => {
-        setSpeakingIndex(-1)
-        setTtsStatus('')
-        URL.revokeObjectURL(url)
-      }
-
-      audioRef.current = audio
-      await audio.play()
-    } catch (err) {
-      console.error('TTS error:', err)
+  // Play the next item in the TTS queue
+  const playNextInQueue = useCallback(async () => {
+    if (ttsPlayingRef.current || ttsCancelledRef.current) return
+    if (ttsQueueRef.current.length === 0) {
       setSpeakingIndex(-1)
       setTtsStatus('')
+      return
     }
-  }, [voiceName])
+
+    ttsPlayingRef.current = true
+    const { url, resolve } = ttsQueueRef.current.shift()
+
+    if (!url) {
+      ttsPlayingRef.current = false
+      if (resolve) resolve()
+      playNextInQueue()
+      return
+    }
+
+    const audio = new Audio(url)
+    audioRef.current = audio
+
+    audio.onplay = () => setTtsStatus('playing')
+    audio.onended = () => {
+      URL.revokeObjectURL(url)
+      ttsPlayingRef.current = false
+      if (resolve) resolve()
+      if (!ttsCancelledRef.current) playNextInQueue()
+    }
+    audio.onerror = () => {
+      URL.revokeObjectURL(url)
+      ttsPlayingRef.current = false
+      if (resolve) resolve()
+      if (!ttsCancelledRef.current) playNextInQueue()
+    }
+
+    try { await audio.play() } catch {
+      ttsPlayingRef.current = false
+      if (resolve) resolve()
+    }
+  }, [])
+
+  // Add a paragraph to the TTS queue and start playing if idle
+  const queueParagraph = useCallback(async (text, msgIndex) => {
+    setSpeakingIndex(msgIndex)
+    setTtsStatus('generating')
+
+    const url = await generateAudio(text)
+    if (ttsCancelledRef.current) {
+      if (url) URL.revokeObjectURL(url)
+      return
+    }
+
+    ttsQueueRef.current.push({ url })
+    if (!ttsPlayingRef.current) playNextInQueue()
+  }, [generateAudio, playNextInQueue])
+
+  // Speak full text at once (for manual click on speaker icon)
+  const speak = useCallback(async (text, index) => {
+    ttsCancelledRef.current = false
+    ttsQueueRef.current = []
+    ttsPlayingRef.current = false
+
+    setSpeakingIndex(index)
+    setTtsStatus('generating')
+
+    // Split into paragraphs and queue them
+    const paragraphs = text.split(/\n\n+/).filter(p => p.trim())
+    for (const para of paragraphs) {
+      if (ttsCancelledRef.current) break
+      const url = await generateAudio(para)
+      if (ttsCancelledRef.current) {
+        if (url) URL.revokeObjectURL(url)
+        break
+      }
+      ttsQueueRef.current.push({ url })
+      if (!ttsPlayingRef.current) playNextInQueue()
+    }
+  }, [generateAudio, playNextInQueue])
 
   // Stop speaking
   const stopSpeaking = useCallback(() => {
+    ttsCancelledRef.current = true
+    ttsQueueRef.current = []
+    ttsPlayingRef.current = false
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
@@ -270,6 +330,14 @@ export default function Home() {
         const reader = res.body.getReader()
         const decoder = new TextDecoder()
         let fullText = ''
+        let spokenUpTo = 0 // track how much text we've sent to TTS
+
+        // Reset TTS queue for auto-read during streaming
+        if (autoRead) {
+          ttsCancelledRef.current = false
+          ttsQueueRef.current = []
+          ttsPlayingRef.current = false
+        }
 
         setMessages([...newMessages, { role: 'assistant', content: '' }])
         setIsLoading(false)
@@ -279,13 +347,28 @@ export default function Home() {
           if (done) break
           fullText += decoder.decode(value, { stream: true })
           setMessages([...newMessages, { role: 'assistant', content: fullText }])
+
+          // Auto-read: send completed paragraphs to TTS as they arrive
+          if (autoRead) {
+            const paragraphs = fullText.split(/\n\n+/)
+            // All but the last paragraph are complete (last may still be streaming)
+            const completeParagraphs = paragraphs.slice(0, -1)
+            const completeText = completeParagraphs.join('\n\n')
+
+            if (completeText.length > spokenUpTo) {
+              const newText = fullText.substring(spokenUpTo, completeText.length)
+              spokenUpTo = completeText.length
+              queueParagraph(newText, newMessages.length)
+            }
+          }
         }
 
-        // Auto-read the response if enabled
-        if (autoRead && fullText) {
-          setTimeout(() => {
-            speak(fullText, newMessages.length)
-          }, 200)
+        // Auto-read: send the final paragraph
+        if (autoRead && fullText.length > spokenUpTo) {
+          const remaining = fullText.substring(spokenUpTo)
+          if (remaining.trim()) {
+            queueParagraph(remaining, newMessages.length)
+          }
         }
         return
 
