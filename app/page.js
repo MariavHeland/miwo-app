@@ -72,7 +72,15 @@ const GLOBE_VIEWS = [
 
 export default function Home() {
   const { t } = useLang()
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('miwo-messages')
+        return saved ? JSON.parse(saved) : []
+      } catch { return [] }
+    }
+    return []
+  })
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isListening, setIsListening] = useState(false)
@@ -102,6 +110,14 @@ export default function Home() {
       audioCtxRef.current.resume()
     }
   }
+  // Save messages to localStorage
+  useEffect(() => {
+    if (messages.length > 0) {
+      try { localStorage.setItem('miwo-messages', JSON.stringify(messages)) }
+      catch {}
+    }
+  }, [messages])
+
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -228,41 +244,65 @@ export default function Home() {
     setInput('')
     setIsLoading(true)
 
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
-      })
+    const maxRetries = 2
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: newMessages }),
+        })
 
-      const data = await res.json()
+        if (!res.ok) {
+          if (attempt < maxRetries && res.status >= 500) {
+            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
+            continue
+          }
+          setMessages([...newMessages, {
+            role: 'assistant',
+            content: 'Something went wrong reaching MIWO. Check the API key configuration.',
+          }])
+          setIsLoading(false)
+          return
+        }
 
-      if (data.error) {
-        setMessages([...newMessages, {
-          role: 'assistant',
-          content: 'Something went wrong reaching MIWO. Check the API key configuration.',
-        }])
-      } else {
-        const assistantMsg = { role: 'assistant', content: data.text }
-        const updatedMessages = [...newMessages, assistantMsg]
-        setMessages(updatedMessages)
+        // Stream the response token by token
+        const reader = res.body.getReader()
+        const decoder = new TextDecoder()
+        let fullText = ''
+
+        setMessages([...newMessages, { role: 'assistant', content: '' }])
+        setIsLoading(false)
+
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          fullText += decoder.decode(value, { stream: true })
+          setMessages([...newMessages, { role: 'assistant', content: fullText }])
+        }
 
         // Auto-read the response if enabled
-        if (autoRead && data.text) {
-          // Small delay so the UI updates first
+        if (autoRead && fullText) {
           setTimeout(() => {
-            speak(data.text, updatedMessages.length - 1)
+            speak(fullText, newMessages.length)
           }, 200)
         }
+        return
+
+      } catch (err) {
+        if (attempt < maxRetries) {
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
+          continue
+        }
       }
-    } catch (err) {
-      setMessages([...newMessages, {
-        role: 'assistant',
-        content: 'Connection error. Make sure the server is running.',
-      }])
-    } finally {
-      setIsLoading(false)
     }
+
+    // All retries failed
+    setMessages([...newMessages, {
+      role: 'assistant',
+      content: 'Connection error. Please check your internet and try again.',
+    }])
+    setIsLoading(false)
   }
 
   const toggleVoice = () => {
@@ -302,7 +342,14 @@ export default function Home() {
   return (
     <div className="app">
       <header className="header">
-        <img src="/miwo-nav.png" alt="MIWO" className="header-logo" />
+        <img
+          src="/miwo-nav.png"
+          alt="MIWO"
+          className="header-logo"
+          onClick={() => { setMessages([]); localStorage.removeItem('miwo-messages') }}
+          style={{ cursor: 'pointer' }}
+          title="New conversation"
+        />
         <div className="header-controls">
           <Link href="/sports" className="nav-link">{t('sport')}</Link>
           <Link href="/history" className="nav-link">{t('history')}</Link>

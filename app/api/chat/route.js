@@ -119,6 +119,7 @@ export async function POST(request) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 4096,
+        stream: true,
         system: systemPrompt,
         tools: [
           {
@@ -134,32 +135,57 @@ export async function POST(request) {
     if (!response.ok) {
       const err = await response.text()
       console.error('Anthropic API error:', response.status, err)
-      // Return more detail for debugging
       return NextResponse.json(
         { error: `API error (${response.status}): ${err.substring(0, 200)}` },
         { status: response.status }
       )
     }
 
-    const data = await response.json()
+    // Stream SSE events from Anthropic and forward text deltas to the client
+    const readable = new ReadableStream({
+      async start(controller) {
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ''
 
-    // Extract text from response content blocks
-    // web_search_20250305 is a server-side tool — Anthropic handles the search
-    // within the same API call, so we just need to extract text blocks
-    let text = ''
-    if (data.content && Array.isArray(data.content)) {
-      for (const block of data.content) {
-        if (block.type === 'text') {
-          text += block.text
+        try {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+
+            buffer += decoder.decode(value, { stream: true })
+            const lines = buffer.split('\n')
+            buffer = lines.pop() // keep incomplete line in buffer
+
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue
+              const data = line.slice(6).trim()
+              if (data === '[DONE]') continue
+
+              try {
+                const event = JSON.parse(data)
+                if (
+                  event.type === 'content_block_delta' &&
+                  event.delta?.type === 'text_delta'
+                ) {
+                  controller.enqueue(new TextEncoder().encode(event.delta.text))
+                }
+              } catch {}
+            }
+          }
+          controller.close()
+        } catch (err) {
+          controller.error(err)
         }
-      }
-    }
+      },
+    })
 
-    if (!text) {
-      text = 'I wasn\'t able to retrieve current news right now. Try again in a moment.'
-    }
-
-    return NextResponse.json({ text, content: text })
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+      },
+    })
   } catch (error) {
     console.error('Chat error:', error.message, error.stack)
     return NextResponse.json(
