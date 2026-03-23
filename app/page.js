@@ -163,9 +163,17 @@ export default function Home() {
     }
   }, [])
 
-  // Strip markdown for TTS
+  // Words that Fish Audio TTS mispronounces — mapped to phonetic spellings
+  const ttsPronunciationFixes = {
+    'parliament': 'parliment',
+    'Parliament': 'Parliment',
+    'parliamentary': 'parlimentary',
+    'Parliamentary': 'Parlimentary',
+  }
+
+  // Strip markdown for TTS and fix pronunciation
   const cleanTextForSpeech = (text) => {
-    return text
+    let cleaned = text
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/\*(.*?)\*/g, '$1')
       .replace(/#{1,6}\s/g, '')
@@ -173,6 +181,13 @@ export default function Home() {
       .replace(/\n{2,}/g, '. ')
       .replace(/\n/g, ' ')
       .trim()
+
+    // Apply pronunciation fixes
+    for (const [word, replacement] of Object.entries(ttsPronunciationFixes)) {
+      cleaned = cleaned.replaceAll(word, replacement)
+    }
+
+    return cleaned
   }
 
   // TTS queue — speaks paragraph by paragraph so voice starts fast
