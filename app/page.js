@@ -416,14 +416,13 @@ export default function Home() {
 
           // Auto-read: send completed sentences to TTS as they stream in
           if (autoRead) {
-            // Find text that ends with sentence-ending punctuation followed by a space or newline
-            const speakableMatch = fullText.substring(spokenUpTo).match(/^([\s\S]*[.!?])(?:\s|\n)/)
-            if (speakableMatch) {
-              const newText = speakableMatch[1]
-              spokenUpTo += newText.length
-              // Skip whitespace after the sentence
-              while (spokenUpTo < fullText.length && /[\s\n]/.test(fullText[spokenUpTo])) spokenUpTo++
-              queueParagraph(newText, newMessages.length, paraCounter)
+            const remaining = fullText.substring(spokenUpTo)
+            // Match only the FIRST sentence (non-greedy) that ends with punctuation + whitespace
+            const m = remaining.match(/^(.*?[.!?])(\s+)/)
+            if (m) {
+              const sentence = m[1]
+              spokenUpTo += m[0].length
+              queueParagraph(sentence, newMessages.length, paraCounter)
               paraCounter++
             }
           }
