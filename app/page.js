@@ -86,7 +86,7 @@ export default function Home() {
   const [isListening, setIsListening] = useState(false)
   const [speakingIndex, setSpeakingIndex] = useState(-1)
   const [autoRead, setAutoRead] = useState(false)
-  const [voiceName, setVoiceName] = useState('nova') // 'nova' or 'atlas'
+  const [voiceName, setVoiceNameRaw] = useState('nova')
   const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing', 'quota'
   const [speakingParaIndex, setSpeakingParaIndex] = useState(-1) // which paragraph is currently being read aloud
   const [globeSrc, setGlobeSrc] = useState('/globe.png') // fallback
@@ -164,12 +164,27 @@ export default function Home() {
   }, [])
 
   // Words that Fish Audio TTS mispronounces — mapped to phonetic spellings
-  const ttsPronunciationFixes = {
-    'parliament': 'parliment',
-    'Parliament': 'Parliment',
-    'parliamentary': 'parlimentary',
-    'Parliamentary': 'Parlimentary',
-  }
+  const ttsPronunciationFixes = [
+    [/\bParliamentary\b/g, 'Parlimentary'],
+    [/\bparliamentary\b/g, 'parlimentary'],
+    [/\bParliament\b/g, 'Parliment'],
+    [/\bparliament\b/g, 'parliment'],
+    [/\bBundestag\b/g, 'Boon-des-tahg'],
+    [/\bReichstag\b/g, 'Rysh-tahg'],
+    [/\bTaoiseach\b/g, 'Tee-shuck'],
+    [/\bXi Jinping\b/g, 'Shee Jin-ping'],
+    [/\bZelensky\b/gi, 'Zeh-LEN-skee'],
+    [/\bMacron\b/g, 'Ma-KRON'],
+    [/\bSchultz\b/g, 'Shooltz'],
+    [/\bScholz\b/g, 'Sholts'],
+    [/\bKyiv\b/g, 'Keev'],
+    [/\bBlinken\b/g, 'BLINK-en'],
+    [/—/g, ', '],
+    [/–/g, ', '],
+    [/\.\.\./g, ', '],
+    [/\s*\(\s*/g, ', '],
+    [/\s*\)\s*/g, ', '],
+  ]
 
   // Strip markdown for TTS and fix pronunciation
   const cleanTextForSpeech = (text) => {
@@ -183,11 +198,21 @@ export default function Home() {
       .trim()
 
     // Apply pronunciation fixes
-    for (const [word, replacement] of Object.entries(ttsPronunciationFixes)) {
-      cleaned = cleaned.replaceAll(word, replacement)
+    for (const [pattern, replacement] of ttsPronunciationFixes) {
+      cleaned = cleaned.replace(pattern, replacement)
     }
 
     return cleaned
+  }
+
+  // Split text into speakable sentence chunks (2-3 sentences each for natural flow)
+  const splitIntoChunks = (text) => {
+    const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.trim())
+    const chunks = []
+    for (let i = 0; i < sentences.length; i += 2) {
+      chunks.push(sentences.slice(i, i + 2).join(' '))
+    }
+    return chunks.filter(c => c.trim())
   }
 
   // TTS queue — speaks paragraph by paragraph so voice starts fast
@@ -288,17 +313,21 @@ export default function Home() {
     setSpeakingParaIndex(0)
     setTtsStatus('generating')
 
-    // Split into paragraphs and queue them
+    // Split into paragraphs, then into sentence chunks within each
     const paragraphs = text.split(/\n\n+/).filter(p => p.trim())
     for (let pi = 0; pi < paragraphs.length; pi++) {
-      if (ttsCancelledRef.current) break
-      const url = await generateAudio(paragraphs[pi])
-      if (ttsCancelledRef.current) {
-        if (url) URL.revokeObjectURL(url)
-        break
+      const chunks = splitIntoChunks(paragraphs[pi])
+      for (const chunk of chunks) {
+        if (ttsCancelledRef.current) break
+        const url = await generateAudio(chunk)
+        if (ttsCancelledRef.current) {
+          if (url) URL.revokeObjectURL(url)
+          break
+        }
+        ttsQueueRef.current.push({ url, paraIndex: pi })
+        if (!ttsPlayingRef.current) playNextInQueue()
       }
-      ttsQueueRef.current.push({ url, paraIndex: pi })
-      if (!ttsPlayingRef.current) playNextInQueue()
+      if (ttsCancelledRef.current) break
     }
   }, [generateAudio, playNextInQueue])
 
@@ -316,6 +345,12 @@ export default function Home() {
     setSpeakingParaIndex(-1)
     setTtsStatus('')
   }, [])
+
+  // Voice swap — stop playback instantly, new voice applies to next generation
+  const setVoiceName = useCallback((name) => {
+    stopSpeaking()
+    setVoiceNameRaw(name)
+  }, [stopSpeaking])
 
   const sendMessage = async (text) => {
     const messageText = text || input
@@ -379,16 +414,15 @@ export default function Home() {
           fullText += decoder.decode(value, { stream: true })
           setMessages([...newMessages, { role: 'assistant', content: fullText }])
 
-          // Auto-read: send completed paragraphs to TTS as they arrive
+          // Auto-read: send completed sentences to TTS as they stream in
           if (autoRead) {
-            const paragraphs = fullText.split(/\n\n+/)
-            // All but the last paragraph are complete (last may still be streaming)
-            const completeParagraphs = paragraphs.slice(0, -1)
-            const completeText = completeParagraphs.join('\n\n')
-
-            if (completeText.length > spokenUpTo) {
-              const newText = fullText.substring(spokenUpTo, completeText.length)
-              spokenUpTo = completeText.length
+            // Find text that ends with sentence-ending punctuation followed by a space or newline
+            const speakableMatch = fullText.substring(spokenUpTo).match(/^([\s\S]*[.!?])(?:\s|\n)/)
+            if (speakableMatch) {
+              const newText = speakableMatch[1]
+              spokenUpTo += newText.length
+              // Skip whitespace after the sentence
+              while (spokenUpTo < fullText.length && /[\s\n]/.test(fullText[spokenUpTo])) spokenUpTo++
               queueParagraph(newText, newMessages.length, paraCounter)
               paraCounter++
             }

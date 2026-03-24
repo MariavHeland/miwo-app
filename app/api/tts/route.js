@@ -39,12 +39,9 @@ export async function POST(request) {
         text: text.trim().substring(0, 2000),
         reference_id: voiceId,
         format: 'mp3',
-        mp3_bitrate: 128,
+        mp3_bitrate: 64,
         normalize: true,
-        latency: 'balanced',
-        prosody: {
-          speed: 0.92,
-        },
+        latency: 'normal',
       }),
     })
 

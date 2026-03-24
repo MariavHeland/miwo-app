@@ -220,12 +220,13 @@ html, body {
 .message.assistant .message-content {
   font-family: var(--font-serif);
   font-size: 17px;
-  line-height: 1.7;
+  line-height: 1.85;
   color: var(--text);
+  max-width: 620px;
 }
 
 .message.assistant .message-content p {
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
 .message.assistant .message-content p:last-child {
