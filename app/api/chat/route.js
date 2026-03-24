@@ -135,34 +135,59 @@ export async function POST(request) {
       content: typeof m.content === 'string' ? m.content : String(m.content),
     }))
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
-        stream: true,
-        system: systemPrompt,
-        tools: [
-          {
-            type: 'web_search_20250305',
-            name: 'web_search',
-            max_uses: 10,
-          }
-        ],
-        messages: apiMessages,
-      }),
-    })
+    // Use AbortController to timeout after 55s (under Vercel's 60s limit)
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 55000)
+
+    let response
+    try {
+      response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4096,
+          stream: true,
+          system: systemPrompt,
+          tools: [
+            {
+              type: 'web_search_20250305',
+              name: 'web_search',
+              max_uses: 10,
+            }
+          ],
+          messages: apiMessages,
+        }),
+      })
+    } catch (fetchErr) {
+      clearTimeout(timeout)
+      if (fetchErr.name === 'AbortError') {
+        console.error('Anthropic API timed out after 55s')
+        return NextResponse.json(
+          { error: 'timeout', message: 'The request took too long. Try again.' },
+          { status: 504 }
+        )
+      }
+      throw fetchErr
+    }
+    clearTimeout(timeout)
 
     if (!response.ok) {
       const err = await response.text()
       console.error('Anthropic API error:', response.status, err)
+      const isOverloaded = response.status === 529 || response.status === 503
       return NextResponse.json(
-        { error: `API error (${response.status}): ${err.substring(0, 200)}` },
+        {
+          error: isOverloaded ? 'overloaded' : 'api_error',
+          message: isOverloaded
+            ? 'MIWO is busy right now. Try again in a moment.'
+            : `Something went wrong (${response.status}). Try again.`,
+        },
         { status: response.status }
       )
     }

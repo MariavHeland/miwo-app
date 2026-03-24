@@ -406,9 +406,16 @@ export default function Home() {
             await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
             continue
           }
+          let errorMsg = 'Something went wrong. Tap retry to try again.'
+          try {
+            const errData = await res.json()
+            if (errData.message) errorMsg = errData.message
+          } catch {}
           setMessages([...newMessages, {
             role: 'assistant',
-            content: 'Something went wrong reaching MIWO. Check the API key configuration.',
+            content: errorMsg,
+            isError: true,
+            retryText: messageText.trim(),
           }])
           setIsLoading(false)
           return
@@ -472,7 +479,9 @@ export default function Home() {
     // All retries failed
     setMessages([...newMessages, {
       role: 'assistant',
-      content: 'Connection error. Please check your internet and try again.',
+      content: 'Couldn\'t connect. Check your internet and tap retry.',
+      isError: true,
+      retryText: messageText.trim(),
     }])
     setIsLoading(false)
   }
@@ -658,11 +667,24 @@ export default function Home() {
       ) : (
         <div className="messages">
           {messages.map((msg, i) => (
-            <div key={i} className={`message ${msg.role}`}>
+            <div key={i} className={`message ${msg.role} ${msg.isError ? 'error-msg' : ''}`}>
               <div className="message-content">
                 {msg.role === 'assistant' ? formatMessage(msg.content, speakingIndex === i) : msg.content}
               </div>
-              {msg.role === 'assistant' && (
+              {msg.role === 'assistant' && msg.isError && (
+                <button
+                  className="retry-btn"
+                  onClick={() => {
+                    // Remove the error message and the user message that triggered it
+                    const cleaned = messages.slice(0, -2)
+                    setMessages(cleaned)
+                    setTimeout(() => sendMessage(msg.retryText), 100)
+                  }}
+                >
+                  ↻ Try again
+                </button>
+              )}
+              {msg.role === 'assistant' && !msg.isError && (
                 <div className="message-actions">
                   {speakingIndex === i ? (
                     <button
