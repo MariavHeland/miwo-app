@@ -480,17 +480,19 @@ export default function Home() {
 
   const formatMessage = (text, isSpeakingMsg) => {
     return text.split('\n\n').map((para, i) => {
-      const formatted = para.replace(
-        /\*\*(.*?)\*\*/g,
-        '<strong>$1</strong>'
-      )
+      // Strip all markdown bold — MIWO is spoken news, no headlines
+      const cleaned = para
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*(.*?)\*/g, '$1')
+        .replace(/#{1,6}\s+/g, '')
       const isActivePara = isSpeakingMsg && speakingParaIndex === i
       return (
         <p
           key={i}
           className={isActivePara ? 'speaking-paragraph' : ''}
-          dangerouslySetInnerHTML={{ __html: formatted }}
-        />
+        >
+          {cleaned}
+        </p>
       )
     })
   }

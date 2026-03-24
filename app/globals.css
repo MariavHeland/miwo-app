@@ -244,8 +244,8 @@ html, body {
 }
 
 .message.assistant .message-content strong {
-  color: var(--copper);
-  font-weight: 600;
+  color: var(--text);
+  font-weight: inherit;
 }
 
 /* Message action buttons (speaker) */
