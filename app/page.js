@@ -376,7 +376,7 @@ export default function Home() {
     setVoiceNameRaw(name)
   }, [stopSpeaking])
 
-  const sendMessage = async (text) => {
+  const sendMessage = async (text, baseMessages) => {
     const messageText = text || input
     if (!messageText.trim() || isLoading) return
 
@@ -387,7 +387,8 @@ export default function Home() {
     stopSpeaking()
 
     const userMessage = { role: 'user', content: messageText.trim() }
-    const newMessages = [...messages, userMessage]
+    const history = baseMessages || messages
+    const newMessages = [...history, userMessage]
     setMessages(newMessages)
     setInput('')
     setIsLoading(true)
@@ -402,8 +403,9 @@ export default function Home() {
         })
 
         if (!res.ok) {
-          if (attempt < maxRetries && res.status >= 500) {
-            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
+          if (attempt < maxRetries && (res.status >= 500 || res.status === 429)) {
+            const delay = res.status === 429 ? 3000 * (attempt + 1) : 1000 * (attempt + 1)
+            await new Promise(r => setTimeout(r, delay))
             continue
           }
           let errorMsg = 'Something went wrong. Tap retry to try again.'
@@ -676,9 +678,10 @@ export default function Home() {
                   className="retry-btn"
                   onClick={() => {
                     // Remove the error message and the user message that triggered it
-                    const cleaned = messages.slice(0, -2)
+                    // Pass cleaned messages directly to avoid stale closure
+                    const cleaned = messages.filter(m => m !== msg && !(m.role === 'user' && m.content === msg.retryText && messages.indexOf(m) === i - 1))
                     setMessages(cleaned)
-                    setTimeout(() => sendMessage(msg.retryText), 100)
+                    sendMessage(msg.retryText, cleaned)
                   }}
                 >
                   ↻ Try again

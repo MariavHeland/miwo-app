@@ -181,10 +181,13 @@ export async function POST(request) {
       const err = await response.text()
       console.error('Anthropic API error:', response.status, err)
       const isOverloaded = response.status === 529 || response.status === 503
+      const isRateLimit = response.status === 429
       return NextResponse.json(
         {
-          error: isOverloaded ? 'overloaded' : 'api_error',
-          message: isOverloaded
+          error: isRateLimit ? 'rate_limit' : isOverloaded ? 'overloaded' : 'api_error',
+          message: isRateLimit
+            ? 'MIWO is getting a lot of requests right now. Give it a few seconds and try again.'
+            : isOverloaded
             ? 'MIWO is busy right now. Try again in a moment.'
             : `Something went wrong (${response.status}). Try again.`,
         },
