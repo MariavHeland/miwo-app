@@ -191,7 +191,7 @@ export async function POST(request) {
             ? 'MIWO is getting a lot of requests right now. Give it a few seconds and try again.'
             : isOverloaded
             ? 'MIWO is busy right now. Try again in a moment.'
-            : `Something went wrong (${response.status}). Try again.`,
+            : `Something went wrong (${response.status}): ${err.substring(0, 300)}`,
         },
         { status: response.status }
       )
