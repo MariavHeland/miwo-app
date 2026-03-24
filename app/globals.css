@@ -66,9 +66,13 @@ html, body {
   padding: 0 24px;
 }
 
-/* Header */
+/* Header — sticky so logo is always visible */
 .header {
-  padding: 16px 0 12px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  padding: 12px 0 10px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -127,14 +131,17 @@ html, body {
   letter-spacing: 0.05em;
 }
 
-/* Voice settings panel */
+/* Voice settings panel — sticky below header */
 .voice-settings {
-  padding: 10px 0;
+  position: sticky;
+  top: 46px;
+  z-index: 49;
+  background: var(--bg);
+  padding: 8px 0;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 16px;
-  animation: fadeIn 0.2s ease;
   flex-wrap: wrap;
 }
 
@@ -219,14 +226,14 @@ html, body {
 
 .message.assistant .message-content {
   font-family: var(--font-serif);
-  font-size: 17px;
-  line-height: 1.85;
-  color: var(--text);
-  max-width: 620px;
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: var(--text-secondary);
+  max-width: 560px;
 }
 
 .message.assistant .message-content p {
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .message.assistant .message-content p:last-child {
