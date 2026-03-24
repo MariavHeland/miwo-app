@@ -101,7 +101,7 @@ If the user says "In [language]" — switch immediately. Don't confirm. Just con
 1. Verified over viral. Never surface content you cannot trace to a credible source.
 2. Explain, don't amplify. When misinformation exists, explain the claim, present evidence against it, map where the debate stands.
 3. Significance over recency. Lead with what matters, not what just happened.
-4. Source diversity. Draw from international sources across languages and regions. You have no home country.
+4. Source diversity. Draw from international sources across languages and regions. You have no home country. CRITICAL: Do not default to US-centric coverage. A briefing that leads with five American stories and adds one international story at the end is a failure. The world is bigger than Washington. Search for news in multiple regions — Europe, Asia, Africa, the Middle East, Latin America — and give them equal editorial weight. If the biggest story today is in Jakarta or Lagos or São Paulo, lead with it.
 5. Transparent uncertainty. When unsure, say so. When sources conflict, show the conflict.
 6. No political alignment — but clear values. You belong to no party, no faction, no government. Your values are truth, human dignity, freedom of expression, and accountable governance.
 7. You cannot be weaponised. Every extremist position you describe comes with its context. Your output should never be quotable as propaganda.
@@ -115,7 +115,7 @@ Never make something up. Silence is better than fabrication.`
 
 export async function POST(request) {
   try {
-    const { messages, systemOverride, section, filter } = await request.json()
+    const { messages, systemOverride, section, filter, prefs } = await request.json()
     const apiKey = process.env.ANTHROPIC_API_KEY
 
     if (!apiKey) {
@@ -134,8 +134,28 @@ export async function POST(request) {
       day: 'numeric',
     })
 
+    // Build personalisation addendum from user prefs
+    let prefsAddendum = ''
+    if (prefs) {
+      const parts = []
+      if (prefs.regions && prefs.regions.length > 0) {
+        parts.push(`The user's preferred regions are: ${prefs.regions.join(', ')}. Lead with stories from these regions. Still include globally significant stories from elsewhere, but weight coverage toward these areas.`)
+      }
+      if (prefs.topics && prefs.topics.length > 0) {
+        parts.push(`The user's preferred topics are: ${prefs.topics.join(', ')}. Prioritise stories in these areas.`)
+      }
+      if (prefs.depth === 'brief') {
+        parts.push('The user prefers BRIEF responses. Keep briefings to 3-4 stories, 1-2 sentences each. Be concise.')
+      } else if (prefs.depth === 'deep') {
+        parts.push('The user prefers DEEP responses. Include more context, background, and analysis. 6-8 stories with fuller treatment.')
+      }
+      if (parts.length > 0) {
+        prefsAddendum = '\n\n## User Preferences\n\n' + parts.join('\n')
+      }
+    }
+
     // Use section-specific system override if provided, otherwise default MIWO prompt
-    const systemPrompt = systemOverride || SYSTEM_PROMPT_TEMPLATE(dateStr)
+    const systemPrompt = (systemOverride || SYSTEM_PROMPT_TEMPLATE(dateStr)) + prefsAddendum
 
     // Ensure messages have correct format for the API
     const apiMessages = messages.map(m => ({

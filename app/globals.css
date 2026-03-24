@@ -191,6 +191,65 @@ html, body {
   cursor: not-allowed;
 }
 
+/* Preferences panel */
+.prefs-panel {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.2s ease;
+}
+
+.prefs-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.prefs-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  min-width: 52px;
+}
+
+.prefs-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.pref-chip {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pref-chip:hover {
+  border-color: var(--copper-dim);
+  color: var(--text);
+}
+
+.pref-chip.active {
+  border-color: var(--copper);
+  color: var(--copper);
+  background: rgba(196, 125, 90, 0.08);
+}
+
+.prefs-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
 /* Messages area */
 .messages {
   flex: 1;

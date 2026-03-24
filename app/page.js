@@ -91,6 +91,16 @@ export default function Home() {
   const [speakingParaIndex, setSpeakingParaIndex] = useState(-1) // which paragraph is currently being read aloud
   const [globeSrc, setGlobeSrc] = useState('/globe.png') // fallback
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
+  const [showPrefs, setShowPrefs] = useState(false)
+  const [prefs, setPrefs] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('miwo-prefs')
+        return saved ? JSON.parse(saved) : { regions: [], topics: [], depth: 'standard' }
+      } catch { return { regions: [], topics: [], depth: 'standard' } }
+    }
+    return { regions: [], topics: [], depth: 'standard' }
+  })
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
   const recognitionRef = useRef(null)
@@ -118,6 +128,20 @@ export default function Home() {
       catch {}
     }
   }, [messages])
+
+  // Save prefs to localStorage
+  useEffect(() => {
+    try { localStorage.setItem('miwo-prefs', JSON.stringify(prefs)) }
+    catch {}
+  }, [prefs])
+
+  const togglePref = (category, value) => {
+    setPrefs(prev => {
+      const list = prev[category] || []
+      const next = list.includes(value) ? list.filter(v => v !== value) : [...list, value]
+      return { ...prev, [category]: next }
+    })
+  }
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -374,7 +398,7 @@ export default function Home() {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: newMessages }),
+          body: JSON.stringify({ messages: newMessages, prefs }),
         })
 
         if (!res.ok) {
@@ -525,8 +549,49 @@ export default function Home() {
           >
             {autoRead ? <SpeakerIcon size={16} /> : <SpeakerOffIcon size={16} />}
           </button>
+          <button
+            className={`header-btn ${showPrefs ? 'active' : ''}`}
+            onClick={() => setShowPrefs(!showPrefs)}
+            title="Preferences"
+          >
+            <SettingsIcon size={16} />
+          </button>
         </div>
       </header>
+
+      {/* Preferences panel */}
+      {showPrefs && (
+        <div className="prefs-panel">
+          <div className="prefs-section">
+            <div className="prefs-label">Regions</div>
+            <div className="prefs-chips">
+              {['Europe', 'Middle East', 'Asia', 'Africa', 'Americas', 'Oceania'].map(r => (
+                <button key={r} className={`pref-chip ${prefs.regions.includes(r) ? 'active' : ''}`}
+                  onClick={() => togglePref('regions', r)}>{r}</button>
+              ))}
+            </div>
+          </div>
+          <div className="prefs-section">
+            <div className="prefs-label">Topics</div>
+            <div className="prefs-chips">
+              {['Politics', 'Economy', 'Tech', 'Climate', 'Culture', 'Science', 'Conflict'].map(t => (
+                <button key={t} className={`pref-chip ${prefs.topics.includes(t) ? 'active' : ''}`}
+                  onClick={() => togglePref('topics', t)}>{t}</button>
+              ))}
+            </div>
+          </div>
+          <div className="prefs-section">
+            <div className="prefs-label">Depth</div>
+            <div className="prefs-chips">
+              {[['brief', 'Brief'], ['standard', 'Standard'], ['deep', 'Deep']].map(([v, l]) => (
+                <button key={v} className={`pref-chip ${prefs.depth === v ? 'active' : ''}`}
+                  onClick={() => setPrefs(p => ({ ...p, depth: v }))}>{l}</button>
+              ))}
+            </div>
+          </div>
+          <div className="prefs-hint">These shape your briefings. No regions selected = global coverage.</div>
+        </div>
+      )}
 
       {/* Voice picker — always visible */}
       <div className="voice-settings">
