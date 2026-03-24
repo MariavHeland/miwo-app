@@ -184,15 +184,24 @@ export async function POST(request) {
       console.error('Anthropic API error:', response.status, err)
       const isOverloaded = response.status === 529 || response.status === 503
       const isRateLimit = response.status === 429
+      const isBilling = response.status === 400 && err.includes('credit balance')
+
+      let errorType = 'api_error'
+      let errorMessage = 'Something went wrong. Tap retry to try again.'
+
+      if (isRateLimit) {
+        errorType = 'rate_limit'
+        errorMessage = 'MIWO is getting a lot of requests right now. Give it a few seconds and try again.'
+      } else if (isOverloaded) {
+        errorType = 'overloaded'
+        errorMessage = 'MIWO is busy right now. Try again in a moment.'
+      } else if (isBilling) {
+        errorType = 'billing'
+        errorMessage = 'MIWO is temporarily unavailable. We\'re working on it.'
+      }
+
       return NextResponse.json(
-        {
-          error: isRateLimit ? 'rate_limit' : isOverloaded ? 'overloaded' : 'api_error',
-          message: isRateLimit
-            ? 'MIWO is getting a lot of requests right now. Give it a few seconds and try again.'
-            : isOverloaded
-            ? 'MIWO is busy right now. Try again in a moment.'
-            : `Something went wrong (${response.status}): ${err.substring(0, 300)}`,
-        },
+        { error: errorType, message: errorMessage },
         { status: response.status }
       )
     }
