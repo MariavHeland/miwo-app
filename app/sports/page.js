@@ -194,14 +194,31 @@ export default function SportsPage() {
         }),
       });
 
-      const data = await res.json();
-      setMessages([...newMessages, { role: 'assistant', content: data.content }]);
+      if (!res.ok) {
+        let errorMsg = t('errorMessage');
+        try { const errData = await res.json(); if (errData.message) errorMsg = errData.message; } catch {}
+        setMessages([...newMessages, { role: 'assistant', content: errorMsg }]);
+        setIsLoading(false);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      setMessages([...newMessages, { role: 'assistant', content: '' }]);
+      setIsLoading(false);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        fullText += decoder.decode(value, { stream: true });
+        setMessages([...newMessages, { role: 'assistant', content: fullText }]);
+      }
     } catch (err) {
       setMessages([
         ...newMessages,
         { role: 'assistant', content: t('errorMessage') },
       ]);
-    } finally {
       setIsLoading(false);
     }
   }, [input, isLoading, messages, view]);
