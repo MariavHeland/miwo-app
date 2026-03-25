@@ -264,6 +264,25 @@ export default function Home() {
       }
       return result
     })
+    // Convert date-day numbers to ordinals: "March 1" → "March first", "October 25" → "October twenty-fifth"
+    const ordinalWord = (n) => {
+      const specials = { 1: 'first', 2: 'second', 3: 'third', 5: 'fifth', 8: 'eighth', 9: 'ninth', 12: 'twelfth' }
+      if (specials[n]) return specials[n]
+      if (n <= 19) return numberToWords(n) + 'th'
+      if (n % 10 === 0) return numberToWords(n).replace(/y$/, 'ieth')
+      const onesDigit = n % 10
+      const tensWord = numberToWords(n - onesDigit)
+      return tensWord + ' ' + (specials[onesDigit] || numberToWords(onesDigit) + 'th')
+    }
+    const months = '(?:January|February|March|April|May|June|July|August|September|October|November|December)'
+    cleaned = cleaned.replace(new RegExp('(' + months + ')\\s+(\\d{1,2})\\b', 'g'), (_, month, day) => {
+      return month + ' ' + ordinalWord(parseInt(day, 10))
+    })
+    // Also handle "1 March" style dates
+    cleaned = cleaned.replace(new RegExp('\\b(\\d{1,2})\\s+(' + months + ')', 'g'), (_, day, month) => {
+      return 'the ' + ordinalWord(parseInt(day, 10)) + ' of ' + month
+    })
+
     // Handle standalone numbers (not inside words): "389" → "three hundred and eighty nine"
     // Skip years (1900-2099) — they should be read as-is by the TTS engine
     cleaned = cleaned.replace(/\b(\d[\d,]*)\b/g, (match) => {
