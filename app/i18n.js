@@ -139,7 +139,7 @@ const translations = {
     natureLabel: 'Naturaleza', natureTitle: 'El planeta habla.\n¿Estamos escuchando?',
     natureSub: 'Clima. Océanos. Bosques. Energía. Las historias ambientales que lo cambian todo. Contadas con ciencia. Sin greenwashing. Sin falsas esperanzas. Solo lo que está pasando realmente.',
     naturePlaceholder: 'Pregunta sobre clima, biodiversidad, energ\u00EDa...',
-    cookLabel: 'Cocina', cookTitle: 'Cada comida erzählt\nuna historia.',
+    cookLabel: 'Cocina', cookTitle: 'Cada comida cuenta\nuna historia.',
     cookSub: 'Recetas, técnicas, ingredientes — la cultura, historia y alegría detrás de lo que comemos. Desde comidas rápidas de la semana hasta tradiciones centenarias. Porque la comida nunca es solo comida.',
     cookPlaceholder: 'Pregunta sobre recetas, t\u00E9cnicas, cocina o ingredientes...',
     pantryTitle: '\u00BFQu\u00E9 tienes en la cocina?',
