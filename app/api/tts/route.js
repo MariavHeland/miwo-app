@@ -17,7 +17,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Fish Audio API key not configured' }, { status: 500 })
     }
 
-    // English voices — user-selectable
+    // Voices — Fish Audio S2 is multilingual, so the same voice speaks any language
     const voices = {
       nova: process.env.FISH_VOICE_NOVA || '3c86704b6c1741f4b6d3723397061f04',
       atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
@@ -26,24 +26,15 @@ export async function POST(request) {
       iris: process.env.FISH_VOICE_IRIS || '6d49364c9eaa4d10ae3a01502a79b084',
     }
 
-    // Language-specific voices — native speakers per language
-    // Set these in Vercel env vars once you've picked voices from fish.audio
-    const langVoices = {
-      de: process.env.FISH_VOICE_DE,  // German
-      fr: process.env.FISH_VOICE_FR,  // French
-      es: process.env.FISH_VOICE_ES,  // Spanish
-      ar: process.env.FISH_VOICE_AR,  // Arabic
-    }
+    const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
 
-    // Use language voice if available; fall back to user's selected English voice
-    const voiceId = (lang && langVoices[lang]) || voices[(voice || 'nova').toLowerCase()] || voices.nova
-
-    // Fish Audio TTS API
+    // Fish Audio TTS API — model s2-pro handles multilingual natively
     const response = await fetch('https://api.fish.audio/v1/tts', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'model': 's2-pro',
       },
       body: JSON.stringify({
         text: text.trim().substring(0, 2000),
