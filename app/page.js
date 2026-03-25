@@ -67,7 +67,7 @@ const GLOBE_FRONT = '/globe-front.png'  // Africa & Europe (left)
 const GLOBE_BACK = '/globe-back.png'    // Asia-Pacific (right)
 
 export default function Home() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [messages, setMessages] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -237,7 +237,9 @@ export default function Home() {
   }
 
   // Strip markdown for TTS and fix pronunciation
+  // lang param determines whether to convert numbers to words (English only)
   const cleanTextForSpeech = (text) => {
+    const isEnglish = !lang || lang === 'en'
     let cleaned = text
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/\*(.*?)\*/g, '$1')
@@ -247,52 +249,52 @@ export default function Home() {
       .replace(/\n/g, ' ')
       .trim()
 
-    // Convert numbers to spoken words (e.g. "389" → "three hundred and eighty nine")
-    // Handle percentages first: "12%" → "twelve percent"
-    cleaned = cleaned.replace(/(\d[\d,]*)\s*%/g, (_, n) => {
-      const num = parseInt(n.replace(/,/g, ''), 10)
-      return isNaN(num) ? n + ' percent' : numberToWords(num) + ' percent'
-    })
-    // Handle currency: "$4,560" → "four thousand five hundred and sixty dollars"
-    cleaned = cleaned.replace(/\$(\d[\d,]*(?:\.\d+)?)/g, (_, n) => {
-      const parts = n.replace(/,/g, '').split('.')
-      const whole = parseInt(parts[0], 10)
-      let result = numberToWords(whole) + ' dollars'
-      if (parts[1]) {
-        const cents = parseInt(parts[1], 10)
-        if (cents > 0) result += ' and ' + numberToWords(cents) + ' cents'
+    // Number-to-words and date conversion: English only
+    // For non-English, Fish Audio reads digits natively in the target language
+    if (isEnglish) {
+      // Handle percentages: "12%" → "twelve percent"
+      cleaned = cleaned.replace(/(\d[\d,]*)\s*%/g, (_, n) => {
+        const num = parseInt(n.replace(/,/g, ''), 10)
+        return isNaN(num) ? n + ' percent' : numberToWords(num) + ' percent'
+      })
+      // Handle currency: "$4,560" → "four thousand five hundred and sixty dollars"
+      cleaned = cleaned.replace(/\$(\d[\d,]*(?:\.\d+)?)/g, (_, n) => {
+        const parts = n.replace(/,/g, '').split('.')
+        const whole = parseInt(parts[0], 10)
+        let result = numberToWords(whole) + ' dollars'
+        if (parts[1]) {
+          const cents = parseInt(parts[1], 10)
+          if (cents > 0) result += ' and ' + numberToWords(cents) + ' cents'
+        }
+        return result
+      })
+      // Convert date-day numbers to ordinals: "March 1" → "March first"
+      const ordinalWord = (n) => {
+        const specials = { 1: 'first', 2: 'second', 3: 'third', 5: 'fifth', 8: 'eighth', 9: 'ninth', 12: 'twelfth' }
+        if (specials[n]) return specials[n]
+        if (n <= 19) return numberToWords(n) + 'th'
+        if (n % 10 === 0) return numberToWords(n).replace(/y$/, 'ieth')
+        const onesDigit = n % 10
+        const tensWord = numberToWords(n - onesDigit)
+        return tensWord + ' ' + (specials[onesDigit] || numberToWords(onesDigit) + 'th')
       }
-      return result
-    })
-    // Convert date-day numbers to ordinals: "March 1" → "March first", "October 25" → "October twenty-fifth"
-    const ordinalWord = (n) => {
-      const specials = { 1: 'first', 2: 'second', 3: 'third', 5: 'fifth', 8: 'eighth', 9: 'ninth', 12: 'twelfth' }
-      if (specials[n]) return specials[n]
-      if (n <= 19) return numberToWords(n) + 'th'
-      if (n % 10 === 0) return numberToWords(n).replace(/y$/, 'ieth')
-      const onesDigit = n % 10
-      const tensWord = numberToWords(n - onesDigit)
-      return tensWord + ' ' + (specials[onesDigit] || numberToWords(onesDigit) + 'th')
+      const months = '(?:January|February|March|April|May|June|July|August|September|October|November|December)'
+      cleaned = cleaned.replace(new RegExp('(' + months + ')\\s+(\\d{1,2})\\b', 'g'), (_, month, day) => {
+        return month + ' ' + ordinalWord(parseInt(day, 10))
+      })
+      cleaned = cleaned.replace(new RegExp('\\b(\\d{1,2})\\s+(' + months + ')', 'g'), (_, day, month) => {
+        return 'the ' + ordinalWord(parseInt(day, 10)) + ' of ' + month
+      })
+      // Standalone numbers: "389" → "three hundred and eighty nine" (skip years)
+      cleaned = cleaned.replace(/\b(\d[\d,]*)\b/g, (match) => {
+        const num = parseInt(match.replace(/,/g, ''), 10)
+        if (isNaN(num) || num > 999999999999) return match
+        if (num >= 1900 && num <= 2099) return match
+        return numberToWords(num)
+      })
     }
-    const months = '(?:January|February|March|April|May|June|July|August|September|October|November|December)'
-    cleaned = cleaned.replace(new RegExp('(' + months + ')\\s+(\\d{1,2})\\b', 'g'), (_, month, day) => {
-      return month + ' ' + ordinalWord(parseInt(day, 10))
-    })
-    // Also handle "1 March" style dates
-    cleaned = cleaned.replace(new RegExp('\\b(\\d{1,2})\\s+(' + months + ')', 'g'), (_, day, month) => {
-      return 'the ' + ordinalWord(parseInt(day, 10)) + ' of ' + month
-    })
 
-    // Handle standalone numbers (not inside words): "389" → "three hundred and eighty nine"
-    // Skip years (1900-2099) — they should be read as-is by the TTS engine
-    cleaned = cleaned.replace(/\b(\d[\d,]*)\b/g, (match) => {
-      const num = parseInt(match.replace(/,/g, ''), 10)
-      if (isNaN(num) || num > 999999999999) return match
-      if (num >= 1900 && num <= 2099) return match // leave years alone
-      return numberToWords(num)
-    })
-
-    // Apply pronunciation fixes
+    // Apply pronunciation fixes (English names in any language)
     for (const [pattern, replacement] of ttsPronunciationFixes) {
       cleaned = cleaned.replace(pattern, replacement)
     }
@@ -415,10 +417,16 @@ export default function Home() {
 
   // Speak full text at once (for manual click on speaker icon)
   const speak = useCallback(async (text, index) => {
+    // Stop any currently playing audio first to prevent overlapping voices
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
     ttsCancelledRef.current = false
     ttsQueueRef.current = []
     ttsPlayingRef.current = false
     ttsParaCounterRef.current = 0
+    lastParaIndexRef.current = -1
 
     setSpeakingIndex(index)
     setSpeakingParaIndex(0)
@@ -490,7 +498,7 @@ export default function Home() {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: newMessages, prefs }),
+          body: JSON.stringify({ messages: newMessages, prefs, lang }),
         })
 
         if (!res.ok) {

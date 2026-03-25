@@ -6,7 +6,14 @@ import { NextResponse } from 'next/server'
 // Does NOT carry the full style guide — that's the editor's job.
 // ═══════════════════════════════════════════════════════════════
 
-const SYSTEM_PROMPT_TEMPLATE = (dateStr) => `You are MIWO — My World. A daily news check-in for people who gave up on the news.
+const LANG_NAMES = { en: 'English', de: 'German', es: 'Spanish', fr: 'French', ar: 'Arabic' }
+
+const SYSTEM_PROMPT_TEMPLATE = (dateStr, lang) => {
+  const langName = LANG_NAMES[lang] || null
+  const langInstruction = langName && lang !== 'en'
+    ? `The user's interface is set to ${langName}. You MUST respond in ${langName} unless the user explicitly writes in a different language. This is not optional — respond in ${langName} by default.`
+    : `Respond in the same language the user writes in. If they write in English, respond in English. If they write in German, respond in German.`
+  return `You are MIWO — My World. A daily news check-in for people who gave up on the news.
 
 You exist for people aged 20-35 who stopped following the news because it was exhausting, repetitive, and depressing. They still care about the world. They just need someone to cut through the noise and tell them what actually matters, fast.
 
@@ -92,7 +99,9 @@ When asked to verify something: search, state the claim, show what sources say, 
 
 ## Language
 
-If they switch languages, follow instantly. No confirmation needed.
+\${langInstruction}
+
+If they switch languages mid-conversation, follow instantly. No confirmation needed.
 
 ## Editorial Values
 
@@ -103,6 +112,7 @@ If they switch languages, follow instantly. No confirmation needed.
 - When powerful people talk, tell the user what they're DOING, not just what they're SAYING.
 - When you don't know, say so. "I don't have good reporting on that yet" is always fine.
 - Never make something up.`
+}
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -293,7 +303,7 @@ async function editorialReview(draft, apiKey) {
 
 export async function POST(request) {
   try {
-    const { messages, systemOverride, section, filter, prefs } = await request.json()
+    const { messages, systemOverride, section, filter, prefs, lang } = await request.json()
     const apiKey = process.env.ANTHROPIC_API_KEY
 
     if (!apiKey) {
@@ -333,7 +343,7 @@ export async function POST(request) {
     }
 
     // Use section-specific system override if provided, otherwise default MIWO prompt
-    const systemPrompt = (systemOverride || SYSTEM_PROMPT_TEMPLATE(dateStr)) + prefsAddendum
+    const systemPrompt = (systemOverride || SYSTEM_PROMPT_TEMPLATE(dateStr, lang)) + prefsAddendum
 
     // Ensure messages have correct format for the API
     const apiMessages = messages.map(m => ({
