@@ -514,18 +514,25 @@ export default function Home() {
 
   const formatMessage = (text, isSpeakingMsg) => {
     return text.split('\n\n').map((para, i) => {
-      // Strip all markdown bold — MIWO is spoken news, no headlines
-      const cleaned = para
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/\*(.*?)\*/g, '$1')
-        .replace(/#{1,6}\s+/g, '')
+      // Strip markdown headings but keep bold as <strong> for copper emphasis
+      const cleaned = para.replace(/#{1,6}\s+/g, '')
+      // Convert **bold** to <strong> spans for visual warmth
+      const parts = cleaned.split(/(\*\*.*?\*\*|\*.*?\*)/g).map((part, j) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={j}>{part.slice(2, -2)}</strong>
+        }
+        if (part.startsWith('*') && part.endsWith('*')) {
+          return <em key={j}>{part.slice(1, -1)}</em>
+        }
+        return part
+      })
       const isActivePara = isSpeakingMsg && speakingParaIndex === i
       return (
         <p
           key={i}
           className={isActivePara ? 'speaking-paragraph' : ''}
         >
-          {cleaned}
+          {parts}
         </p>
       )
     })

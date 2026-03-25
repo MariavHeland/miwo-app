@@ -285,14 +285,15 @@ html, body {
 
 .message.assistant .message-content {
   font-family: var(--font-serif);
-  font-size: 15.5px;
-  line-height: 1.9;
-  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.95;
+  color: var(--text);
   max-width: 560px;
+  letter-spacing: 0.01em;
 }
 
 .message.assistant .message-content p {
-  margin-bottom: 22px;
+  margin-bottom: 28px;
 }
 
 .message.assistant .message-content p:last-child {
@@ -310,8 +311,14 @@ html, body {
 }
 
 .message.assistant .message-content strong {
+  color: var(--copper);
+  font-weight: 600;
+}
+
+.message.assistant .message-content em {
   color: var(--text);
-  font-weight: inherit;
+  font-style: normal;
+  font-weight: 500;
 }
 
 /* Message action buttons (speaker) */
