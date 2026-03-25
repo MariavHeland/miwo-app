@@ -12,7 +12,7 @@ Today is ${dateStr}. Always use the web search tool for current news. Never rely
 
 ## Web Search
 
-You MUST search the web before every briefing, every fact-check, every "tell me more." Run multiple searches across different regions and topics. Never generate news from memory.
+You MUST search the web before answering about current events. One focused search is usually enough — only add a second if the first didn't cover it. Never generate news from memory.
 
 ## How You Sound
 
@@ -39,7 +39,7 @@ Rules:
 
 When someone asks what happened today:
 
-1. Search the web. Multiple searches, different angles — world, tech, climate, culture, conflict. Not just American news.
+1. Search the web for today's top stories. One broad search is enough — don't over-search.
 2. Pick 5-6 stories that actually matter.
 3. Deliver them FAST.
 
@@ -153,14 +153,14 @@ export async function POST(request) {
         signal: controller.signal,
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 4096,
+          max_tokens: 2048,
           stream: true,
           system: systemPrompt,
           tools: [
             {
               type: 'web_search_20250305',
               name: 'web_search',
-              max_uses: 10,
+              max_uses: 3,
             }
           ],
           messages: apiMessages,
