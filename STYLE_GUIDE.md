@@ -62,7 +62,41 @@ In most cases, these phrases are not carrying real information and should simply
 
 **Test:** Could this phrase appear in any story about any topic? If yes, it's a cliché. Ask: is there a real fact behind it? If yes, state the fact and attribute it. If no, cut it.
 
-### 1.4 Premature Framing
+### 1.4 Attribution Verbs
+
+The verb you attach to a person's statement carries editorial weight. "Claims" implies disbelief. "Confirmed" implies belief. Most of the time, MIWO should be neutral.
+
+**The spectrum:**
+
+| Implies belief | Neutral | Implies disbelief |
+|---------------|---------|-------------------|
+| confirmed, revealed, acknowledged | said, stated, told reporters | claimed, insisted, alleged |
+
+**The rule:** Default to neutral verbs. Use "said" or "says" for almost everyone. Reserve "claims" for cases where disbelief is editorially justified — where there is specific evidence or contradiction that warrants scepticism. Never use "claims" as a routine synonym for "said."
+
+| Wrong | Why | Right |
+|-------|-----|-------|
+| "Iran claims it opened the strait" | "Claims" implies they didn't. Is there evidence they didn't? | "Iran says it opened the strait" |
+| "The minister confirmed the deal" | "Confirmed" implies MIWO already believes it | "The minister said the deal had been reached" |
+| "Officials revealed the plan" | "Revealed" implies it's true and was hidden | "Officials described the plan" |
+
+**Exception:** When a statement directly contradicts established facts or other credible sources, "claims" is appropriate. The editorial decision to use a belief-implying or disbelief-implying verb must be deliberate, never automatic.
+
+### 1.5 False Continuation
+
+Using "still" or "continues to" when the continuation of something is not itself news. "Still" implies something was expected to stop or change. If nothing was expected to change, the word is meaningless.
+
+**The rule:** Only use "still" when there was a prior expectation or report that something would stop, and it hasn't.
+
+| Wrong | Why | Right |
+|-------|-----|-------|
+| "The Pentagon is still deploying 3,000 troops" | Nothing suggested the deployment would stop | "The Pentagon is deploying 3,000 troops" — or omit if it was reported yesterday and nothing has changed |
+| "Prices are still rising" | They were rising yesterday too. Is the rate new? | "Prices rose again today" (if new data) or omit (if no new data) |
+| "Talks are still ongoing" | If they paused — and resumed — then use "still." Otherwise it adds nothing | "Talks continue" or omit |
+
+**Test:** Was there a reason to expect this would stop? If no, "still" is not news — it's the sun still rising.
+
+### 1.6 Premature Framing
 
 Declaring something a crisis, turning point, landmark, or historic moment before it has proved to be one.
 
@@ -94,10 +128,14 @@ Using vague words of quantity that obscure whether something is large or small.
 
 All individuals are referred to with equal formality. No person gets a higher linguistic status than another through naming convention.
 
-**Convention:** First reference uses full name and role. Subsequent references use surname only.
+**Convention:** First reference ALWAYS uses full name and role. No exceptions. Subsequent references use surname only.
 
 - First: "Mette Frederiksen, the Danish prime minister"
 - After: "Frederiksen"
+- First: "President Donald Trump" or "Donald Trump, the US president"
+- After: "Trump"
+
+**Never** use a surname alone on first reference, even for the most famous people in the world. "Trump says" on first mention is wrong. "President Donald Trump says" is correct. The reader in Jakarta or Lagos may not immediately know which Trump, or what role they hold. First reference with full name and role is not optional — it is the foundation of equal treatment.
 
 This applies to everyone equally — heads of state, activists, accused criminals, victims. No one gets "Mr" or "Mrs" (too formal for MIWO's audience). No one gets first-name-only (too familiar, and creates false intimacy). The surname convention is the equaliser.
 
@@ -141,7 +179,13 @@ MIWO uses a clear hierarchy to signal how confident a claim is:
 4. **Contested claim:** Two sides say different things. Present both. "The US says it delivered the plan. Iran says it received no such document."
 5. **Unverified:** No credible source yet. Say so. "Reports are circulating but MIWO has not been able to verify them independently."
 
-### 4.2 Named Sources
+### 4.2 Contested Claims
+
+When a claim is disputed or unverified: report the claim, attribute it precisely, then **immediately** report the dispute or absence of confirmation. Do not leave a contested claim standing alone in a paragraph. The dispute or uncertainty must follow within the same paragraph.
+
+If the truth is genuinely unclear, say so explicitly. "It is unclear whether..." or "This could not be independently confirmed" are not admissions of failure — they are useful information.
+
+### 4.3 Named Sources
 
 - Always name the source organisation or official where possible
 - "A senior US official" is acceptable only when the source would face genuine risk from being named
@@ -149,13 +193,51 @@ MIWO uses a clear hierarchy to signal how confident a claim is:
 
 ---
 
-## 5. Sentence Structure
+## 5. Structure and Clarity
+
+### 5.1 The Goal
+
+Short sentences are a tool, not a goal. The goal is **clarity**. A piece should leave the listener with an accurate understanding of what happened, why it matters, and what is uncertain. If short sentences create a disjointed list of facts that obscures the picture, they have failed.
+
+### 5.2 Sentence Rules
 
 - One idea per sentence.
 - If a sentence contains more than one comma, it should probably be two sentences.
 - Never stack developments using "and," "while," or "as" to connect unrelated facts.
 - Prefer the active voice. "The jury ordered Meta to pay" not "Meta was ordered to pay by the jury."
 - Keep subject and verb close together. Don't separate them with long subordinate clauses.
+
+### 5.3 Grouping Related Facts
+
+Related facts belong together. Contradictions should be placed directly next to each other so the tension is visible and legible. Do not flatten a complex, contradictory situation into a disconnected list.
+
+When facts are in genuine tension — for example, when the White House and the Pentagon appear to be doing opposite things — the structure must make that tension explicit. The reader should see the contradiction, not have to reconstruct it from scattered sentences.
+
+| Wrong (disconnected) | Right (structured) |
+|---------------------|-------------------|
+| "Trump says he paused strikes for five days. He says talks are productive. Iran opened the Strait of Hormuz. Oil dropped 9%. The Pentagon is deploying 3,000 troops. Iran hit Gulf countries with missiles." | "President Donald Trump says he has paused strikes on Iran for five days. He describes the talks as productive. Iran has neither confirmed nor denied that talks are happening. Meanwhile, the Pentagon is deploying 3,000 additional troops to the region — an action that sits uneasily alongside talk of peace. On the ground, Iran hit Gulf states with missiles and drones today. A fuel tank caught fire at Kuwait's airport." |
+
+The second version is longer. But it is news. The first version is a list of facts that leaves the reader more confused than before they started reading.
+
+### 5.4 The Three Categories of Knowledge
+
+Every piece should leave the reader with an accurate sense of three things:
+
+1. **What is known** — confirmed, multi-source, factual
+2. **What is disputed** — claimed by one side, contested or unconfirmed by others
+3. **What is unknown** — genuinely unclear, no reliable information available
+
+These are three different categories and they must never be collapsed into one. When the truth is genuinely unclear, say so explicitly. "It is unclear whether..." or "This could not be independently confirmed" are not admissions of failure — they are useful information. The reader is better served by knowing the picture is murky than by receiving false certainty.
+
+**Example — the honest version of the Iran talks:**
+
+"President Donald Trump says productive talks are under way. Iran has neither confirmed this nor denied it outright. It is not clear whether formal negotiations are happening or whether Trump is characterising something more informal."
+
+That is more words than a clean assertion. But it is actually news. A clean assertion is not.
+
+### 5.5 Structuring Confusion
+
+When a situation is genuinely confusing — as wars often are — the job is not to simplify it into false clarity. The job is to **structure the confusion** so it is legible. The reader should come away understanding what is contradictory and why, not wondering whether the writer was confused.
 
 ---
 
