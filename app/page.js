@@ -62,13 +62,9 @@ function SettingsIcon({ size = 18 }) {
   )
 }
 
-// Globe views — rotate randomly to avoid Western-centric default
-// TODO: Add globe-asia.jpg and globe-pacific.jpg when files are available
-const GLOBE_VIEWS = [
-  '/globe.png',          // Africa & Europe (current)
-  // '/globe-asia.jpg',  // East Asia & Oceania — add file to /public
-  // '/globe-pacific.jpg', // Asia-Pacific & Indian Ocean — add file to /public
-]
+// Globe images — two hemispheres flanking the MIWO wordmark
+const GLOBE_FRONT = '/globe-front.png'  // Africa & Europe (left)
+const GLOBE_BACK = '/globe-back.png'    // Asia-Pacific (right)
 
 export default function Home() {
   const { t } = useLang()
@@ -89,7 +85,7 @@ export default function Home() {
   const [voiceName, setVoiceNameRaw] = useState('nova')
   const [ttsStatus, setTtsStatus] = useState('') // '', 'generating', 'playing', 'quota'
   const [speakingParaIndex, setSpeakingParaIndex] = useState(-1) // which paragraph is currently being read aloud
-  const [globeSrc, setGlobeSrc] = useState('/globe.png') // fallback
+  // Globe sources are fixed — no random rotation needed
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
   const [showWelcome, setShowWelcome] = useState(true)
   const [showPrefs, setShowPrefs] = useState(false)
@@ -653,12 +649,9 @@ export default function Home() {
       {showWelcome ? (
         <div className="welcome">
           <div className="welcome-identity">
-            <img src={globeSrc} alt="" className="welcome-globe welcome-globe-left" />
-            <div className="welcome-brand-wrap">
-              <img src="/miwo-brand.png" alt="MIWO" className="welcome-brand-img" />
-              <span className="welcome-brand-subtitle">my world my news</span>
-            </div>
-            <img src={globeSrc} alt="" className="welcome-globe welcome-globe-right" />
+            <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
+            <img src="/miwo-brand.png" alt="MIWO — my world my news" className="welcome-brand-img" />
+            <img src={GLOBE_BACK} alt="" className="welcome-globe welcome-globe-right" />
           </div>
           <div className="welcome-promise">
             <p>{t('promise1')}</p>

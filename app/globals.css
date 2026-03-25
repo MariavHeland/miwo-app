@@ -541,34 +541,17 @@ html, body {
 }
 .welcome-globe-right {
   margin-left: -130px;
-  transform: scaleX(-1);
   position: relative;
   z-index: 0;
 }
 
-.welcome-brand-wrap {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
 .welcome-brand-img {
-  width: clamp(360px, 42vw, 520px);
+  width: clamp(520px, 48vw, 720px);
   height: auto;
   display: block;
-}
-
-.welcome-brand-subtitle {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.32em;
-  text-transform: lowercase;
-  color: var(--text-dim);
-  margin-top: 2px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
 }
 
 /* Promise — the tagline */
@@ -637,10 +620,6 @@ html, body {
   }
   .welcome-identity {
     margin-bottom: 24px;
-  }
-  .welcome-brand-subtitle {
-    font-size: 11px;
-    letter-spacing: 0.25em;
   }
   .welcome-right {
     max-width: 100%;
