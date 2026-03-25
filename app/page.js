@@ -103,6 +103,7 @@ export default function Home() {
   const recognitionRef = useRef(null)
   const audioRef = useRef(null)
   const audioCtxRef = useRef(null)
+  const sendMessageRef = useRef(null)
 
   // Globe images are now fixed constants (GLOBE_FRONT, GLOBE_BACK)
 
@@ -169,7 +170,8 @@ export default function Home() {
           if (event.results[0].isFinal) {
             setIsListening(false)
             setTimeout(() => {
-              sendMessage(transcript)
+              // Use ref to avoid stale closure — sendMessage changes every render
+              if (sendMessageRef.current) sendMessageRef.current(transcript)
             }, 300)
           }
         }
@@ -197,12 +199,42 @@ export default function Home() {
     [/\bScholz\b/g, 'Sholts'],
     [/\bKyiv\b/g, 'Keev'],
     [/\bBlinken\b/g, 'BLINK-en'],
+    [/\bIsrael\b/g, 'IZ-ray-el'],
+    [/\bIsraeli\b/g, 'iz-RAY-lee'],
+    [/\bHamas\b/g, 'hah-MAHS'],
+    [/\bHezbollah\b/g, 'hez-BOL-ah'],
+    [/\bUkraine\b/g, 'you-CRANE'],
+    [/\bUkrainian\b/g, 'you-CRANE-ee-an'],
+    [/\bQatar\b/g, 'KAH-tar'],
+    [/\bErdogan\b/g, 'AIR-doh-wan'],
+    [/\bNetanyahu\b/g, 'net-an-YAH-hoo'],
     [/—/g, ', '],
     [/–/g, ', '],
     [/\.\.\./g, ', '],
     [/\s*\(\s*/g, ', '],
     [/\s*\)\s*/g, ', '],
   ]
+
+  // Convert numbers to spoken words for natural TTS
+  const numberToWords = (num) => {
+    if (num === 0) return 'zero'
+    const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
+      'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
+    const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+
+    const convert = (n) => {
+      if (n < 20) return ones[n]
+      if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? ' ' + ones[n % 10] : '')
+      if (n < 1000) return ones[Math.floor(n / 100)] + ' hundred' + (n % 100 ? ' and ' + convert(n % 100) : '')
+      if (n < 1000000) return convert(Math.floor(n / 1000)) + ' thousand' + (n % 1000 ? ' ' + convert(n % 1000) : '')
+      if (n < 1000000000) return convert(Math.floor(n / 1000000)) + ' million' + (n % 1000000 ? ' ' + convert(n % 1000000) : '')
+      return convert(Math.floor(n / 1000000000)) + ' billion' + (n % 1000000000 ? ' ' + convert(n % 1000000000) : '')
+    }
+
+    const isNeg = num < 0
+    const result = convert(Math.abs(num))
+    return isNeg ? 'minus ' + result : result
+  }
 
   // Strip markdown for TTS and fix pronunciation
   const cleanTextForSpeech = (text) => {
@@ -214,6 +246,29 @@ export default function Home() {
       .replace(/\n{2,}/g, '. ')
       .replace(/\n/g, ' ')
       .trim()
+
+    // Convert numbers to spoken words (e.g. "389" → "three hundred and eighty nine")
+    // Handle percentages first: "12%" → "twelve percent"
+    cleaned = cleaned.replace(/(\d[\d,]*)\s*%/g, (_, n) => {
+      const num = parseInt(n.replace(/,/g, ''), 10)
+      return isNaN(num) ? n + ' percent' : numberToWords(num) + ' percent'
+    })
+    // Handle currency: "$4,560" → "four thousand five hundred and sixty dollars"
+    cleaned = cleaned.replace(/\$(\d[\d,]*(?:\.\d+)?)/g, (_, n) => {
+      const parts = n.replace(/,/g, '').split('.')
+      const whole = parseInt(parts[0], 10)
+      let result = numberToWords(whole) + ' dollars'
+      if (parts[1]) {
+        const cents = parseInt(parts[1], 10)
+        if (cents > 0) result += ' and ' + numberToWords(cents) + ' cents'
+      }
+      return result
+    })
+    // Handle standalone numbers (not inside words): "389" → "three hundred and eighty nine"
+    cleaned = cleaned.replace(/\b(\d[\d,]*)\b/g, (match) => {
+      const num = parseInt(match.replace(/,/g, ''), 10)
+      return isNaN(num) || num > 999999999999 ? match : numberToWords(num)
+    })
 
     // Apply pronunciation fixes
     for (const [pattern, replacement] of ttsPronunciationFixes) {
@@ -237,6 +292,7 @@ export default function Home() {
   const ttsQueueRef = useRef([])
   const ttsPlayingRef = useRef(false)
   const ttsCancelledRef = useRef(false)
+  const lastParaIndexRef = useRef(-1) // track paragraph transitions for pauses
 
   // Generate audio for one chunk of text
   const generateAudio = useCallback(async (text) => {
@@ -261,11 +317,21 @@ export default function Home() {
       setSpeakingIndex(-1)
       setSpeakingParaIndex(-1)
       setTtsStatus('')
+      lastParaIndexRef.current = -1
       return
     }
 
+    const { url, resolve, paraIndex } = ttsQueueRef.current[0]
+
+    // Half-second pause between paragraphs (different news items)
+    if (lastParaIndexRef.current >= 0 && paraIndex !== lastParaIndexRef.current) {
+      await new Promise(r => setTimeout(r, 500))
+      if (ttsCancelledRef.current) return
+    }
+
+    ttsQueueRef.current.shift()
     ttsPlayingRef.current = true
-    const { url, resolve, paraIndex } = ttsQueueRef.current.shift()
+    lastParaIndexRef.current = paraIndex
 
     if (!url) {
       ttsPlayingRef.current = false
@@ -355,6 +421,7 @@ export default function Home() {
     ttsQueueRef.current = []
     ttsPlayingRef.current = false
     ttsParaCounterRef.current = 0
+    lastParaIndexRef.current = -1
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
@@ -484,6 +551,9 @@ export default function Home() {
     }])
     setIsLoading(false)
   }
+
+  // Keep sendMessage ref current so speech recognition always uses latest version
+  sendMessageRef.current = sendMessage
 
   const toggleVoice = () => {
     if (!recognitionRef.current) return
