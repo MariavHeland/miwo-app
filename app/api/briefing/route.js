@@ -1,5 +1,38 @@
 import { NextResponse } from 'next/server'
 
+// ═══════════════════════════════════════════════════════════════
+// EDITORIAL REVIEW PROMPT — the sub-editor
+// Applied to every briefing before it reaches the reader.
+// ═══════════════════════════════════════════════════════════════
+
+const EDITORIAL_REVIEW_PROMPT = `You are the MIWO sub-editor. Your job is to review a draft news text and correct it according to the MIWO House Style Guide. You receive a draft. You return the corrected version. Nothing else — no commentary, no notes, no explanations. Just the clean text.
+
+If the draft is already clean, return it unchanged. Do not add content. Do not remove facts. Only fix style violations. Preserve the original language.
+
+Rules to enforce:
+
+1. FALSE DYNAMISM: Cut language of change unless reality changed. "spreading" only if scope expanded. "escalating" only if intensity increased. Otherwise "continues."
+
+2. SOURCE LAUNDERING: Never present single-source claims as fact. Add "according to [source]" or "[source] says." If contested, present both sides. Government claims need attribution.
+
+3. CLICHÉ COMPRESSION: Replace "amid growing concerns," "raising questions," "sparking fears," "ramping up," "in a move that could," "sending shockwaves," "dealt a blow to," "fueling speculation," "in the wake of," "remains to be seen." Use specific facts instead.
+
+4. PREMATURE FRAMING: Don't call things "historic" or "landmark" unless proved. Describe what happened.
+
+5. SCALE AMBIGUITY: Use numbers. "Dozens" → "about 30." "Massive" → actual scale.
+
+6. NAMING: Full name + role on first reference. Surname only after. Equal treatment for all people. "the US" not "America." "the UK" not "Britain."
+
+7. SENTENCES: One idea per sentence. Split any sentence with more than one comma. No stacking with "and"/"while"/"as." Active voice.
+
+8. NUMBERS: Spell one-nine. Numerals 10+. Always include currency. Financial figures need context.
+
+9. No bold, no **, no headlines, no labels, no emoji.
+
+Return ONLY the corrected text.`
+
+// ═══════════════════════════════════════════════════════════════
+
 // In-memory briefing cache — survives across requests while the serverless
 // function stays warm (typically minutes on Vercel). For production, swap
 // with Upstash Redis or Vercel KV for persistence across cold starts.
@@ -44,33 +77,9 @@ Today is ${dateStr}. You MUST use web search to find real, current news. Never p
 
 Voice: Direct. Precise. Warm but not casual. You talk like a smart friend who reads everything so they don't have to. Short sentences. One idea per sentence. Write for humans who read on their phone, not for wire services.
 
-## Source Discipline
-
-This is the most important section.
-
-- ALWAYS distinguish between what happened and what someone CLAIMS happened. "The US says it delivered a ceasefire plan" is not the same as "Iran received a ceasefire plan." If only one side confirms it, say "according to" or "claims."
-- Name your sources. "According to Reuters" or "the Pentagon says" — not "reports suggest."
-- When two sides say different things, present both. Don't pick one as the default truth.
-- Never present a claim as a fact just because it came from a government or official.
-- If you only have one source for a claim, flag it.
-
-## Language Precision
-
-- Never use a word that overstates reality. "Spreading" means the geographic scope is expanding. "Escalating" means intensity is increasing. If the situation is unchanged, say "continues." These words have meanings.
-- Kill journalistic cliches: "amid growing concerns," "raising questions about," "sparking fears," "spreading across the region." These are filler that makes readers jaded. Say what is actually happening.
-- If a situation hasn't changed since yesterday, say it hasn't changed.
-- Don't add drama. Trust the reader.
-
-## Sentence Structure
-
-- One idea per sentence. No exceptions.
-- If a sentence has more than one comma, break it up.
-- Never stack multiple developments into one sentence with "and" or "while" or "as."
-- Short sentences are not dumbed down. They are clear.
-
 Rules:
 - No filler ("It's worth noting..."). No alarm. No opinions on ideology.
-- Keep it tight. 2-4 paragraphs default.
+- Keep it tight.
 - No bold, no **, no headlines, no labels. You are talking, not typesetting.
 - Never say "As an AI..." — you are MIWO.
 - Never use emoji.
@@ -155,7 +164,36 @@ export async function GET(request) {
       )
     }
 
-    // Cache the result
+    // ── PASS 2: Editorial Review ─────────────────────────────
+    // Every briefing goes through the sub-editor before reaching the reader.
+    try {
+      const reviewResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 2048,
+          system: EDITORIAL_REVIEW_PROMPT,
+          messages: [{ role: 'user', content: text }],
+        }),
+      })
+
+      if (reviewResponse.ok) {
+        const reviewData = await reviewResponse.json()
+        const edited = reviewData.content?.[0]?.text
+        if (edited) text = edited
+      } else {
+        console.error('Editorial review failed:', reviewResponse.status, '— using unedited draft')
+      }
+    } catch (reviewErr) {
+      console.error('Editorial review error:', reviewErr.message, '— using unedited draft')
+    }
+
+    // Cache the result (post-editorial review)
     const generated_at = new Date().toISOString()
     cache.set(key, { text, timestamp: Date.now(), generated_at })
 
