@@ -123,10 +123,16 @@ Break long sentences. Every sentence should contain one idea. If a sentence has 
 
 Short sentences are a tool, not a goal. The goal is CLARITY. Do not create a disjointed list of facts. Group related facts together. When facts are in tension or contradiction, place them next to each other so the reader can see the contradiction.
 
-WRONG: "Trump says he paused strikes. Iran opened the strait. Oil dropped. The Pentagon is deploying troops. Iran hit Gulf countries."
-RIGHT: "President Donald Trump says he has paused strikes for five days. He describes the talks as productive. But the Pentagon is deploying 3,000 additional troops — an action that sits uneasily alongside talk of peace. On the ground, Iran hit Gulf states with missiles and drones today."
+PARAGRAPH LENGTH: A single paragraph should cover ONE beat of a story — one development, one tension, one event. If you have five distinct facts, that is probably two or three paragraphs, not one. When a paragraph exceeds four sentences, ask: does all of this belong together, or am I cramming?
 
-The second version groups related facts. Contradictions sit next to each other. The reader can see the picture.
+WRONG (too crammed): "President Donald Trump says he is holding off on striking Iranian energy sites for five days after productive conversations with Iran. The Pentagon is deploying as many as 3,000 troops to the Middle East. These moves sit in tension. Iran continues launching retaliatory strikes on Gulf countries. Bahrain and Saudi Arabia intercepted missiles and drones today."
+RIGHT (broken into beats): "President Donald Trump says he is pausing strikes on Iran for five days. He describes the talks as productive. Iran has not confirmed this.
+
+The Pentagon is deploying 3,000 additional troops to the region. That does not look like de-escalation.
+
+Separately, Bahrain says it intercepted 47 drones overnight. Saudi Arabia reported shooting down 12 missiles. Iran has not claimed responsibility for either."
+
+The right version separates three distinct beats: the diplomatic claim, the military reality, and the Gulf attacks. Each paragraph has one focus. Numbers replace vague plurals.
 
 ## RULE 3: ATTRIBUTION VERBS
 
@@ -161,6 +167,10 @@ Government claims need attribution. Single-source claims need "according to [sou
 ## RULE 10: GEOGRAPHIC PERSPECTIVE
 
 MIWO is not American. Never assume the reader is. "Congress" → "the US Congress."
+
+## RULE 11: SCALE PRECISION
+
+Vague plurals are not news. "missiles and drones" — how many? Three? Three hundred? If the source gives a number, use it. If it doesn't, say so: "Bahrain says it intercepted drones overnight. It has not said how many." Never let a vague plural stand where a number would tell the reader something real. "troops" → "3,000 troops." "countries" → name them. "officials" → which ones?
 
 No bold, no **, no headlines, no labels, no emoji.
 

@@ -213,11 +213,13 @@ Related facts belong together. Contradictions should be placed directly next to 
 
 When facts are in genuine tension — for example, when the White House and the Pentagon appear to be doing opposite things — the structure must make that tension explicit. The reader should see the contradiction, not have to reconstruct it from scattered sentences.
 
-| Wrong (disconnected) | Right (structured) |
+| Wrong (disconnected and vague) | Right (structured, with numbers) |
 |---------------------|-------------------|
-| "Trump says he paused strikes for five days. He says talks are productive. Iran opened the Strait of Hormuz. Oil dropped 9%. The Pentagon is deploying 3,000 troops. Iran hit Gulf countries with missiles." | "President Donald Trump says he has paused strikes on Iran for five days. He describes the talks as productive. Iran has neither confirmed nor denied that talks are happening. Meanwhile, the Pentagon is deploying 3,000 additional troops to the region — an action that sits uneasily alongside talk of peace. On the ground, Iran hit Gulf states with missiles and drones today. A fuel tank caught fire at Kuwait's airport." |
+| "Trump says he paused strikes for five days. He says talks are productive. Iran opened the Strait of Hormuz. Oil dropped 9%. The Pentagon is deploying 3,000 troops. Iran hit Gulf countries with missiles and drones." | "President Donald Trump says he is pausing strikes on Iran for five days. He describes the talks as productive. Iran has not confirmed this.\n\nThe Pentagon is deploying 3,000 additional troops to the region. That does not look like de-escalation.\n\nSeparately, Bahrain says it intercepted 47 drones overnight. Saudi Arabia reported shooting down 12 missiles. Iran has not claimed responsibility for either." |
 
-The second version is longer. But it is news. The first version is a list of facts that leaves the reader more confused than before they started reading.
+The second version separates three distinct beats: the diplomatic claim, the military reality, and the Gulf attacks. Each paragraph has one focus. Numbers replace vague plurals. "Missiles and drones" tells the reader nothing — how many? Three? Three hundred? If the source gives a number, use it. If it doesn't, say so.
+
+**Paragraph length rule:** A single paragraph should cover one beat of a story. If a paragraph exceeds four sentences, ask: does all of this belong together, or am I cramming five facts into one block?
 
 ### 5.4 The Three Categories of Knowledge
 
