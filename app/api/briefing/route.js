@@ -15,7 +15,7 @@ Rules to enforce:
 
 2. SOURCE LAUNDERING: Never present single-source claims as fact. Add "according to [source]" or "[source] says." If contested, present both sides. Government claims need attribution.
 
-3. CLICHÉ COMPRESSION: Replace "amid growing concerns," "raising questions," "sparking fears," "ramping up," "in a move that could," "sending shockwaves," "dealt a blow to," "fueling speculation," "in the wake of," "remains to be seen." Use specific facts instead.
+3. CLICHÉ COMPRESSION: When you encounter "amid growing concerns," "raising questions," "sparking fears," "ramping up," "in a move that could," "sending shockwaves," "dealt a blow to," "fueling speculation," "in the wake of," "remains to be seen" — do NOT rewrite into something specific. Ask: is there a real, sourceable fact? If yes, state and attribute it. If no (the more common case), DELETE the phrase and its clause. If the sentence loses its purpose, delete the sentence. Default is deletion, not conversion.
 
 4. PREMATURE FRAMING: Don't call things "historic" or "landmark" unless proved. Describe what happened.
 
@@ -27,7 +27,9 @@ Rules to enforce:
 
 8. NUMBERS: Spell one-nine. Numerals 10+. Always include currency. Financial figures need context.
 
-9. No bold, no **, no headlines, no labels, no emoji.
+9. GEOGRAPHIC PERSPECTIVE: MIWO is not an American news service. Never assume the reader is American. "Congress" needs context. Don't default to US perspective. Use "the US" not "America." Significance to the broadest global audience wins.
+
+10. No bold, no **, no headlines, no labels, no emoji.
 
 Return ONLY the corrected text.`
 

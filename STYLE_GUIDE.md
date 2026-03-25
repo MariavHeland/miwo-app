@@ -41,22 +41,26 @@ Presenting a claim made by one party as established fact. This is the most dange
 
 ### 1.3 Cliché Compression
 
-Phrases that have been used so many times they no longer carry meaning. They give the reader the sensation of being informed without actually informing them.
+Phrases that have been used so many times they no longer carry meaning. They give the reader the sensation of being informed without actually informing them. Often, they are not describing something that happened — nothing happened. The language is simply filler.
+
+**The rule:** Do not attempt to rewrite a cliché into something more specific. First ask: is there a specific, sourceable claim here? If yes, make it explicit and attribute it. If no, **delete the phrase and the clause it belongs to.** If removing it leaves the surrounding sentence without a subject or purpose, delete the sentence. The default action is deletion, not conversion.
 
 **Banned phrases:**
 
-- "amid growing concerns" — Say what the concerns are and who holds them
-- "raising questions about" — Say what the questions are
-- "sparking fears" — Say who is afraid and of what, specifically
-- "ramping up" — Say what increased, by how much
-- "in a move that could" — Say what actually happened
-- "sending shockwaves through" — Say what the actual reaction was
-- "dealt a blow to" — Say what the concrete consequence was
-- "fueling speculation" — Say what people are actually saying
-- "in the wake of" — Say "after"
-- "remains to be seen" — Cut it entirely
+- "amid growing concerns"
+- "raising questions about"
+- "sparking fears"
+- "ramping up"
+- "in a move that could"
+- "sending shockwaves through"
+- "dealt a blow to"
+- "fueling speculation"
+- "in the wake of"
+- "remains to be seen"
 
-**Test:** Could this phrase appear in any story about any topic? If yes, it's a cliché. Replace it with the specific fact.
+In most cases, these phrases are not carrying real information and should simply be cut. You may not have the facts available to convert them into something more accurate — you may not be able to answer who raised the questions, or what the fears were, or whether there were any fears at all. When you cannot make a cliché specific and sourced, remove it entirely.
+
+**Test:** Could this phrase appear in any story about any topic? If yes, it's a cliché. Ask: is there a real fact behind it? If yes, state the fact and attribute it. If no, cut it.
 
 ### 1.4 Premature Framing
 
@@ -155,16 +159,36 @@ MIWO uses a clear hierarchy to signal how confident a claim is:
 
 ---
 
-## 6. Tone
+## 6. Geographic Perspective
+
+MIWO is not an American news service. It is not a European news service. It has no home country.
+
+MIWO's audience is global. A reader in Berlin, Lagos, São Paulo, or Jakarta should feel equally served. The US dominates the news cycle at certain moments — that's a fact of current events, not a editorial choice. When American news is the biggest story, cover it. When it isn't, don't lead with it simply because American media does.
+
+**Rules:**
+
+- Never assume the reader is American. "Congress" needs context: "the US Congress." "The president" needs a name and country the first time.
+- Never treat American domestic politics as the default frame. A funding dispute in Washington is not inherently more important than a constitutional crisis in Nairobi.
+- When covering a conflict involving the US, do not default to the US perspective. Apply the same source attribution discipline to American officials as to any other government.
+- Use "the US" not "America" (America is a continent). Use "the UK" not "Britain" (Britain excludes Northern Ireland).
+- Actively seek stories from regions that English-language media undercovers: sub-Saharan Africa, South and Southeast Asia, Latin America, the Pacific. Not for tokenism — because important things happen there that the reader deserves to know about.
+- When multiple stories compete for the lead, significance to the broadest global audience wins, not significance to the American audience.
+
+## 7. Tone and Audience
+
+MIWO's core audience is 20-35. They are not stupid — they are busy. They stopped following the news because it was exhausting, not because they stopped caring. They read on their phones. They scan. They will not tolerate long, congested sentences.
 
 - MIWO talks like a smart friend. Not a professor. Not a news anchor.
-- Short sentences are not dumbed down. They are clear. Clarity is respect for the reader's time.
+- Short sentences are not dumbed down. They are clear. Clarity is respect for the reader's time and intelligence.
+- One idea per sentence. This is not a suggestion — it is the most important structural rule in this guide.
+- If a sentence needs to be read twice to be understood, it is too long. Break it up.
 - If a day was quiet, say it was quiet. Don't manufacture urgency.
 - Trust the reader. They can handle nuance, uncertainty, and the phrase "we don't know yet."
+- Write for the ear. Everything MIWO produces may be read aloud by a voice. If it sounds awkward spoken, rewrite it.
 
 ---
 
-## 7. What MIWO Does Not Do
+## 8. What MIWO Does Not Do
 
 - Predict outcomes ("This could lead to...")
 - Editorialize on ideology

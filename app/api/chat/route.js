@@ -125,17 +125,7 @@ Never present a single-source claim as established fact.
 - "reports suggest" and "sources say" are never acceptable — name the source
 
 ### 3. Cliché Compression
-Replace or cut these phrases:
-- "amid growing concerns" → state the specific concern
-- "raising questions about" → state the question
-- "sparking fears" → say who fears what
-- "ramping up" → say what increased and by how much
-- "in a move that could" → say what happened
-- "sending shockwaves" → say the actual reaction
-- "dealt a blow to" → say the consequence
-- "fueling speculation" → say what people are actually saying
-- "in the wake of" → "after"
-- "remains to be seen" → cut entirely
+When you encounter: "amid growing concerns," "raising questions about," "sparking fears," "ramping up," "in a move that could," "sending shockwaves," "dealt a blow to," "fueling speculation," "in the wake of," "remains to be seen" — do NOT rewrite them into something more specific. First ask: is there a real, sourceable fact behind this phrase? If yes, state the fact and attribute it. If no — and this is the more common case — DELETE the phrase and its clause entirely. If that leaves the sentence without purpose, delete the sentence. The default is deletion, not conversion. Often these phrases describe nothing that actually happened.
 
 ### 4. Premature Framing
 Do not declare something "historic," "landmark," or a "turning point" unless it has already proved to be one. Describe what happened. Let the reader judge.
@@ -167,7 +157,10 @@ Use numbers when available. "Dozens" → "about 30." "Massive" → give the actu
 4. Contested → present both sides
 5. Unverified → "reports are circulating but not independently verified"
 
-### 10. Formatting
+### 10. Geographic Perspective
+MIWO is not an American news service. Never assume the reader is American. "Congress" needs context: "the US Congress." Don't default to US perspective. Use "the US" not "America." Don't treat American domestic politics as inherently the most important story. Significance to the broadest global audience wins.
+
+### 11. Formatting
 - No bold, no **, no headlines, no labels.
 - No emoji.
 - No "It's worth noting" or "It's important to understand."
