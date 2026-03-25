@@ -104,6 +104,9 @@ export default function Home() {
   const audioRef = useRef(null)
   const audioCtxRef = useRef(null)
   const sendMessageRef = useRef(null)
+  const wsPlayingRef = useRef(false)    // Web Speech active flag
+  const speakWSRef = useRef(null)       // ref to speakWebSpeech (defined later)
+  const queueWSRef = useRef(null)       // ref to queueWebSpeechSentence (defined later)
 
   // Globe images are now fixed constants (GLOBE_FRONT, GLOBE_BACK)
 
@@ -398,8 +401,37 @@ export default function Home() {
   // Track paragraph counter for TTS queue
   const ttsParaCounterRef = useRef(0)
 
+  // Stop speaking — defined here so queueParagraph and speak can reference it without TDZ
+  const stopSpeaking = useCallback(() => {
+    // Stop Fish Audio queue
+    ttsCancelledRef.current = true
+    ttsQueueRef.current = []
+    ttsPlayingRef.current = false
+    ttsParaCounterRef.current = 0
+    lastParaIndexRef.current = -1
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    // Stop Web Speech
+    wsPlayingRef.current = false
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+    setSpeakingIndex(-1)
+    setSpeakingParaIndex(-1)
+    setTtsStatus('')
+  }, [])
+
   // Add a paragraph to the TTS queue and start playing if idle
   const queueParagraph = useCallback(async (text, msgIndex, paraIndex) => {
+    // Non-English: use Web Speech (native OS voice, native accent)
+    if (lang && lang !== 'en') {
+      queueWSRef.current?.(text, msgIndex, paraIndex)
+      return
+    }
+
+    // English: Fish Audio queue
     setSpeakingIndex(msgIndex)
     setTtsStatus('generating')
 
@@ -413,11 +445,18 @@ export default function Home() {
 
     ttsQueueRef.current.push({ url, paraIndex: pIdx })
     if (!ttsPlayingRef.current) playNextInQueue()
-  }, [generateAudio, playNextInQueue])
+  }, [generateAudio, playNextInQueue, lang])
 
   // Speak full text at once (for manual click on speaker icon)
   const speak = useCallback(async (text, index) => {
-    // Stop any currently playing audio first to prevent overlapping voices
+    // Non-English: use Web Speech API (native OS voices, native accent)
+    if (lang && lang !== 'en') {
+      stopSpeaking()
+      speakWSRef.current?.(text, index)
+      return
+    }
+
+    // English: use Fish Audio (branded voice quality)
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
@@ -448,23 +487,99 @@ export default function Home() {
       }
       if (ttsCancelledRef.current) break
     }
-  }, [generateAudio, playNextInQueue])
+  }, [generateAudio, playNextInQueue, lang, stopSpeaking]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Stop speaking
-  const stopSpeaking = useCallback(() => {
-    ttsCancelledRef.current = true
-    ttsQueueRef.current = []
-    ttsPlayingRef.current = false
-    ttsParaCounterRef.current = 0
-    lastParaIndexRef.current = -1
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
+  // ─── Web Speech API — used for non-English languages ───────────────────────
+  // Maps MIWO lang codes to BCP-47 locales that browsers understand
+  const langToLocale = { de: 'de-DE', fr: 'fr-FR', es: 'es-ES', ar: 'ar-SA' }
+
+  // Pick the best available OS voice for a given locale
+  const getWebSpeechVoice = (locale) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return null
+    const voices = window.speechSynthesis.getVoices()
+    const langCode = locale.split('-')[0]
+    return (
+      voices.find(v => v.lang === locale) ||        // exact match first
+      voices.find(v => v.lang.startsWith(langCode) && v.localService) || // local preferred
+      voices.find(v => v.lang.startsWith(langCode)) || // any for this language
+      null
+    )
+  }
+
+  // Speak full text via Web Speech (speaker-icon click, non-English)
+  const speakWebSpeech = useCallback(async (text, index) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    window.speechSynthesis.cancel()
+    wsPlayingRef.current = true
+
+    const locale = langToLocale[lang] || 'de-DE'
+    const voice = getWebSpeechVoice(locale)
+    const paragraphs = text.split(/\n\n+/).filter(p => p.trim())
+
+    setSpeakingIndex(index)
+    setTtsStatus('playing')
+
+    for (let pi = 0; pi < paragraphs.length; pi++) {
+      if (!wsPlayingRef.current) break
+      const cleaned = cleanTextForSpeech(paragraphs[pi])
+      if (!cleaned) continue
+
+      setSpeakingParaIndex(pi)
+      await new Promise((resolve) => {
+        const utt = new SpeechSynthesisUtterance(cleaned)
+        utt.lang = locale
+        utt.rate = 0.92
+        if (voice) utt.voice = voice
+        utt.onend = resolve
+        utt.onerror = resolve
+        window.speechSynthesis.speak(utt)
+      })
+
+      // Half-second breath between paragraphs
+      if (pi < paragraphs.length - 1 && wsPlayingRef.current) {
+        await new Promise(r => setTimeout(r, 500))
+      }
     }
-    setSpeakingIndex(-1)
-    setSpeakingParaIndex(-1)
-    setTtsStatus('')
-  }, [])
+
+    if (wsPlayingRef.current) {
+      setSpeakingIndex(-1)
+      setSpeakingParaIndex(-1)
+      setTtsStatus('')
+      wsPlayingRef.current = false
+    }
+  }, [lang]) // eslint-disable-line react-hooks/exhaustive-deps
+  speakWSRef.current = speakWebSpeech  // keep bridge ref up to date each render
+
+  // Queue a single sentence via Web Speech (streaming auto-read, non-English)
+  const queueWebSpeechSentence = useCallback((text, msgIndex, paraIndex) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    const locale = langToLocale[lang] || 'de-DE'
+    const voice = getWebSpeechVoice(locale)
+    const cleaned = cleanTextForSpeech(text)
+    if (!cleaned) return
+
+    setSpeakingIndex(msgIndex)
+    setTtsStatus('playing')
+
+    const utt = new SpeechSynthesisUtterance(cleaned)
+    utt.lang = locale
+    utt.rate = 0.92
+    if (voice) utt.voice = voice
+    utt.onstart = () => {
+      if (paraIndex >= 0) setSpeakingParaIndex(paraIndex)
+    }
+    utt.onend = () => {
+      // Clear state only when the queue is empty
+      if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+        setSpeakingIndex(-1)
+        setSpeakingParaIndex(-1)
+        setTtsStatus('')
+      }
+    }
+    window.speechSynthesis.speak(utt)
+  }, [lang]) // eslint-disable-line react-hooks/exhaustive-deps
+  queueWSRef.current = queueWebSpeechSentence  // keep bridge ref up to date each render
+  // ─── End Web Speech ─────────────────────────────────────────────────────────
 
   // Voice swap — stop playback instantly, new voice applies to next generation
   const setVoiceName = useCallback((name) => {
