@@ -872,7 +872,11 @@ html, body {
 }
 
 .chat-input::placeholder { color: var(--text-dim); }
-.chat-input:focus { border-color: var(--copper-dim); }
+.chat-input:focus {
+  border-color: var(--copper);
+  box-shadow: 0 0 0 3px rgba(196, 125, 90, 0.08);
+  outline: none;
+}
 
 .chat-send {
   width: 46px;
@@ -890,7 +894,10 @@ html, body {
   justify-content: center;
 }
 
-.chat-send:hover { filter: brightness(1.1); }
+.chat-send:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 12px rgba(196, 125, 90, 0.3);
+}
 .chat-send:disabled { opacity: 0.3; cursor: not-allowed; }
 
 /* ═══════════════════════════════════════════════
@@ -973,8 +980,9 @@ html, body {
 }
 
 .subpage-filter:hover {
-  border-color: var(--copper-dim);
+  border-color: var(--copper);
   color: var(--text);
+  box-shadow: 0 0 8px rgba(196, 125, 90, 0.1);
 }
 
 .subpage-filter.active {
