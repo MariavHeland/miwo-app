@@ -268,7 +268,13 @@ async function collectStreamText(response) {
 // Helper: run editorial review pass (non-streaming, returns text)
 // ═══════════════════════════════════════════════════════════════
 
-async function editorialReview(draft, apiKey) {
+async function editorialReview(draft, apiKey, lang) {
+  const langName = LANG_NAMES[lang] || null
+  // Prepend a hard language lock so Haiku never switches to English
+  const langLock = langName && lang !== 'en'
+    ? `CRITICAL: The text below is in ${langName}. You MUST return the corrected text in ${langName}. Do NOT translate or switch to English under any circumstances.\n\n`
+    : ''
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -281,7 +287,7 @@ async function editorialReview(draft, apiKey) {
       max_tokens: 2048,
       system: EDITORIAL_REVIEW_PROMPT,
       messages: [
-        { role: 'user', content: draft }
+        { role: 'user', content: langLock + draft }
       ],
     }),
   })
@@ -428,7 +434,7 @@ export async function POST(request) {
 
     if (isNewsContent(apiMessages, draft)) {
       try {
-        finalText = await editorialReview(draft, apiKey)
+        finalText = await editorialReview(draft, apiKey, lang)
       } catch (reviewErr) {
         console.error('Editorial review error (using unedited draft):', reviewErr.message)
         // Fail gracefully — use unedited draft

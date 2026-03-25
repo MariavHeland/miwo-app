@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { encode } from '@msgpack/msgpack'
 
 // Fish Audio TTS endpoint
 // Takes text + voice name, returns audio as mp3 stream
@@ -28,22 +29,24 @@ export async function POST(request) {
 
     const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
 
-    // Fish Audio TTS API — model s2-pro handles multilingual natively
+    // Fish Audio TTS API — S2-pro model requires msgpack encoding
+    const msgpackBody = encode({
+      text: text.trim().substring(0, 2000),
+      reference_id: voiceId,
+      format: 'mp3',
+      mp3_bitrate: 64,
+      normalize: true,
+      latency: 'normal',
+    })
+
     const response = await fetch('https://api.fish.audio/v1/tts', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/msgpack',
         'model': 's2-pro',
       },
-      body: JSON.stringify({
-        text: text.trim().substring(0, 2000),
-        reference_id: voiceId,
-        format: 'mp3',
-        mp3_bitrate: 64,
-        normalize: true,
-        latency: 'normal',
-      }),
+      body: msgpackBody,
     })
 
     if (!response.ok) {
