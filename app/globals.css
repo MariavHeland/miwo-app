@@ -450,7 +450,9 @@ html, body {
 }
 
 .input-field:focus {
-  border-color: var(--copper-dim);
+  border-color: var(--copper);
+  box-shadow: 0 0 0 3px rgba(196, 125, 90, 0.08);
+  outline: none;
 }
 
 /* Voice button */
@@ -470,8 +472,9 @@ html, body {
 }
 
 .voice-btn:hover {
-  border-color: var(--copper-dim);
+  border-color: var(--copper);
   color: var(--copper);
+  box-shadow: 0 0 8px rgba(196, 125, 90, 0.12);
 }
 
 .voice-btn.listening {
@@ -504,6 +507,7 @@ html, body {
 
 .send-btn:hover {
   background: var(--copper-dim);
+  box-shadow: 0 0 12px rgba(196, 125, 90, 0.25);
 }
 
 .send-btn:disabled {
@@ -607,9 +611,11 @@ html, body {
 }
 
 .welcome-prompt:hover {
-  border-color: var(--copper-dim);
+  border-color: var(--copper);
   color: var(--text);
   background: var(--surface);
+  box-shadow: 0 0 12px rgba(196, 125, 90, 0.12);
+  transform: translateY(-2px);
 }
 
 /* Mobile */
@@ -718,6 +724,7 @@ html, body {
 .nav-btn:hover {
   color: var(--copper);
   background: var(--surface);
+  box-shadow: inset 0 0 8px rgba(196, 125, 90, 0.08);
 }
 
 /* Nav links in main page header */
