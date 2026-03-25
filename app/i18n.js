@@ -6,7 +6,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const translations = {
   en: {
     // Nav
-    sport: 'Sport', history: 'History', arts: 'Arts', nature: 'Nature', cook: 'Cook', home: 'Home',
+    sport: 'Sport', history: 'History', arts: 'Arts', classics: 'Classics', nature: 'Nature', cook: 'Cook', home: 'Home',
     // Main page
     tagline: 'The world in 30 seconds. News without the noise.',
     promise1: 'Only news, sourced and checked.',
@@ -24,6 +24,10 @@ const translations = {
     historyLabel: 'History', historyTitle: 'What happened\nbefore matters.',
     historySub: 'Ancient civilisations, medieval power, modern revolutions, and the myths we tell ourselves — explored with depth and honesty.',
     historyPlaceholder: 'Ask about any era, event, or figure...',
+    // Classics
+    classicsLabel: 'Classics', classicsTitle: 'The ideas that\nbuilt the West.',
+    classicsSub: 'Ancient Rome and Greece — their philosophy, literature, politics, and culture. The foundations of Western thought, from Plato to Cicero, still alive today.',
+    classicsPlaceholder: 'Ask about ancient Rome, Greece, philosophy, classical texts...',
     // Arts
     artsLabel: 'Arts & Culture', artsTitle: 'The canvas of\ntoday\u2019s world.',
     artsSub: 'Visual arts, music, theatre, film and cultural news — curated and explained, from gallery openings to global movements.',
@@ -63,7 +67,7 @@ const translations = {
     errorMessage: 'Something went wrong. Try again in a moment.',
   },
   de: {
-    sport: 'Sport', history: 'Geschichte', arts: 'Kunst', nature: 'Natur', cook: 'Kochen', home: 'Start',
+    sport: 'Sport', history: 'Geschichte', arts: 'Kunst', classics: 'Klassik', nature: 'Natur', cook: 'Kochen', home: 'Start',
     tagline: 'Die Welt in 30 Sekunden. Nachrichten ohne L\u00E4rm.',
     promise1: 'Nur Nachrichten, recherchiert und gepr\u00FCft.',
     promise2: 'Fragen. Nachhaken. Verstehen.',
@@ -78,6 +82,9 @@ const translations = {
     historyLabel: 'Geschichte', historyTitle: 'Was vorher\ngeschah, z\u00E4hlt.',
     historySub: 'Antike Zivilisationen, mittelalterliche Macht, moderne Revolutionen und die Mythen, die wir uns erz\u00E4hlen \u2014 erforscht mit Tiefe und Ehrlichkeit.',
     historyPlaceholder: 'Frag nach einer Epoche, einem Ereignis oder einer Person...',
+    classicsLabel: 'Klassik', classicsTitle: 'Die Ideen, die\nden Westen bauten.',
+    classicsSub: 'Antikes Rom und Griechenland — ihre Philosophie, Literatur, Politik und Kultur. Die Grundlagen des westlichen Denkens, von Platon bis Cicero, heute noch lebendig.',
+    classicsPlaceholder: 'Frag nach antiken R\u00F6mern, Griechen, Philosophie, klassischen Texten...',
     artsLabel: 'Kunst & Kultur', artsTitle: 'Die Leinwand\nder heutigen Welt.',
     artsSub: 'Bildende Kunst, Musik, Theater, Film und Kulturnachrichten \u2014 kuratiert und erkl\u00E4rt.',
     artsPlaceholder: 'Frag nach Kunst, Musik, Theater, Kultur...',

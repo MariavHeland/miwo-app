@@ -552,6 +552,7 @@ export default function Home() {
         <div className="header-controls">
           <Link href="/sports" className="nav-link">{t('sport')}</Link>
           <Link href="/history" className="nav-link">{t('history')}</Link>
+          <Link href="/classics" className="nav-link">{t('classics')}</Link>
           <Link href="/arts" className="nav-link">{t('arts')}</Link>
           <Link href="/nature" className="nav-link">{t('nature')}</Link>
           <Link href="/cook" className="nav-link">{t('cook')}</Link>
