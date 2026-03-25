@@ -104,10 +104,7 @@ export default function Home() {
   const audioRef = useRef(null)
   const audioCtxRef = useRef(null)
 
-  // Pick a random globe view on mount
-  useEffect(() => {
-    setGlobeSrc(GLOBE_VIEWS[Math.floor(Math.random() * GLOBE_VIEWS.length)])
-  }, [])
+  // Globe images are now fixed constants (GLOBE_FRONT, GLOBE_BACK)
 
   // Unlock AudioContext on user gesture so auto-read works after async fetch
   function ensureAudioContext() {
