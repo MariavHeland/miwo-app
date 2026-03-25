@@ -265,9 +265,12 @@ export default function Home() {
       return result
     })
     // Handle standalone numbers (not inside words): "389" → "three hundred and eighty nine"
+    // Skip years (1900-2099) — they should be read as-is by the TTS engine
     cleaned = cleaned.replace(/\b(\d[\d,]*)\b/g, (match) => {
       const num = parseInt(match.replace(/,/g, ''), 10)
-      return isNaN(num) || num > 999999999999 ? match : numberToWords(num)
+      if (isNaN(num) || num > 999999999999) return match
+      if (num >= 1900 && num <= 2099) return match // leave years alone
+      return numberToWords(num)
     })
 
     // Apply pronunciation fixes
