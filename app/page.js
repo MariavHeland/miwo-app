@@ -62,12 +62,12 @@ function SettingsIcon({ size = 18 }) {
   )
 }
 
-// Globe views — rotate randomly to avoid Western-centric default
+// Globe views â rotate randomly to avoid Western-centric default
 // TODO: Add globe-asia.jpg and globe-pacific.jpg when files are available
 const GLOBE_VIEWS = [
   '/globe.png',          // Africa & Europe (current)
-  // '/globe-asia.jpg',  // East Asia & Oceania — add file to /public
-  // '/globe-pacific.jpg', // Asia-Pacific & Indian Ocean — add file to /public
+  // '/globe-asia.jpg',  // East Asia & Oceania â add file to /public
+  // '/globe-pacific.jpg', // Asia-Pacific & Indian Ocean â add file to /public
 ]
 
 export default function Home() {
@@ -188,7 +188,7 @@ export default function Home() {
     }
   }, [])
 
-  // Words that Fish Audio TTS mispronounces — mapped to phonetic spellings
+  // Words that Fish Audio TTS mispronounces â mapped to phonetic spellings
   const ttsPronunciationFixes = [
     [/\bParliamentary\b/g, 'Parlimentary'],
     [/\bparliamentary\b/g, 'parlimentary'],
@@ -204,8 +204,8 @@ export default function Home() {
     [/\bScholz\b/g, 'Sholts'],
     [/\bKyiv\b/g, 'Keev'],
     [/\bBlinken\b/g, 'BLINK-en'],
-    [/—/g, ', '],
-    [/–/g, ', '],
+    [/â/g, ', '],
+    [/â/g, ', '],
     [/\.\.\./g, ', '],
     [/\s*\(\s*/g, ', '],
     [/\s*\)\s*/g, ', '],
@@ -240,7 +240,7 @@ export default function Home() {
     return chunks.filter(c => c.trim())
   }
 
-  // TTS queue — speaks paragraph by paragraph so voice starts fast
+  // TTS queue â speaks paragraph by paragraph so voice starts fast
   const ttsQueueRef = useRef([])
   const ttsPlayingRef = useRef(false)
   const ttsCancelledRef = useRef(false)
@@ -371,7 +371,7 @@ export default function Home() {
     setTtsStatus('')
   }, [])
 
-  // Voice swap — stop playback instantly, new voice applies to next generation
+  // Voice swap â stop playback instantly, new voice applies to next generation
   const setVoiceName = useCallback((name) => {
     stopSpeaking()
     setVoiceNameRaw(name)
@@ -521,7 +521,7 @@ export default function Home() {
 
   const formatMessage = (text, isSpeakingMsg) => {
     return text.split('\n\n').map((para, i) => {
-      // Strip all markdown bold — MIWO is spoken news, no headlines
+      // Strip all markdown bold â MIWO is spoken news, no headlines
       const cleaned = para
         .replace(/\*\*(.*?)\*\*/g, '$1')
         .replace(/\*(.*?)\*/g, '$1')
@@ -563,7 +563,7 @@ export default function Home() {
               else ensureAudioContext() // Unlock audio on user gesture
               setAutoRead(!autoRead)
             }}
-            title={autoRead ? 'Auto-read on — click to turn off' : 'Auto-read off — click to turn on'}
+            title={autoRead ? 'Auto-read on â click to turn off' : 'Auto-read off â click to turn on'}
           >
             {autoRead ? <SpeakerIcon size={16} /> : <SpeakerOffIcon size={16} />}
           </button>
@@ -611,7 +611,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Voice picker — always visible */}
+      {/* Voice picker â always visible */}
       <div className="voice-settings">
         <div className="voice-settings-row">
           <div className="voice-settings-label">{t('voice')}</div>
@@ -652,25 +652,28 @@ export default function Home() {
 
       {showWelcome ? (
         <div className="welcome">
-          <div className="welcome-hero">
-            <img src={globeSrc} alt="" className="welcome-globe" />
-            <div className="welcome-right">
+          <div className="welcome-identity">
+            <img src={globeSrc} alt="" className="welcome-globe welcome-globe-left" />
+            <div className="welcome-brand-wrap">
               <img src="/miwo-brand.png" alt="MIWO" className="welcome-brand-img" />
-              <p className="welcome-sub">
-                {t('tagline')}
-              </p>
-              <div className="welcome-prompts">
-                <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt1'))}>
-                  {t('prompt1')}
-                </button>
-                <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt2'))}>
-                  {t('prompt2')}
-                </button>
-                <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt3'))}>
-                  {t('prompt3')}
-                </button>
-              </div>
+              <span className="welcome-brand-subtitle">my world my news</span>
             </div>
+            <img src={globeSrc} alt="" className="welcome-globe welcome-globe-right" />
+          </div>
+          <div className="welcome-promise">
+            <p>{t('promise1')}</p>
+            <p style={{ marginTop: '6px' }}>{t('promise2')}</p>
+          </div>
+          <div className="welcome-prompts">
+            <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt1'))}>
+              {t('prompt1')}
+            </button>
+            <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt2'))}>
+              {t('prompt2')}
+            </button>
+            <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt3'))}>
+              {t('prompt3')}
+            </button>
           </div>
         </div>
       ) : (
@@ -691,7 +694,7 @@ export default function Home() {
                     sendMessage(msg.retryText, cleaned)
                   }}
                 >
-                  ↻ Try again
+                  â Try again
                 </button>
               )}
               {msg.role === 'assistant' && !msg.isError && (
@@ -746,7 +749,7 @@ export default function Home() {
               padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(196,125,90,0.3)',
               whiteSpace: 'nowrap', animation: 'pulse 1.5s ease-in-out infinite',
             }}>
-              {ttsStatus === 'generating' ? '✨ Generating MIWO voice...' : ttsStatus === 'quota' ? '⏳ Voice quota reached — try again in a minute' : '🔊 Playing...'}
+              {ttsStatus === 'generating' ? 'â¨ Generating MIWO voice...' : ttsStatus === 'quota' ? 'â³ Voice quota reached â try again in a minute' : 'ð Playing...'}
             </div>
           )}
           <textarea
