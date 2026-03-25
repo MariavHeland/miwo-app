@@ -199,10 +199,10 @@ export default function Home() {
     [/\bScholz\b/g, 'Sholts'],
     [/\bKyiv\b/g, 'Keev'],
     [/\bBlinken\b/g, 'BLINK-en'],
-    [/\bIsrael\b/g, 'IZ-ray-el'],
-    [/\bIsraeli\b/g, 'iz-RAY-lee'],
+    [/\bIsrael\b/g, 'Izzrael'],
+    [/\bIsraeli\b/g, 'Izzraeli'],
     [/\bHamas\b/g, 'hah-MAHS'],
-    [/\bHezbollah\b/g, 'hez-BOL-ah'],
+    [/\bHezbollah\b/g, 'Hezballah'],
     [/\bUkraine\b/g, 'you-CRANE'],
     [/\bUkrainian\b/g, 'you-CRANE-ee-an'],
     [/\bQatar\b/g, 'KAH-tar'],
@@ -321,16 +321,21 @@ export default function Home() {
       return
     }
 
+    // Lock immediately to prevent overlapping calls during the pause
+    ttsPlayingRef.current = true
+
     const { url, resolve, paraIndex } = ttsQueueRef.current[0]
 
     // Half-second pause between paragraphs (different news items)
     if (lastParaIndexRef.current >= 0 && paraIndex !== lastParaIndexRef.current) {
       await new Promise(r => setTimeout(r, 500))
-      if (ttsCancelledRef.current) return
+      if (ttsCancelledRef.current) {
+        ttsPlayingRef.current = false
+        return
+      }
     }
 
     ttsQueueRef.current.shift()
-    ttsPlayingRef.current = true
     lastParaIndexRef.current = paraIndex
 
     if (!url) {
