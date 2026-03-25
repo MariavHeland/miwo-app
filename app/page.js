@@ -91,6 +91,7 @@ export default function Home() {
   const [speakingParaIndex, setSpeakingParaIndex] = useState(-1) // which paragraph is currently being read aloud
   const [globeSrc, setGlobeSrc] = useState('/globe.png') // fallback
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(true)
   const [showPrefs, setShowPrefs] = useState(false)
   const [prefs, setPrefs] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -380,6 +381,9 @@ export default function Home() {
     const messageText = text || input
     if (!messageText.trim() || isLoading) return
 
+    // Hide welcome screen when user sends a message
+    setShowWelcome(false)
+
     // Pre-unlock AudioContext on this user gesture so auto-read works after response
     if (autoRead) ensureAudioContext()
 
@@ -508,8 +512,11 @@ export default function Home() {
   }
 
   const handlePromptClick = (text) => {
+    setShowWelcome(false)
+    setMessages([])
+    localStorage.removeItem('miwo-messages')
     setInput(text)
-    sendMessage(text)
+    sendMessage(text, [])
   }
 
   const formatMessage = (text, isSpeakingMsg) => {
@@ -538,7 +545,7 @@ export default function Home() {
           src="/miwo-nav.png"
           alt="MIWO"
           className="header-logo"
-          onClick={() => { setMessages([]); localStorage.removeItem('miwo-messages') }}
+          onClick={() => { setShowWelcome(true); setMessages([]); localStorage.removeItem('miwo-messages') }}
           style={{ cursor: 'pointer' }}
           title="New conversation"
         />
@@ -643,7 +650,7 @@ export default function Home() {
         </div>
       </div>
 
-      {messages.length === 0 && !isLoading ? (
+      {showWelcome ? (
         <div className="welcome">
           <div className="welcome-hero">
             <img src={globeSrc} alt="" className="welcome-globe" />
