@@ -6,7 +6,7 @@ export const maxDuration = 60
 
 export async function POST(request) {
   try {
-    const { text, voice } = await request.json()
+    const { text, voice, lang } = await request.json()
 
     if (!text || !text.trim()) {
       return NextResponse.json({ error: 'No text provided' }, { status: 400 })
@@ -17,7 +17,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Fish Audio API key not configured' }, { status: 500 })
     }
 
-    // Voice IDs — display name → Fish Audio reference ID
+    // English voices — user-selectable
     const voices = {
       nova: process.env.FISH_VOICE_NOVA || '3c86704b6c1741f4b6d3723397061f04',
       atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
@@ -26,7 +26,17 @@ export async function POST(request) {
       iris: process.env.FISH_VOICE_IRIS || '6d49364c9eaa4d10ae3a01502a79b084',
     }
 
-    const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
+    // Language-specific voices — native speakers per language
+    // Set these in Vercel env vars once you've picked voices from fish.audio
+    const langVoices = {
+      de: process.env.FISH_VOICE_DE,  // German
+      fr: process.env.FISH_VOICE_FR,  // French
+      es: process.env.FISH_VOICE_ES,  // Spanish
+      ar: process.env.FISH_VOICE_AR,  // Arabic
+    }
+
+    // Use language voice if available; fall back to user's selected English voice
+    const voiceId = (lang && langVoices[lang]) || voices[(voice || 'nova').toLowerCase()] || voices.nova
 
     // Fish Audio TTS API
     const response = await fetch('https://api.fish.audio/v1/tts', {

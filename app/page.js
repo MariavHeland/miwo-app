@@ -326,13 +326,13 @@ export default function Home() {
     const res = await fetch('/api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: cleanText, voice: voiceName }),
+      body: JSON.stringify({ text: cleanText, voice: voiceName, lang }),
     })
 
     if (!res.ok) return null
     const blob = await res.blob()
     return URL.createObjectURL(blob)
-  }, [voiceName])
+  }, [voiceName, lang])
 
   // Play the next item in the TTS queue
   const playNextInQueue = useCallback(async () => {
@@ -720,7 +720,14 @@ export default function Home() {
       {/* Voice picker — always visible */}
       <div className="voice-settings">
         <div className="voice-settings-row">
-          <div className="voice-settings-label">{t('voice')}</div>
+          <div className="voice-settings-label">
+            {t('voice')}
+            {lang && lang !== 'en' && (
+              <span style={{ fontSize: '11px', color: 'var(--copper-dim)', marginLeft: '6px', fontStyle: 'italic' }}>
+                {lang.toUpperCase()}
+              </span>
+            )}
+          </div>
           <div className="voice-options">
             <button
               className={`voice-option ${voiceName === 'nova' ? 'active' : ''}`}
