@@ -530,6 +530,10 @@ html, body {
   justify-content: center;
   position: relative;
   margin-bottom: 36px;
+  /* Subtle copper glow behind identity */
+  background: radial-gradient(ellipse 800px 600px at center, rgba(196, 125, 90, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  padding: 80px 60px;
 }
 
 .welcome-globe {
@@ -537,9 +541,11 @@ html, body {
   height: 200px;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 0.85;
+  opacity: 0.95;
   mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
   -webkit-mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
+  filter: drop-shadow(0 0 20px rgba(196, 125, 90, 0.15));
+  transition: filter 0.3s ease;
 }
 .welcome-globe-left {
   margin-right: -130px;
@@ -559,6 +565,8 @@ html, body {
   object-fit: contain;
   position: relative;
   z-index: 2;
+  filter: drop-shadow(0 0 30px rgba(196, 125, 90, 0.2));
+  transition: filter 0.3s ease;
 }
 
 /* Promise — the tagline */
@@ -627,6 +635,8 @@ html, body {
   }
   .welcome-identity {
     margin-bottom: 24px;
+    padding: 40px 30px;
+    background: radial-gradient(ellipse 600px 450px at center, rgba(196, 125, 90, 0.08) 0%, transparent 70%);
   }
   .welcome-right {
     max-width: 100%;
