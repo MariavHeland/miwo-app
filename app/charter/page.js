@@ -272,21 +272,83 @@ export default function CharterPage() {
         </Guardrail>
 
         <Guardrail title="Source Integrity">
-          <P>MIWO categorises sources by reliability, not volume.</P>
+          <P>MIWO categorises sources by reliability, not volume. Every outlet MIWO draws from maintains its own editorial charter or standards of practice. We take that seriously — and we hold ourselves to the same transparency.</P>
           <div style={{ margin: '16px 0' }}>
             {[
-              ['Tier 1 — Primary Reference', 'Wire services (Reuters, AP, AFP), outlets with rigorous editorial standards, official government statements, court records, UN agencies, peer-reviewed research.'],
-              ['Tier 2 — Strong Regional / Specialist', 'National newspapers of record, specialist outlets, established fact-checking organisations.'],
-              ['Tier 3 — Contextual', 'Regional and local media, established independent journalists. Require cross-referencing.'],
-              ['Tier 4 — Unverified / Social', 'Social media, anonymous sources, partisan media, content farms. Never cited as evidence. Referenced only to explain where a claim originated.'],
-            ].map(([label, desc], i) => (
-              <div key={i} style={{ padding: '12px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none' }}>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--copper)', marginBottom: 4 }}>{label}</div>
-                <p style={{ fontFamily: 'var(--font-serif)', fontSize: 15, lineHeight: 1.75, color: 'var(--text-dim)', margin: 0 }}>{desc}</p>
+              {
+                label: 'Tier 1 — Primary Reference',
+                desc: 'Wire services and outlets with rigorous editorial standards, global reach, and published codes of practice.',
+                sources: [
+                  { name: 'Reuters', note: 'Trust Principles (est. 1941)' },
+                  { name: 'Associated Press (AP)', note: 'News Values & Principles' },
+                  { name: 'Agence France-Presse (AFP)', note: 'AFP Charter (est. 1957)' },
+                  { name: 'BBC', note: 'Editorial Guidelines' },
+                  { name: 'The Guardian', note: 'Editorial Code' },
+                  { name: 'Le Monde', note: 'Charte d\'éthique' },
+                  { name: 'Der Spiegel', note: 'Editorial Statute' },
+                  { name: 'Al Jazeera', note: 'Code of Ethics' },
+                  { name: 'NHK', note: 'Broadcasting Guidelines' },
+                ],
+                also: 'Official government statements, court records, UN agencies, peer-reviewed research.',
+              },
+              {
+                label: 'Tier 2 — Strong Regional / Specialist',
+                desc: 'National newspapers of record and specialist outlets with strong editorial standards and regional or domain expertise.',
+                sources: [
+                  { name: 'Haaretz', note: 'Israel' },
+                  { name: 'The Hindu', note: 'India' },
+                  { name: 'El País', note: 'Spain / Latin America' },
+                  { name: 'Folha de São Paulo', note: 'Brazil' },
+                  { name: 'Dawn', note: 'Pakistan' },
+                  { name: 'France 24', note: 'France / Francophone world' },
+                  { name: 'Nikkei', note: 'Japan / Asia-Pacific' },
+                  { name: 'STAT News', note: 'health & medicine' },
+                  { name: 'The Information', note: 'technology' },
+                  { name: 'Foreign Policy', note: 'geopolitics' },
+                ],
+                also: 'Established fact-checking organisations: Full Fact, Africa Check, Snopes, PolitiFact. Forensic analysts: Bellingcat, AP Verification team.',
+              },
+              {
+                label: 'Tier 3 — Contextual',
+                desc: 'Useful for context, local depth, or breaking news — but require cross-referencing with Tier 1 or 2 sources.',
+                sources: null,
+                also: 'Regional and local media, established independent journalists with track records, government press releases (used as source for government positions only, not as independent verification).',
+              },
+              {
+                label: 'Tier 4 — Unverified / Social',
+                desc: 'Never cited as evidence. Referenced only to explain where a claim originated.',
+                sources: null,
+                also: 'Social media posts, anonymous sources, partisan media with documented bias, content farms, clickbait outlets.',
+              },
+            ].map((tier, i) => (
+              <div key={i} style={{ padding: '16px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none' }}>
+                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--copper)', marginBottom: 6 }}>{tier.label}</div>
+                <p style={{ fontFamily: 'var(--font-serif)', fontSize: 15, lineHeight: 1.75, color: 'var(--text-dim)', margin: '0 0 8px' }}>{tier.desc}</p>
+                {tier.sources && (
+                  <div style={{ margin: '10px 0', display: 'flex', flexWrap: 'wrap', gap: '6px 16px' }}>
+                    {tier.sources.map((s, j) => (
+                      <span key={j} style={{ fontFamily: 'var(--font-serif)', fontSize: 14, color: 'var(--text)', lineHeight: 1.8 }}>
+                        <strong>{s.name}</strong>
+                        <span style={{ color: 'var(--text-muted)', fontSize: 13 }}> — {s.note}</span>
+                        {j < tier.sources.length - 1 ? '' : ''}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {tier.also && (
+                  <p style={{ fontFamily: 'var(--font-serif)', fontSize: 14, lineHeight: 1.75, color: 'var(--text-muted)', margin: '6px 0 0', fontStyle: 'italic' }}>{tier.also}</p>
+                )}
               </div>
             ))}
           </div>
-          <P>Sources are weighted by editorial rigour and independence, not by volume.</P>
+          <h4 style={h4Style}>How sources are ordered</h4>
+          <UL items={[
+            <><strong>Wire services first.</strong> Reuters, AP, and AFP provide the factual baseline for any story. Their editorial charters — Reuters Trust Principles (1941), AFP's founding charter (1957) — are among the oldest and most rigorous in journalism.</>,
+            <><strong>Local sources for local stories.</strong> A story about Beirut leads with Lebanese reporting. A story about Seoul leads with Korean sources. No country's press is treated as the default lens.</>,
+            <><strong>Specialist outlets for specialist stories.</strong> STAT News for medicine, The Information for technology, Foreign Policy for geopolitics — domain expertise matters.</>,
+            <><strong>Cross-referencing over single-source.</strong> MIWO prefers claims confirmed by two or more independent sources from different outlets or regions. When only one source exists, MIWO says so.</>,
+            <><strong>Volume does not equal credibility.</strong> A hundred blog posts do not outweigh one Reuters dispatch. Sources are weighted by editorial rigour and independence, not by how many times a claim is repeated.</>,
+          ]} />
         </Guardrail>
 
         <Guardrail title="Fact-Check Ratings">
