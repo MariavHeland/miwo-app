@@ -1284,3 +1284,42 @@ html, body {
   margin: 0 8px;
   opacity: 0.5;
 }
+
+/* ── RTL support (Arabic) ──────────────────────────────────── */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .message.user {
+  align-self: flex-start;
+}
+
+[dir="rtl"] .message.user .message-content {
+  border-radius: 16px 16px 16px 4px;
+}
+
+[dir="rtl"] .input-area {
+  direction: rtl;
+}
+
+[dir="rtl"] .input-area input,
+[dir="rtl"] .input-area textarea {
+  text-align: right;
+}
+
+[dir="rtl"] .header-controls {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .lang-picker {
+  direction: ltr;
+}
+
+[dir="rtl"] .welcome-prompts {
+  direction: rtl;
+}
+
+[dir="rtl"] .message-actions {
+  left: 0;
+  right: auto;
+}

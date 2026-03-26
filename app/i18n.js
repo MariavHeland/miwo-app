@@ -294,10 +294,19 @@ export function LangProvider({ children }) {
     if (saved && translations[saved]) setLangState(saved);
   }, []);
 
+  const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
+
   const setLang = (code) => {
     setLangState(code);
     if (typeof window !== 'undefined') localStorage.setItem('miwo-lang', code);
   };
+
+  // Set dir and lang on <html> for RTL support
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = RTL_LANGS.includes(lang) ? 'rtl' : 'ltr';
+  }, [lang]);
 
   const t = (key) => {
     return (translations[lang] && translations[lang][key]) || (translations.en && translations.en[key]) || key;

@@ -50,19 +50,32 @@ export async function POST(request) {
         }),
       })
     } else {
-      // ── Non-English: S2-pro WITH reference_id ─────────────────────────────
-      // S2-pro is multilingual — it handles French/German/Arabic/Spanish natively.
-      // reference_id keeps the voice CONSISTENT across all chunks.
-      // Without it, Fish Audio picks a random native voice per request = voice switching.
-      // The voice won't sound identical to English Nova, but it will be ONE voice.
-      const msgpackBody = encode({
+      // ── Non-English: S2-pro multilingual ──────────────────────────────────
+      // S2-pro handles French/German/Arabic/Spanish natively.
+      //
+      // For languages with non-Latin scripts (Arabic, Hebrew, etc.), using an
+      // English-cloned reference_id produces English-accented pronunciation.
+      // These languages DROP the reference_id so S2-pro uses its own native voice.
+      //
+      // For Latin-script languages (French, Spanish, German), the reference_id
+      // keeps the voice consistent across chunks while S2-pro handles pronunciation.
+      const NATIVE_VOICE_LANGS = ['ar', 'he', 'fa', 'ur', 'zh', 'ja', 'ko']
+      const useNativeVoice = NATIVE_VOICE_LANGS.includes(lang)
+
+      const ttsPayload = {
         text: text.trim().substring(0, 2000),
-        reference_id: voiceId,
         format: 'mp3',
         mp3_bitrate: 64,
         normalize: true,
         latency: 'normal',
-      })
+      }
+
+      // Only include reference_id for Latin-script languages
+      if (!useNativeVoice) {
+        ttsPayload.reference_id = voiceId
+      }
+
+      const msgpackBody = encode(ttsPayload)
 
       response = await fetch('https://api.fish.audio/v1/tts', {
         method: 'POST',
