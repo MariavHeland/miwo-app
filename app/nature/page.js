@@ -252,6 +252,14 @@ export default function NaturePage() {
             <div ref={messagesEndRef} />
           </div>
         )}
+        <div style={{
+          textAlign: 'center', padding: '48px 24px 36px',
+          fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
+          borderTop: '1px solid var(--rule)',
+        }}>
+          MIWO {t('natureLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, BBC, Nature, Science, The Guardian, Carbon Brief, IPCC, IUCN &middot;{' '}
+          <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
+        </div>
       </div>
 
       {/* Chat input */}

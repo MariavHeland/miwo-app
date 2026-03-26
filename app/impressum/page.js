@@ -16,38 +16,16 @@ export default function ImpressumPage() {
           <div className="nav-div" />
           <div className="nav-section" style={{ color: 'var(--copper)' }}>{t('impressum')}</div>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <Link href="/sports">
-            <button className="nav-btn" style={{ borderColor: 'var(--sport)', color: 'var(--sport)' }}>
-              {t('sport')}
-            </button>
-          </Link>
-          <Link href="/history">
-            <button className="nav-btn" style={{ borderColor: 'var(--history)', color: 'var(--history)' }}>
-              {t('history')}
-            </button>
-          </Link>
-          <Link href="/arts">
-            <button className="nav-btn" style={{ borderColor: 'var(--art)', color: 'var(--art)' }}>
-              {t('arts')}
-            </button>
-          </Link>
-          <Link href="/nature">
-            <button className="nav-btn" style={{ borderColor: 'var(--nature)', color: 'var(--nature)' }}>
-              {t('nature')}
-            </button>
-          </Link>
-          <Link href="/cook">
-            <button className="nav-btn" style={{ borderColor: 'var(--cooking)', color: 'var(--cooking)' }}>
-              {t('cook')}
-            </button>
-          </Link>
+        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+          <Link href="/sports" className="nav-btn">{t('sport')}</Link>
+          <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/classics" className="nav-btn">{t('classics')}</Link>
+          <Link href="/arts" className="nav-btn">{t('arts')}</Link>
+          <Link href="/nature" className="nav-btn">{t('nature')}</Link>
+          <Link href="/science" className="nav-btn">{t('science')}</Link>
+          <Link href="/cook" className="nav-btn">{t('cook')}</Link>
           <LangPicker />
-          <Link href="/">
-            <button className="nav-btn">
-              {t('home')}
-            </button>
-          </Link>
+          <Link href="/" className="nav-btn">{t('home')}</Link>
         </div>
       </nav>
 

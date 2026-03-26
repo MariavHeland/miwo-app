@@ -173,8 +173,10 @@ export default function CookPage() {
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <Link href="/sports" className="nav-btn">{t('sport')}</Link>
           <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/classics" className="nav-btn">{t('classics')}</Link>
           <Link href="/arts" className="nav-btn">{t('arts')}</Link>
           <Link href="/nature" className="nav-btn">{t('nature')}</Link>
+          <Link href="/science" className="nav-btn">{t('science')}</Link>
           <LangPicker />
           <Link href="/" className="nav-btn">{t('home')}</Link>
         </div>

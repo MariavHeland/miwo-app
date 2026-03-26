@@ -167,6 +167,7 @@ export default function SciencePage() {
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <Link href="/sports" className="nav-btn">{t('sport')}</Link>
           <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/classics" className="nav-btn">{t('classics')}</Link>
           <Link href="/arts" className="nav-btn">{t('arts')}</Link>
           <Link href="/nature" className="nav-btn">{t('nature')}</Link>
           <Link href="/cook" className="nav-btn">{t('cook')}</Link>
@@ -257,6 +258,14 @@ export default function SciencePage() {
             <div ref={messagesEndRef} />
           </div>
         )}
+        <div style={{
+          textAlign: 'center', padding: '48px 24px 36px',
+          fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
+          borderTop: '1px solid var(--rule)',
+        }}>
+          MIWO {t('scienceLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, Nature, Science, STAT News, New Scientist, Ars Technica, MIT Technology Review &middot;{' '}
+          <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
+        </div>
       </div>
 
       {/* Chat input */}
