@@ -250,7 +250,7 @@ export default function ClassicsPage() {
           fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
           borderTop: '1px solid var(--rule)',
         }}>
-          MIWO {t('classicsLabel').toUpperCase()} &middot; {t('sourcesInclude')} Perseus Digital Library, JSTOR, Loeb Classical Library, Stanford Encyclopedia of Philosophy, BBC In Our Time &middot;{' '}
+          MIWO {t('classicsLabel').toUpperCase()} &middot; {t('sourcesInclude')} Perseus Digital Library, JSTOR, Loeb Classical Library &amp; hundreds more &middot;{' '}
           <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
         </div>
       </div>

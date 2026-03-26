@@ -257,7 +257,7 @@ export default function NaturePage() {
           fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
           borderTop: '1px solid var(--rule)',
         }}>
-          MIWO {t('natureLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, BBC, Nature, Science, The Guardian, Carbon Brief, IPCC, IUCN &middot;{' '}
+          MIWO {t('natureLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, Nature, Science, Carbon Brief &amp; hundreds more &middot;{' '}
           <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
         </div>
       </div>

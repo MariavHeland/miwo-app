@@ -415,7 +415,7 @@ export default function SportsPage() {
               fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
               borderTop: '1px solid var(--rule)',
             }}>
-              MIWO {t('sportLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, ESPN, BBC Sport, The Athletic, ICC, NFL, NHL, ATP, WTA, PGA Tour, F1, World Rugby &middot;{' '}
+              MIWO {t('sportLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, ESPN, BBC Sport, The Athletic, F1 &amp; hundreds more &middot;{' '}
               <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
             </div>
           </div>

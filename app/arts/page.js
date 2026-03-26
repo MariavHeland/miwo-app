@@ -276,7 +276,7 @@ export default function ArtsPage() {
           fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
           borderTop: '1px solid var(--rule)',
         }}>
-          MIWO {t('artsLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, The Guardian, Artnet, Artforum, Frieze, The Art Newspaper, Hyperallergic &middot;{' '}
+          MIWO {t('artsLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, The Guardian, Artforum, Hyperallergic &amp; hundreds more &middot;{' '}
           <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
         </div>
       </div>

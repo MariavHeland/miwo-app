@@ -263,7 +263,7 @@ export default function SciencePage() {
           fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
           borderTop: '1px solid var(--rule)',
         }}>
-          MIWO {t('scienceLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, Nature, Science, STAT News, New Scientist, Ars Technica, MIT Technology Review &middot;{' '}
+          MIWO {t('scienceLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, Nature, Science, STAT News &amp; hundreds more &middot;{' '}
           <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
         </div>
       </div>
