@@ -256,10 +256,10 @@ html, body {
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 0;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .message {
@@ -287,15 +287,15 @@ html, body {
 
 .message.assistant .message-content {
   font-family: var(--font-serif);
-  font-size: 16px;
-  line-height: 1.95;
+  font-size: 15px;
+  line-height: 1.78;
   color: var(--text);
-  max-width: 560px;
+  max-width: 520px;
   letter-spacing: 0.01em;
 }
 
 .message.assistant .message-content p {
-  margin-bottom: 28px;
+  margin-bottom: 16px;
 }
 
 .message.assistant .message-content p:last-child {
@@ -611,27 +611,27 @@ html, body {
 
 /* Charter section — values below the news */
 .welcome-charter {
-  max-width: 640px;
-  margin: 48px auto 0;
-  padding: 48px 0;
+  max-width: 560px;
+  margin: 32px auto 0;
+  padding: 28px 0;
   text-align: center;
   border-top: 1px solid var(--border);
 }
 .charter-title {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: clamp(28px, 3.5vw, 40px);
+  font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.2;
   color: var(--text);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .welcome-charter p {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--text-dim);
-  line-height: 1.7;
-  margin-bottom: 16px;
+  line-height: 1.65;
+  margin-bottom: 12px;
 }
 .welcome-charter p strong {
   color: var(--text);
