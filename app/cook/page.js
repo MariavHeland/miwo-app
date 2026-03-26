@@ -188,7 +188,7 @@ export default function CookPage() {
           <div className="welcome">
             {/* Hero layout — globe + right column, like homepage */}
             <div className="subpage-hero">
-              <img src="/globe.png" alt="" className="welcome-globe" />
+              <img src="/symbol-cook.jpeg" alt="" className="welcome-globe" />
               <div className="subpage-hero-right">
                 <div className="welcome-label" style={{ color: 'var(--cooking)' }}>
                   {t('cookLabel')}
