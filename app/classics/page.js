@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useLang, LangPicker } from '../i18n';
 
 export default function ArtsPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +36,7 @@ export default function ArtsPage() {
         body: JSON.stringify({
           messages: newMessages,
           section: 'classics',
+          lang,
           filter: activeFilter,
         }),
       });

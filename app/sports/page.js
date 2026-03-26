@@ -153,7 +153,7 @@ const SPORT_FILTERS = [
    COMPONENT
    ═══════════════════════════════════════════════ */
 export default function SportsPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [view, setView] = useState('feed');
   const [activeSport, setActiveSport] = useState('all');
   const [expandedCards, setExpandedCards] = useState(new Set());
@@ -191,6 +191,7 @@ export default function SportsPage() {
         body: JSON.stringify({
           messages: newMessages,
           systemOverride: SPORT_SYSTEM_PROMPT,
+          lang,
         }),
       });
 

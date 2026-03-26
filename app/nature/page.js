@@ -23,7 +23,7 @@ Always use web_search to find the latest data. Environmental news changes rapidl
 Format: clear paragraphs, bold key findings and names. Include source attribution. Use metric units.`;
 
 export default function NaturePage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +56,7 @@ export default function NaturePage() {
           section: 'nature',
           filter: activeFilter,
           systemOverride: NATURE_SYSTEM_PROMPT,
+          lang,
         }),
       });
 

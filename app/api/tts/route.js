@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { encode } from '@msgpack/msgpack'
 
 // Fish Audio TTS endpoint
-// Takes text + voice name, returns audio as mp3 stream
+// Takes text + voice name + lang, returns audio as mp3 stream
 export const maxDuration = 60
 
 export async function POST(request) {
@@ -18,36 +18,62 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Fish Audio API key not configured' }, { status: 500 })
     }
 
-    // Voices — Fish Audio S2 is multilingual, so the same voice speaks any language
-    const voices = {
-      nova: process.env.FISH_VOICE_NOVA || '3c86704b6c1741f4b6d3723397061f04',
-      atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
-      cleo: process.env.FISH_VOICE_CLEO || '289cad70b38b4ab890f7c1344b732115',
-      sol: process.env.FISH_VOICE_SOL || '5009c2727b164afe8e4040619cfcc9ab',
-      iris: process.env.FISH_VOICE_IRIS || '6d49364c9eaa4d10ae3a01502a79b084',
+    const isEnglish = !lang || lang === 'en'
+
+    let response
+
+    if (isEnglish) {
+      // ── English: original S1 approach with cloned voices ──────────────────
+      // Nova, Atlas, Cleo, Sol, Iris — the voices Maria chose and calibrated.
+      // JSON body, no model header, S1 model. This is the proven working path.
+      const voices = {
+        nova: process.env.FISH_VOICE_NOVA || '3c86704b6c1741f4b6d3723397061f04',
+        atlas: process.env.FISH_VOICE_ATLAS || '22ed56c43aa54f4dbd3c56674964d016',
+        cleo: process.env.FISH_VOICE_CLEO || '289cad70b38b4ab890f7c1344b732115',
+        sol: process.env.FISH_VOICE_SOL || '5009c2727b164afe8e4040619cfcc9ab',
+        iris: process.env.FISH_VOICE_IRIS || '6d49364c9eaa4d10ae3a01502a79b084',
+      }
+      const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
+
+      response = await fetch('https://api.fish.audio/v1/tts', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: text.trim().substring(0, 2000),
+          reference_id: voiceId,
+          format: 'mp3',
+          mp3_bitrate: 64,
+          normalize: true,
+          latency: 'normal',
+        }),
+      })
+    } else {
+      // ── Non-English: S2-pro with no reference_id ──────────────────────────
+      // Fish Audio S2-pro picks its own native voice for the target language.
+      // No reference_id = no forced cross-lingual transfer that sounds off.
+      // German gets a native German voice, Arabic gets a native Arabic voice, etc.
+      // S2-pro requires msgpack encoding (not JSON).
+      const msgpackBody = encode({
+        text: text.trim().substring(0, 2000),
+        format: 'mp3',
+        mp3_bitrate: 64,
+        normalize: true,
+        latency: 'normal',
+      })
+
+      response = await fetch('https://api.fish.audio/v1/tts', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/msgpack',
+          'model': 's2-pro',
+        },
+        body: msgpackBody,
+      })
     }
-
-    const voiceId = voices[(voice || 'nova').toLowerCase()] || voices.nova
-
-    // Fish Audio TTS API — S2-pro model requires msgpack encoding
-    const msgpackBody = encode({
-      text: text.trim().substring(0, 2000),
-      reference_id: voiceId,
-      format: 'mp3',
-      mp3_bitrate: 64,
-      normalize: true,
-      latency: 'normal',
-    })
-
-    const response = await fetch('https://api.fish.audio/v1/tts', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/msgpack',
-        'model': 's2-pro',
-      },
-      body: msgpackBody,
-    })
 
     if (!response.ok) {
       const err = await response.text()

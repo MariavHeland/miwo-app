@@ -348,8 +348,16 @@ export async function POST(request) {
       }
     }
 
-    // Use section-specific system override if provided, otherwise default MIWO prompt
-    const systemPrompt = (systemOverride || SYSTEM_PROMPT_TEMPLATE(dateStr, lang)) + prefsAddendum
+    // Build system prompt — always append language instruction for non-English
+    const langName = LANG_NAMES[lang] || null
+    const langSuffix = langName && lang !== 'en'
+      ? `\n\nCRITICAL LANGUAGE RULE: The user's language is set to ${langName}. You MUST respond entirely in ${langName}. Do not switch to English under any circumstances.`
+      : ''
+
+    const systemPrompt = (systemOverride
+      ? systemOverride + langSuffix
+      : SYSTEM_PROMPT_TEMPLATE(dateStr, lang)
+    ) + prefsAddendum
 
     // Ensure messages have correct format for the API
     const apiMessages = messages.map(m => ({
@@ -357,20 +365,23 @@ export async function POST(request) {
       content: typeof m.content === 'string' ? m.content : String(m.content),
     }))
 
-    // ── PASS 1: Draft ──────────────────────────────────────────
-    const controller1 = new AbortController()
-    const timeout1 = setTimeout(() => controller1.abort(), 35000) // 35s for drafting
+    // ── Single-pass streaming — text flows to client as Sonnet writes it ───
+    // The two-pass (Sonnet → Haiku editorial review) architecture added 5-8s
+    // of latency before the user saw anything. The Sonnet system prompt already
+    // contains all 11 editorial rules. Streaming directly gives instant response.
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 45000)
 
-    let draftResponse
+    let anthropicResponse
     try {
-      draftResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apiKey,
           'anthropic-version': '2023-06-01',
         },
-        signal: controller1.signal,
+        signal: controller.signal,
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 2048,
@@ -380,16 +391,16 @@ export async function POST(request) {
             {
               type: 'web_search_20250305',
               name: 'web_search',
-              max_uses: 3,
+              max_uses: 1,  // Single focused search — faster, cheaper
             }
           ],
           messages: apiMessages,
         }),
       })
     } catch (fetchErr) {
-      clearTimeout(timeout1)
+      clearTimeout(timeout)
       if (fetchErr.name === 'AbortError') {
-        console.error('Draft pass timed out after 35s')
+        console.error('Request timed out after 45s')
         return NextResponse.json(
           { error: 'timeout', message: 'The request took too long. Try again.' },
           { status: 504 }
@@ -397,14 +408,14 @@ export async function POST(request) {
       }
       throw fetchErr
     }
-    clearTimeout(timeout1)
+    clearTimeout(timeout)
 
-    if (!draftResponse.ok) {
-      const err = await draftResponse.text()
-      console.error('Anthropic API error:', draftResponse.status, err)
-      const isOverloaded = draftResponse.status === 529 || draftResponse.status === 503
-      const isRateLimit = draftResponse.status === 429
-      const isBilling = draftResponse.status === 400 && err.includes('credit balance')
+    if (!anthropicResponse.ok) {
+      const err = await anthropicResponse.text()
+      console.error('Anthropic API error:', anthropicResponse.status, err)
+      const isOverloaded = anthropicResponse.status === 529 || anthropicResponse.status === 503
+      const isRateLimit = anthropicResponse.status === 429
+      const isBilling = anthropicResponse.status === 400 && err.includes('credit balance')
 
       let errorType = 'api_error'
       let errorMessage = 'Something went wrong. Tap retry to try again.'
@@ -422,44 +433,51 @@ export async function POST(request) {
 
       return NextResponse.json(
         { error: errorType, message: errorMessage },
-        { status: draftResponse.status }
+        { status: anthropicResponse.status }
       )
     }
 
-    // Collect the full draft text from the stream
-    const draft = await collectStreamText(draftResponse)
-
-    // ── PASS 2: Editorial Review (news content only) ───────────
-    let finalText = draft
-
-    if (isNewsContent(apiMessages, draft)) {
-      try {
-        finalText = await editorialReview(draft, apiKey, lang)
-      } catch (reviewErr) {
-        console.error('Editorial review error (using unedited draft):', reviewErr.message)
-        // Fail gracefully — use unedited draft
-      }
-    }
-
-    // ── Stream final text to client ────────────────────────────
+    // ── Pipe Anthropic SSE stream → client as raw text ─────────
+    // Extract only text_delta events and forward them immediately.
+    // The user sees words appearing as Sonnet writes them.
     const encoder = new TextEncoder()
     const readable = new ReadableStream({
-      start(controller) {
-        // Send in small chunks for smooth streaming feel
-        const chunkSize = 8
-        let i = 0
-        function pushChunk() {
-          if (i >= finalText.length) {
-            controller.close()
-            return
+      async start(streamController) {
+        const reader = anthropicResponse.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ''
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+
+            buffer += decoder.decode(value, { stream: true })
+            const lines = buffer.split('\n')
+            buffer = lines.pop() // keep incomplete last line
+
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue
+              const data = line.slice(6).trim()
+              if (data === '[DONE]') continue
+
+              try {
+                const event = JSON.parse(data)
+                if (
+                  event.type === 'content_block_delta' &&
+                  event.delta?.type === 'text_delta' &&
+                  event.delta.text
+                ) {
+                  streamController.enqueue(encoder.encode(event.delta.text))
+                }
+              } catch { /* skip malformed events */ }
+            }
           }
-          const chunk = finalText.slice(i, i + chunkSize)
-          controller.enqueue(encoder.encode(chunk))
-          i += chunkSize
-          // Small delay between chunks for natural streaming feel
-          setTimeout(pushChunk, 15)
+        } catch (streamErr) {
+          console.error('Stream read error:', streamErr.message)
+        } finally {
+          streamController.close()
         }
-        pushChunk()
       },
     })
 
