@@ -896,14 +896,14 @@ export default function Home() {
             </div>
           </div>
         )}
-        {/* Charter values — appears after the briefing */}
-        {messages.length > 0 && !isLoading && (
-          <div className="welcome-charter">
+        {/* Charter values — fades in/out while loading, stays below news */}
+        {messages.length > 0 && (
+          <div className={`welcome-charter ${isLoading ? 'charter-breathing' : ''}`}>
             <h3 className="charter-title">{t('charterTitle')}</h3>
             <p><strong>{t('charter1label')}</strong><br />{t('charter1')}</p>
             <p><strong>{t('charter2label')}</strong><br />{t('charter2')}</p>
             <p><strong>{t('charter3label')}</strong><br />{t('charter3')}</p>
-            <a href="/impressum" className="charter-link">{t('charterLink')} →</a>
+            <Link href="/impressum" className="charter-link">{t('charterLink')} →</Link>
           </div>
         )}
         <div ref={messagesEndRef} />

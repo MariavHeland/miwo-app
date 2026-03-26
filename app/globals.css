@@ -653,6 +653,15 @@ html, body {
   opacity: 0.8;
 }
 
+/* Gentle fade in/out while news is loading */
+.charter-breathing {
+  animation: charterBreath 3s ease-in-out infinite;
+}
+@keyframes charterBreath {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
 .welcome-prompts {
   display: flex;
   flex-direction: column;
