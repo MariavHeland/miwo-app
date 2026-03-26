@@ -82,6 +82,8 @@ html, body {
 }
 
 .header-logo {
+  flex-shrink: 0;
+  min-width: 60px;
   height: 26px;
   width: auto;
   display: block;
@@ -752,6 +754,8 @@ html, body {
 }
 
 .nav-brand {
+  flex-shrink: 0;
+  min-width: 60px;
   display: block;
   height: 26px;
   width: auto;
