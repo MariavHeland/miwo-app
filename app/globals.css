@@ -1395,3 +1395,65 @@ html, body {
   left: 0;
   right: auto;
 }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE LAYOUT
+   ═══════════════════════════════════════════════ */
+
+/* Large: 1400px+ — spread out, generous spacing */
+@media (min-width: 1400px) {
+  .app {
+    max-width: 1320px;
+    padding: 0 72px;
+  }
+  .message.assistant .message-content {
+    max-width: 780px;
+  }
+  .welcome-charter {
+    max-width: 780px;
+  }
+  .chat-container {
+    max-width: 1320px;
+    padding: 80px 72px 120px;
+  }
+  .stories-feed {
+    max-width: 1320px;
+    padding: 24px 72px 40px;
+  }
+}
+
+/* Medium-large: 1100–1399px — current defaults apply */
+
+/* Medium: 900–1099px — tighten padding */
+@media (max-width: 1099px) {
+  .app {
+    padding: 0 32px;
+  }
+  .chat-container {
+    padding: 80px 32px 120px;
+  }
+  .stories-feed {
+    padding: 24px 24px 40px;
+  }
+}
+
+/* Tablet: 768–899px — compact nav, narrower column */
+@media (max-width: 899px) {
+  .app {
+    padding: 0 20px;
+  }
+  .nav-link {
+    font-size: 13px;
+    padding: 5px 8px;
+  }
+  .message.assistant .message-content {
+    max-width: 100%;
+  }
+  .chat-container {
+    padding: 80px 20px 120px;
+  }
+  .stories-feed {
+    padding: 24px 20px 40px;
+  }
+}
+
