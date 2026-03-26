@@ -820,7 +820,7 @@ export default function Home() {
 
       <div className="messages">
         {/* Front page identity — shows on first load, scrolls away as user converses */}
-        {!messages.some(m => m.role === 'user') && (
+        {messages.length === 0 && (
           <div className="welcome-hero">
             <div className="welcome-identity">
               <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
