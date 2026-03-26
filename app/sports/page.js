@@ -260,6 +260,11 @@ export default function SportsPage() {
     ? STORIES : STORIES.filter((s) => s.sport === activeSport);
   const showOdd = activeSport === 'all' || activeSport === 'odd';
   const sportColor = (sport) => 'var(--' + sport + ')';
+  const SPORT_LABEL_MAP = {
+    football: 'filterFootball', cricket: 'filterCricket', nfl: 'filterAmericanFootball',
+    hockey: 'filterHockey', tennis: 'filterTennis', basketball: 'filterBasketball',
+    rugby: 'filterRugby', f1: 'filterF1', golf: 'filterGolf',
+  };
 
   /* ── Render grouped stories ── */
   const renderGrouped = () => {
@@ -269,7 +274,7 @@ export default function SportsPage() {
       return (
         <div key={sport} className="story-section">
           <div className="story-section-tag" style={{ color: sportColor(sport) }}>
-            {group[0].label}
+            {t(SPORT_LABEL_MAP[sport] || sport)}
           </div>
           {group.map((story) => {
             const idx = STORIES.indexOf(story);
@@ -408,7 +413,7 @@ export default function SportsPage() {
               fontSize: '13px', color: 'var(--text-faint)', fontStyle: 'italic',
               borderTop: '1px solid var(--rule)',
             }}>
-              MIWO {t('sportLabel').toUpperCase()} &middot; Sources include Reuters, AP, ESPN, BBC Sport, The Athletic, ICC, NFL, NHL, ATP, WTA, PGA Tour, F1, World Rugby &middot;{' '}
+              MIWO {t('sportLabel').toUpperCase()} &middot; {t('sourcesInclude')} Reuters, AP, ESPN, BBC Sport, The Athletic, ICC, NFL, NHL, ATP, WTA, PGA Tour, F1, World Rugby &middot;{' '}
               <Link href="/" style={{ color: 'var(--copper-dim)' }}>{t('backToBriefing')}</Link>
             </div>
           </div>

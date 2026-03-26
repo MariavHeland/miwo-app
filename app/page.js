@@ -696,7 +696,7 @@ export default function Home() {
           className="header-logo"
           onClick={() => { stopSpeaking(); setMessages([]); localStorage.removeItem('miwo-messages') }}
           style={{ cursor: 'pointer' }}
-          title="New conversation"
+          title={t('newConversation')}
         />
         <div className="header-controls">
           <button
@@ -724,14 +724,14 @@ export default function Home() {
               else ensureAudioContext() // Unlock audio on user gesture
               setAutoRead(!autoRead)
             }}
-            title={autoRead ? 'Auto-read on — click to turn off' : 'Auto-read off — click to turn on'}
+            title={autoRead ? t('autoReadOn') : t('autoReadOff')}
           >
             {autoRead ? <SpeakerIcon size={16} /> : <SpeakerOffIcon size={16} />}
           </button>
           <button
             className={`header-btn ${showPrefs ? 'active' : ''}`}
             onClick={() => setShowPrefs(!showPrefs)}
-            title="Preferences"
+            title={t('preferences')}
           >
             <SettingsIcon size={16} />
           </button>
@@ -742,7 +742,7 @@ export default function Home() {
       {showPrefs && (
         <div className="prefs-panel">
           <div className="prefs-section">
-            <div className="prefs-label">Regions</div>
+            <div className="prefs-label">{t('prefRegions')}</div>
             <div className="prefs-chips">
               {['Europe', 'Middle East', 'Asia', 'Africa', 'Americas', 'Oceania'].map(r => (
                 <button key={r} className={`pref-chip ${prefs.regions.includes(r) ? 'active' : ''}`}
@@ -751,24 +751,24 @@ export default function Home() {
             </div>
           </div>
           <div className="prefs-section">
-            <div className="prefs-label">Topics</div>
+            <div className="prefs-label">{t('prefTopics')}</div>
             <div className="prefs-chips">
-              {['Politics', 'Economy', 'Tech', 'Climate', 'Culture', 'Science', 'Conflict'].map(t => (
-                <button key={t} className={`pref-chip ${prefs.topics.includes(t) ? 'active' : ''}`}
-                  onClick={() => togglePref('topics', t)}>{t}</button>
+              {[['Politics', 'topicPolitics'], ['Economy', 'topicEconomy'], ['Tech', 'topicTech'], ['Climate', 'topicClimate'], ['Culture', 'topicCulture'], ['Science', 'topicScience'], ['Conflict', 'topicConflict']].map(([id, key]) => (
+                <button key={id} className={`pref-chip ${prefs.topics.includes(id) ? 'active' : ''}`}
+                  onClick={() => togglePref('topics', id)}>{t(key)}</button>
               ))}
             </div>
           </div>
           <div className="prefs-section">
-            <div className="prefs-label">Depth</div>
+            <div className="prefs-label">{t('prefDepth')}</div>
             <div className="prefs-chips">
-              {[['brief', 'Brief'], ['standard', 'Standard'], ['deep', 'Deep']].map(([v, l]) => (
+              {[['brief', 'depthBrief'], ['standard', 'depthStandard'], ['deep', 'depthDeep']].map(([v, k]) => (
                 <button key={v} className={`pref-chip ${prefs.depth === v ? 'active' : ''}`}
-                  onClick={() => setPrefs(p => ({ ...p, depth: v }))}>{l}</button>
+                  onClick={() => setPrefs(p => ({ ...p, depth: v }))}>{t(k)}</button>
               ))}
             </div>
           </div>
-          <div className="prefs-hint">These shape your briefings. No regions selected = global coverage.</div>
+          <div className="prefs-hint">{t('prefHint')}</div>
         </div>
       )}
 
@@ -860,7 +860,7 @@ export default function Home() {
                   sendMessage(msg.retryText, cleaned)
                 }}
               >
-                ↻ Try again
+                {t('tryAgain')}
               </button>
             )}
             {msg.role === 'assistant' && !msg.isError && (
@@ -869,7 +869,7 @@ export default function Home() {
                   <button
                     className="msg-action-btn speaking"
                     onClick={stopSpeaking}
-                    title="Stop reading"
+                    title={t('stopReading')}
                   >
                     <StopIcon size={14} />
                   </button>
@@ -877,7 +877,7 @@ export default function Home() {
                   <button
                     className="msg-action-btn"
                     onClick={() => { ensureAudioContext(); speak(msg.content, i) }}
-                    title="Read aloud"
+                    title={t('readAloud')}
                   >
                     <SpeakerIcon size={14} />
                   </button>
@@ -913,7 +913,7 @@ export default function Home() {
           <button
             className={`voice-btn ${isListening ? 'listening' : ''}`}
             onClick={toggleVoice}
-            title={isListening ? 'Stop listening' : 'Speak to MIWO'}
+            title={isListening ? t('stopListening') : t('speakToMiwo')}
           >
             <MicIcon />
           </button>
@@ -924,7 +924,7 @@ export default function Home() {
               padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(196,125,90,0.3)',
               whiteSpace: 'nowrap', animation: 'pulse 1.5s ease-in-out infinite',
             }}>
-              {ttsStatus === 'generating' ? '✨ Generating MIWO voice...' : ttsStatus === 'quota' ? '⏳ Voice quota reached — try again in a minute' : '🔊 Playing...'}
+              {ttsStatus === 'generating' ? t('voiceGenerating') : ttsStatus === 'quota' ? t('voiceQuotaReached') : t('voicePlaying')}
             </div>
           )}
           <textarea
