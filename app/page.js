@@ -903,7 +903,7 @@ export default function Home() {
             <p><strong>{t('charter1label')}</strong><br />{t('charter1')}</p>
             <p><strong>{t('charter2label')}</strong><br />{t('charter2')}</p>
             <p><strong>{t('charter3label')}</strong><br />{t('charter3')}</p>
-            <Link href="/impressum" className="charter-link">{t('charterLink')} →</Link>
+            <Link href="/charter" className="charter-link">{t('charterLink')} →</Link>
           </div>
         )}
         <div ref={messagesEndRef} />
