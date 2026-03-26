@@ -83,10 +83,11 @@ html, body {
 
 .header-logo {
   flex-shrink: 0;
-  min-width: 60px;
-  height: 26px;
+  min-width: 80px;
+  height: 40px;
   width: auto;
   display: block;
+  mix-blend-mode: screen;
 }
 
 .logo {
@@ -755,17 +756,18 @@ html, body {
 
 .nav-brand {
   flex-shrink: 0;
-  min-width: 60px;
+  min-width: 80px;
   display: block;
-  height: 26px;
+  height: 40px;
   width: auto;
   cursor: pointer;
 }
 
 .nav-brand img {
-  height: 26px;
+  height: 40px;
   width: auto;
   display: block;
+  mix-blend-mode: screen;
 }
 
 .nav-div {
