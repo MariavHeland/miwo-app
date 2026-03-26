@@ -559,11 +559,8 @@ html, body {
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: 20px;
-  /* Subtle copper glow behind identity */
-  background: radial-gradient(ellipse 800px 600px at center, rgba(196, 125, 90, 0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  padding: 40px 60px;
+  z-index: 1;
+  margin-bottom: 36px;
 }
 
 .welcome-globe {
@@ -571,19 +568,17 @@ html, body {
   height: 200px;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 0.92;
-  filter: drop-shadow(0 0 30px rgba(196, 125, 90, 0.25)) brightness(1.08) contrast(1.05);
-  transition: filter 0.3s ease;
+  opacity: 0.85;
+  position: relative;
+  z-index: 0;
+  mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
+  -webkit-mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
 }
 .welcome-globe-left {
   margin-right: -130px;
-  position: relative;
-  z-index: 0;
 }
 .welcome-globe-right {
   margin-left: -130px;
-  position: relative;
-  z-index: 0;
 }
 
 .welcome-brand-img {
@@ -593,14 +588,14 @@ html, body {
   object-fit: contain;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 0 30px rgba(196, 125, 90, 0.2));
-  transition: filter 0.3s ease;
 }
 
 /* Promise — the tagline */
 .welcome-promise {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  margin-bottom: 0;
+  margin-bottom: 40px;
   max-width: 400px;
 }
 .welcome-promise p {
@@ -612,46 +607,48 @@ html, body {
   margin: 0;
 }
 
-/* Charter section — values below the button */
+/* Charter section — values below the news */
 .welcome-charter {
-  margin-top: 48px;
-  max-width: 480px;
+  max-width: 640px;
+  margin: 48px auto 0;
+  padding: 48px 0;
   text-align: center;
   border-top: 1px solid var(--border);
-  padding-top: 32px;
 }
 .charter-title {
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--copper);
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text);
   margin-bottom: 20px;
-  letter-spacing: 0.02em;
 }
 .welcome-charter p {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
-  color: var(--text);
+  color: var(--text-dim);
   line-height: 1.7;
   margin-bottom: 16px;
 }
 .welcome-charter p strong {
-  color: var(--copper);
-  font-weight: 500;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
 }
 .charter-link {
   display: inline-block;
-  margin-top: 8px;
+  margin-top: 20px;
+  font-family: var(--font-sans);
   font-size: 13px;
-  font-weight: 500;
   color: var(--copper);
-  opacity: 0.7;
+  letter-spacing: 0.02em;
   transition: opacity 0.2s;
   text-decoration: none;
 }
 .charter-link:hover {
-  opacity: 1;
+  opacity: 0.8;
 }
 
 .welcome-prompts {
@@ -707,8 +704,6 @@ html, body {
   }
   .welcome-identity {
     margin-bottom: 24px;
-    padding: 40px 30px;
-    background: radial-gradient(ellipse 600px 450px at center, rgba(196, 125, 90, 0.08) 0%, transparent 70%);
   }
   .welcome-right {
     max-width: 100%;
