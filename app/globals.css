@@ -61,8 +61,9 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 840px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   padding: 0 24px;
 }
 
@@ -258,6 +259,9 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 840px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .message {
@@ -415,6 +419,9 @@ html, body {
   position: relative;
   padding: 16px 0 24px;
   border-top: 1px solid var(--border);
+  max-width: 840px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 @keyframes pulse {
@@ -545,10 +552,8 @@ html, body {
   height: 200px;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 0.95;
-  mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
-  -webkit-mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
-  filter: drop-shadow(0 0 20px rgba(196, 125, 90, 0.15));
+  opacity: 0.92;
+  filter: drop-shadow(0 0 30px rgba(196, 125, 90, 0.25)) brightness(1.08) contrast(1.05);
   transition: filter 0.3s ease;
 }
 .welcome-globe-left {

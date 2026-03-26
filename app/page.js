@@ -62,6 +62,15 @@ function SettingsIcon({ size = 18 }) {
   )
 }
 
+function HomeIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  )
+}
+
 // Globe images — two hemispheres flanking the MIWO wordmark
 const GLOBE_FRONT = '/globe-front.png'  // Africa & Europe (left)
 const GLOBE_BACK = '/globe-back.png'    // Asia-Pacific (right)
@@ -104,6 +113,7 @@ export default function Home() {
   const audioRef = useRef(null)
   const audioCtxRef = useRef(null)
   const sendMessageRef = useRef(null)
+  const hasAutoLoadedRef = useRef(false)
 
   // Globe images are now fixed constants (GLOBE_FRONT, GLOBE_BACK)
 
@@ -497,7 +507,7 @@ export default function Home() {
     setVoiceNameRaw(name)
   }, [stopSpeaking])
 
-  const sendMessage = async (text, baseMessages) => {
+  const sendMessage = async (text, baseMessages, opts = {}) => {
     const messageText = text || input
     if (!messageText.trim() || isLoading) return
 
@@ -512,10 +522,14 @@ export default function Home() {
 
     const userMessage = { role: 'user', content: messageText.trim() }
     const history = baseMessages || messages
-    const newMessages = [...history, userMessage]
-    setMessages(newMessages)
+    // For auto-load briefing, include user message in API call but don't display it
+    const apiMessages = [...history, userMessage]
+    const displayMessages = opts.hideUserMessage ? [...history] : apiMessages
+    setMessages(displayMessages)
     setInput('')
     setIsLoading(true)
+    // Use apiMessages for the API call (includes the trigger question)
+    const newMessages = apiMessages
 
     const maxRetries = 2
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -537,7 +551,7 @@ export default function Home() {
             const errData = await res.json()
             if (errData.message) errorMsg = errData.message
           } catch {}
-          setMessages([...newMessages, {
+          setMessages([...displayMessages, {
             role: 'assistant',
             content: errorMsg,
             isError: true,
@@ -562,14 +576,14 @@ export default function Home() {
           ttsParaCounterRef.current = 0
         }
 
-        setMessages([...newMessages, { role: 'assistant', content: '' }])
+        setMessages([...displayMessages, { role: 'assistant', content: '' }])
         setIsLoading(false)
 
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
           fullText += decoder.decode(value, { stream: true })
-          setMessages([...newMessages, { role: 'assistant', content: fullText }])
+          setMessages([...displayMessages, { role: 'assistant', content: fullText }])
 
           // Auto-read: batch completed sentences into chunks before sending to TTS.
           // Batching gives the TTS engine enough context for proper intonation —
@@ -585,7 +599,7 @@ export default function Home() {
                 spokenUpTo += paraBreak + 2 // skip past the \n\n
                 // Skip whitespace after the break
                 while (spokenUpTo < fullText.length && fullText[spokenUpTo] === '\n') spokenUpTo++
-                queueParagraph(chunk, newMessages.length, paraCounter)
+                queueParagraph(chunk, displayMessages.length, paraCounter)
                 paraCounter++
               }
             }
@@ -596,7 +610,7 @@ export default function Home() {
         if (autoRead && fullText.length > spokenUpTo) {
           const remaining = fullText.substring(spokenUpTo)
           if (remaining.trim()) {
-            queueParagraph(remaining, newMessages.length, paraCounter)
+            queueParagraph(remaining, displayMessages.length, paraCounter)
           }
         }
         return
@@ -610,7 +624,7 @@ export default function Home() {
     }
 
     // All retries failed
-    setMessages([...newMessages, {
+    setMessages([...displayMessages, {
       role: 'assistant',
       content: 'Couldn\'t connect. Check your internet and tap retry.',
       isError: true,
@@ -621,6 +635,25 @@ export default function Home() {
 
   // Keep sendMessage ref current so speech recognition always uses latest version
   sendMessageRef.current = sendMessage
+
+  // Auto-load briefing on first visit — MIWO opens with news, no question needed
+  useEffect(() => {
+    if (hasAutoLoadedRef.current) return
+    // If there are saved messages from a previous session, show those (not welcome)
+    if (messages.length > 0) {
+      setShowWelcome(false)
+      hasAutoLoadedRef.current = true
+      return
+    }
+    // First visit: auto-send briefing request — news starts immediately
+    hasAutoLoadedRef.current = true
+    const timer = setTimeout(() => {
+      if (sendMessageRef.current) {
+        sendMessageRef.current(t('prompt1'), [], { hideUserMessage: true })
+      }
+    }, 300)
+    return () => clearTimeout(timer)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleVoice = () => {
     if (!recognitionRef.current) return
@@ -687,6 +720,26 @@ export default function Home() {
           title="New conversation"
         />
         <div className="header-controls">
+          <button
+            className="header-btn home-btn"
+            onClick={() => {
+              stopSpeaking()
+              setMessages([])
+              localStorage.removeItem('miwo-messages')
+              setShowWelcome(false)
+              hasAutoLoadedRef.current = false
+              // Trigger fresh briefing
+              setTimeout(() => {
+                if (sendMessageRef.current) {
+                  hasAutoLoadedRef.current = true
+                  sendMessageRef.current(t('prompt1'), [], { hideUserMessage: true })
+                }
+              }, 100)
+            }}
+            title={t('home') || 'Home — fresh briefing'}
+          >
+            <HomeIcon size={16} />
+          </button>
           <Link href="/sports" className="nav-link">{t('sport')}</Link>
           <Link href="/history" className="nav-link">{t('history')}</Link>
           <Link href="/classics" className="nav-link">{t('classics')}</Link>
