@@ -312,7 +312,9 @@ export default function Home() {
     return chunks.filter(c => c.trim())
   }
 
-  // TTS queue — speaks paragraph by paragraph so voice starts fast
+  // TTS queue — ordered slots ensure audio always plays top-to-bottom
+  // Each slot is { url: string|null, ready: bool, paraIndex: number }
+  // Slots are pre-allocated in order; filled asynchronously as TTS returns.
   const ttsQueueRef = useRef([])
   const ttsPlayingRef = useRef(false)
   const ttsCancelledRef = useRef(false)
@@ -334,7 +336,7 @@ export default function Home() {
     return URL.createObjectURL(blob)
   }, [voiceName, lang])
 
-  // Play the next item in the TTS queue
+  // Play the next READY item in the TTS queue (always slot 0)
   const playNextInQueue = useCallback(async () => {
     if (ttsPlayingRef.current || ttsCancelledRef.current) return
     if (ttsQueueRef.current.length === 0) {
@@ -345,10 +347,14 @@ export default function Home() {
       return
     }
 
+    // Wait for the FIRST slot to be ready — never skip ahead
+    const slot = ttsQueueRef.current[0]
+    if (!slot.ready) return // not yet — will be triggered when the slot fills
+
     // Lock immediately to prevent overlapping calls during the pause
     ttsPlayingRef.current = true
 
-    const { url, resolve, paraIndex } = ttsQueueRef.current[0]
+    const { url, paraIndex } = slot
 
     // Half-second pause between paragraphs (different news items)
     if (lastParaIndexRef.current >= 0 && paraIndex !== lastParaIndexRef.current) {
@@ -364,7 +370,6 @@ export default function Home() {
 
     if (!url) {
       ttsPlayingRef.current = false
-      if (resolve) resolve()
       playNextInQueue()
       return
     }
@@ -379,19 +384,16 @@ export default function Home() {
     audio.onended = () => {
       URL.revokeObjectURL(url)
       ttsPlayingRef.current = false
-      if (resolve) resolve()
       if (!ttsCancelledRef.current) playNextInQueue()
     }
     audio.onerror = () => {
       URL.revokeObjectURL(url)
       ttsPlayingRef.current = false
-      if (resolve) resolve()
       if (!ttsCancelledRef.current) playNextInQueue()
     }
 
     try { await audio.play() } catch {
       ttsPlayingRef.current = false
-      if (resolve) resolve()
     }
   }, [])
 
@@ -416,25 +418,35 @@ export default function Home() {
   }, [])
 
   // Add a paragraph to the TTS queue and start playing if idle
-  // Fish Audio S2 handles all languages — no routing needed
+  // Pre-allocates an ordered slot SYNCHRONOUSLY, then fills it when audio arrives.
+  // This guarantees playback order regardless of which TTS request returns first.
   const queueParagraph = useCallback(async (text, msgIndex, paraIndex) => {
     setSpeakingIndex(msgIndex)
     setTtsStatus('generating')
 
     const pIdx = paraIndex >= 0 ? paraIndex : ttsParaCounterRef.current++
 
+    // 1. Reserve a slot in order (synchronous — runs before any await)
+    const slot = { url: null, ready: false, paraIndex: pIdx }
+    ttsQueueRef.current.push(slot)
+
+    // 2. Fetch audio (async — may complete out of order, that's fine)
     const url = await generateAudio(text)
     if (ttsCancelledRef.current) {
       if (url) URL.revokeObjectURL(url)
       return
     }
 
-    ttsQueueRef.current.push({ url, paraIndex: pIdx })
+    // 3. Fill the slot and mark ready
+    slot.url = url
+    slot.ready = true
+
+    // 4. Kick the player — it will only play if this slot is first in line
     if (!ttsPlayingRef.current) playNextInQueue()
   }, [generateAudio, playNextInQueue])
 
   // Speak full text at once (for manual click on speaker icon)
-  // Fish Audio S2 is multilingual — same voice handles all languages natively
+  // Pre-allocates ALL slots in order first, then fills them as TTS returns.
   const speak = useCallback(async (text, index) => {
     if (audioRef.current) {
       audioRef.current.pause()
@@ -452,19 +464,30 @@ export default function Home() {
 
     // Split into paragraphs, then into sentence chunks within each
     const paragraphs = text.split(/\n\n+/).filter(p => p.trim())
+
+    // 1. Pre-allocate all slots in order (synchronous)
+    const allSlots = []
     for (let pi = 0; pi < paragraphs.length; pi++) {
       const chunks = splitIntoChunks(paragraphs[pi])
       for (const chunk of chunks) {
-        if (ttsCancelledRef.current) break
-        const url = await generateAudio(chunk)
-        if (ttsCancelledRef.current) {
-          if (url) URL.revokeObjectURL(url)
-          break
-        }
-        ttsQueueRef.current.push({ url, paraIndex: pi })
-        if (!ttsPlayingRef.current) playNextInQueue()
+        const slot = { url: null, ready: false, paraIndex: pi, text: chunk }
+        ttsQueueRef.current.push(slot)
+        allSlots.push(slot)
       }
+    }
+
+    // 2. Generate audio for all slots (concurrent, but order is locked)
+    for (const slot of allSlots) {
       if (ttsCancelledRef.current) break
+      const url = await generateAudio(slot.text)
+      if (ttsCancelledRef.current) {
+        if (url) URL.revokeObjectURL(url)
+        break
+      }
+      slot.url = url
+      slot.ready = true
+      delete slot.text
+      if (!ttsPlayingRef.current) playNextInQueue()
     }
   }, [generateAudio, playNextInQueue, stopSpeaking])
 
@@ -548,16 +571,23 @@ export default function Home() {
           fullText += decoder.decode(value, { stream: true })
           setMessages([...newMessages, { role: 'assistant', content: fullText }])
 
-          // Auto-read: send completed sentences to TTS as they stream in
+          // Auto-read: batch completed sentences into chunks before sending to TTS.
+          // Batching gives the TTS engine enough context for proper intonation —
+          // a lone "The first woman." sounds unfinished, but "She's the 106th person
+          // to hold the job. The first woman." sounds conclusive.
           if (autoRead) {
             const remaining = fullText.substring(spokenUpTo)
-            // Match only the FIRST sentence (non-greedy) that ends with punctuation + whitespace
-            const m = remaining.match(/^(.*?[.!?])(\s+)/)
-            if (m) {
-              const sentence = m[1]
-              spokenUpTo += m[0].length
-              queueParagraph(sentence, newMessages.length, paraCounter)
-              paraCounter++
+            // Look for a paragraph break (double newline) — that's always a chunk boundary
+            const paraBreak = remaining.indexOf('\n\n')
+            if (paraBreak > 0) {
+              const chunk = remaining.substring(0, paraBreak).trim()
+              if (chunk) {
+                spokenUpTo += paraBreak + 2 // skip past the \n\n
+                // Skip whitespace after the break
+                while (spokenUpTo < fullText.length && fullText[spokenUpTo] === '\n') spokenUpTo++
+                queueParagraph(chunk, newMessages.length, paraCounter)
+                paraCounter++
+              }
             }
           }
         }
