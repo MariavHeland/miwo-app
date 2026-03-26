@@ -23,6 +23,7 @@
   --odd: #8B7A5A;
   --history: #A08860;
   --art: #C49A5A;
+  --classics: #8b7355;
   --cooking: #C45A5A;
   --nature: #4A8B6A;
   --nature-light: #6AAF8A;
@@ -266,8 +267,8 @@ html, body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .message.user {

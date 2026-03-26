@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLang, LangPicker } from '../i18n';
 
-export default function ArtsPage() {
+export default function ClassicsPage() {
   const { t, lang } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -13,7 +13,7 @@ export default function ArtsPage() {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   };
 
   useEffect(() => {
@@ -78,18 +78,18 @@ export default function ArtsPage() {
   };
 
   const filters = [
-    { id: 'all', label: 'All Classics' },
-    { id: 'visual', label: 'Visual Arts' },
-    { id: 'music', label: 'Music' },
-    { id: 'theatre', label: 'Theatre' },
-    { id: 'film', label: 'Film' },
-    { id: 'culture', label: 'Culture' },
+    { id: 'all', label: t('filterAllClassics') },
+    { id: 'philosophy', label: t('filterPhilosophy') },
+    { id: 'literature', label: t('filterLiterature') },
+    { id: 'rome', label: t('filterRome') },
+    { id: 'greece', label: t('filterGreece') },
+    { id: 'rhetoric', label: t('filterRhetoric') },
   ];
 
   const suggestedPrompts = [
-    'What\u2019s happening in the art world today?',
-    'Any major exhibitions opening this week?',
-    'Latest in music and live performance',
+    t('classicsPrompt1'),
+    t('classicsPrompt2'),
+    t('classicsPrompt3'),
   ];
 
   return (
@@ -101,7 +101,7 @@ export default function ArtsPage() {
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--art)' }}>{t('classicsLabel')}</div>
+          <div className="nav-section" style={{ color: 'var(--classics)' }}>{t('classicsLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <Link href="/sports" className="nav-btn">{t('sport')}</Link>
@@ -121,7 +121,7 @@ export default function ArtsPage() {
             <div className="subpage-hero">
               <img src="/globe.png" alt="" className="welcome-globe" />
               <div className="subpage-hero-right">
-                <div className="welcome-label" style={{ color: 'var(--art)' }}>
+                <div className="welcome-label" style={{ color: 'var(--classics)' }}>
                   {t('classicsLabel')}
                 </div>
                 <h1 className="welcome-title">
@@ -140,7 +140,7 @@ export default function ArtsPage() {
                       onClick={() => setActiveFilter(f.id)}
                       style={
                         activeFilter === f.id
-                          ? { borderColor: 'var(--art)', color: 'var(--art)', background: 'rgba(196, 154, 90, 0.08)' }
+                          ? { borderColor: 'var(--classics)', color: 'var(--classics)', background: 'rgba(139, 115, 85, 0.08)' }
                           : {}
                       }
                     >
@@ -151,9 +151,9 @@ export default function ArtsPage() {
 
                 {/* Stacked prompts — like homepage */}
                 <div className="subpage-prompts">
-                  {suggestedPrompts.map((prompt) => (
+                  {suggestedPrompts.map((prompt, idx) => (
                     <button
-                      key={prompt}
+                      key={idx}
                       className="subpage-prompt"
                       onClick={() => sendMessage(prompt)}
                     >
@@ -173,7 +173,7 @@ export default function ArtsPage() {
                   style={
                     msg.role === 'user'
                       ? { textAlign: 'right', color: 'var(--text-faint)' }
-                      : { color: 'var(--art)' }
+                      : { color: 'var(--classics)' }
                   }
                 >
                   {msg.role === 'assistant' ? `MIWO ${t('classicsLabel').toUpperCase()}` : t('you')}
@@ -187,7 +187,7 @@ export default function ArtsPage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label" style={{ color: 'var(--art)' }}>MIWO {t('classicsLabel').toUpperCase()}</div>
+                <div className="message-label" style={{ color: 'var(--classics)' }}>MIWO {t('classicsLabel').toUpperCase()}</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
@@ -213,7 +213,7 @@ export default function ArtsPage() {
             className="chat-send"
             onClick={() => sendMessage()}
             disabled={isLoading || !input.trim()}
-            style={{ background: 'var(--art)' }}
+            style={{ background: 'var(--classics)' }}
           >
             &rarr;
           </button>

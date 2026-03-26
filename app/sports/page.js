@@ -167,7 +167,7 @@ export default function SportsPage() {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   }, [messages]);
 
   const locale = LANG_LOCALE_MAP[lang] || 'en-GB';
