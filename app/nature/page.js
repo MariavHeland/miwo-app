@@ -97,19 +97,19 @@ export default function NaturePage() {
   };
 
   const filters = [
-    { id: 'all', label: 'All Nature' },
-    { id: 'climate', label: 'Climate' },
-    { id: 'biodiversity', label: 'Biodiversity' },
-    { id: 'oceans', label: 'Oceans' },
-    { id: 'forests', label: 'Forests' },
-    { id: 'energy', label: 'Energy' },
-    { id: 'wildlife', label: 'Wildlife' },
+    { id: 'all', label: t('filterAllNature') },
+    { id: 'climate', label: t('filterClimate') },
+    { id: 'biodiversity', label: t('filterBiodiversity') },
+    { id: 'oceans', label: t('filterOceans') },
+    { id: 'forests', label: t('filterForests') },
+    { id: 'energy', label: t('filterEnergy') },
+    { id: 'wildlife', label: t('filterWildlife') },
   ];
 
   const suggestedPrompts = [
-    'What\u2019s happening with the climate this week?',
-    'Latest on deforestation and rewilding',
-    'Renewable energy breakthroughs in 2026',
+    t('naturePrompt1'),
+    t('naturePrompt2'),
+    t('naturePrompt3'),
   ];
 
   return (
@@ -171,9 +171,9 @@ export default function NaturePage() {
 
                 {/* Stacked prompts — like homepage */}
                 <div className="subpage-prompts">
-                  {suggestedPrompts.map((prompt) => (
+                  {suggestedPrompts.map((prompt, idx) => (
                     <button
-                      key={prompt}
+                      key={idx}
                       className="subpage-prompt"
                       onClick={() => sendMessage(prompt)}
                     >

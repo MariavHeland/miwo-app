@@ -78,18 +78,18 @@ export default function ArtsPage() {
   };
 
   const filters = [
-    { id: 'all', label: 'All Arts' },
-    { id: 'visual', label: 'Visual Arts' },
-    { id: 'music', label: 'Music' },
-    { id: 'theatre', label: 'Theatre' },
-    { id: 'film', label: 'Film' },
-    { id: 'culture', label: 'Culture' },
+    { id: 'all', label: t('filterAllArts') },
+    { id: 'visual', label: t('filterVisualArts') },
+    { id: 'music', label: t('filterMusic') },
+    { id: 'theatre', label: t('filterTheatre') },
+    { id: 'film', label: t('filterFilm') },
+    { id: 'culture', label: t('filterCulture') },
   ];
 
   const suggestedPrompts = [
-    'What\u2019s happening in the art world today?',
-    'Any major exhibitions opening this week?',
-    'Latest in music and live performance',
+    t('artsPrompt1'),
+    t('artsPrompt2'),
+    t('artsPrompt3'),
   ];
 
   return (
@@ -151,9 +151,9 @@ export default function ArtsPage() {
 
                 {/* Stacked prompts — like homepage */}
                 <div className="subpage-prompts">
-                  {suggestedPrompts.map((prompt) => (
+                  {suggestedPrompts.map((prompt, idx) => (
                     <button
-                      key={prompt}
+                      key={idx}
                       className="subpage-prompt"
                       onClick={() => sendMessage(prompt)}
                     >

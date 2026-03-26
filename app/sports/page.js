@@ -135,23 +135,25 @@ const ODD_SPORTS = [
   { emoji: '\uD83D\uDC1D', region: 'Oxfordshire, England', title: 'World Poohsticks Championship', text: '43rd annual championship: May 24, 2026 at Sandford Lock. Yes, from Winnie-the-Pooh. Yes, it has a world championship.', detail: 'Drop a stick from one side of a bridge, rush to the other side, see whose appears first. Invented by A.A. Milne in 1928. By some distance, the most charming sporting event on earth.' },
 ];
 
-const SPORT_FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'football', label: 'Football' },
-  { key: 'cricket', label: 'Cricket' },
-  { key: 'nfl', label: 'American Football' },
-  { key: 'hockey', label: 'Hockey' },
-  { key: 'tennis', label: 'Tennis' },
-  { key: 'basketball', label: 'Basketball' },
-  { key: 'rugby', label: 'Rugby' },
-  { key: 'f1', label: 'Formula 1' },
-  { key: 'golf', label: 'Golf' },
-  { key: 'odd', label: 'The Unusual' },
+const SPORT_FILTER_KEYS = [
+  { key: 'all', i18nKey: 'filterAll' },
+  { key: 'football', i18nKey: 'filterFootball' },
+  { key: 'cricket', i18nKey: 'filterCricket' },
+  { key: 'nfl', i18nKey: 'filterAmericanFootball' },
+  { key: 'hockey', i18nKey: 'filterHockey' },
+  { key: 'tennis', i18nKey: 'filterTennis' },
+  { key: 'basketball', i18nKey: 'filterBasketball' },
+  { key: 'rugby', i18nKey: 'filterRugby' },
+  { key: 'f1', i18nKey: 'filterF1' },
+  { key: 'golf', i18nKey: 'filterGolf' },
+  { key: 'odd', i18nKey: 'filterUnusual' },
 ];
 
 /* ═══════════════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════════════ */
+const LANG_LOCALE_MAP = { en: 'en-GB', de: 'de-DE', es: 'es-ES', fr: 'fr-FR', ar: 'ar-EG' };
+
 export default function SportsPage() {
   const { t, lang } = useLang();
   const [view, setView] = useState('feed');
@@ -168,7 +170,8 @@ export default function SportsPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const today = new Date().toLocaleDateString('en-GB', {
+  const locale = LANG_LOCALE_MAP[lang] || 'en-GB';
+  const today = new Date().toLocaleDateString(locale, {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
@@ -351,13 +354,13 @@ export default function SportsPage() {
 
           {/* Sport filter pills */}
           <div className="sport-nav">
-            {SPORT_FILTERS.map(({ key, label }) => (
+            {SPORT_FILTER_KEYS.map(({ key, i18nKey }) => (
               <button
                 key={key}
                 className={'sport-pill' + (activeSport === key ? ' active' : '')}
                 onClick={() => setActiveSport(key)}
               >
-                {label}
+                {t(i18nKey)}
               </button>
             ))}
           </div>
@@ -370,14 +373,13 @@ export default function SportsPage() {
             {showOdd && (
               <div className="story-section">
                 <div className="story-section-tag" style={{ color: 'var(--odd)' }}>
-                  The Unusual
+                  {t('theUnusual')}
                 </div>
                 <p style={{
                   fontSize: '15px', color: 'var(--text-secondary)',
                   lineHeight: '1.7', marginBottom: '24px',
                 }}>
-                  Sport is bigger than what makes the front page. Across the world, people compete
-                  at things that would baffle a casual observer and utterly captivate a curious one.
+                  {t('unusualIntro')}
                 </p>
                 <div className="odd-grid">
                   {ODD_SPORTS.map((odd, i) => (
@@ -431,13 +433,13 @@ export default function SportsPage() {
               </p>
               <div className="prompt-pills">
                 {[
-                  'What\'s happening in sport this week?',
-                  'Champions League quarter-final preview',
-                  'IPL 2026 \u2014 who should I watch?',
-                  'Tell me about an unusual sport',
-                ].map((prompt) => (
+                  t('sportPrompt1'),
+                  t('sportPrompt2'),
+                  t('sportPrompt3'),
+                  t('sportPrompt4'),
+                ].map((prompt, idx) => (
                   <button
-                    key={prompt}
+                    key={idx}
                     className="prompt-pill"
                     onClick={() => sendMessage(prompt)}
                     onMouseEnter={(e) => {

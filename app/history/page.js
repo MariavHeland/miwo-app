@@ -78,18 +78,18 @@ export default function HistoryPage() {
   };
 
   const filters = [
-    { id: 'all', label: 'All History' },
-    { id: 'ancient', label: 'Ancient' },
-    { id: 'medieval', label: 'Medieval' },
-    { id: 'modern', label: 'Modern' },
-    { id: 'onthisday', label: 'On This Day' },
-    { id: 'myths', label: 'Myths & Legends' },
+    { id: 'all', label: t('filterAllHistory') },
+    { id: 'ancient', label: t('filterAncient') },
+    { id: 'medieval', label: t('filterMedieval') },
+    { id: 'modern', label: t('filterModern') },
+    { id: 'onthisday', label: t('filterOnThisDay') },
+    { id: 'myths', label: t('filterMyths') },
   ];
 
   const suggestedPrompts = [
-    'What happened on this day in history?',
-    'Tell me a fascinating story from ancient Rome',
-    'Explain a turning point that shaped the modern world',
+    t('historyPrompt1'),
+    t('historyPrompt2'),
+    t('historyPrompt3'),
   ];
 
   const cowardPrompt = `Today's "Coward We Should Remember." History celebrates heroes endlessly. But cowardice — acts of moral failure, betrayal, capitulation, or craven self-interest by people in positions of power — shaped the world just as much. Tell me about one historical figure whose cowardice had significant consequences. Not a villain or a tyrant (they had conviction, however twisted). A coward: someone who knew what was right, had the power to act, and chose not to — or who betrayed others to save themselves. Give me their name, what they did (or failed to do), and why it mattered. Be specific, be fair, and don't soften it. End with a single sentence on what we should learn from their failure. Pick someone different each day — draw from any era, any civilisation. At least half the time, choose someone who is not a white man. Cowardice is universal — make sure your selections reflect that.`;
@@ -190,9 +190,9 @@ export default function HistoryPage() {
 
                 {/* Stacked prompts — like homepage */}
                 <div className="subpage-prompts">
-                  {suggestedPrompts.map((prompt) => (
+                  {suggestedPrompts.map((prompt, idx) => (
                     <button
-                      key={prompt}
+                      key={idx}
                       className="subpage-prompt"
                       onClick={() => sendMessage(prompt)}
                     >
