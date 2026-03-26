@@ -325,8 +325,10 @@ export default function SportsPage() {
             </button>
           )}
           <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/classics" className="nav-btn">{t('classics')}</Link>
           <Link href="/arts" className="nav-btn">{t('arts')}</Link>
           <Link href="/nature" className="nav-btn">{t('nature')}</Link>
+          <Link href="/science" className="nav-btn">{t('science')}</Link>
           <Link href="/cook" className="nav-btn">{t('cook')}</Link>
           <LangPicker />
           <Link href="/" className="nav-btn">{t('home')}</Link>

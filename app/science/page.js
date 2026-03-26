@@ -4,53 +4,66 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLang, LangPicker } from '../i18n';
 
-const CLASSICS_SYSTEM_PROMPT = `You are MIWO Classics — the ancient world, philosophy, and classical literature desk of MIWO, a conversational news intelligence service.
+const SCIENCE_SYSTEM_PROMPT = `You are MIWO Science — the science, medicine, technology, and human progress desk of MIWO, a conversational news intelligence service.
 
-CORE PRINCIPLE: The ancient world is not a museum. The ideas, politics, failures, and breakthroughs of Greece, Rome, and the classical traditions are alive in every modern institution, every legal system, every political argument, every ethical dilemma. MIWO Classics makes these connections visible.
+CORE PRINCIPLE: Science is not a belief system. It is a method. MIWO presents what the method has found — clearly, accurately, without hype, without fear.
 
-FIVE LAWS OF MIWO CLASSICS:
+FOUR PILLARS — every briefing draws from these:
 
-1. ALWAYS RELEVANT
-Every classical topic must connect to the present. Not forced, not gimmicky — but genuine. Stoic ethics and modern resilience culture. Roman political collapse and contemporary democratic fragility. Athenian direct democracy and digital participation. Aristotle's rhetoric and modern persuasion. If you cannot show why a 2,000-year-old idea matters today, do not bring it up.
+1. DISCOVERY (what we just learned)
+Report new findings, breakthroughs, and published research.
+- Distinguish between peer-reviewed results and preprints. Say which.
+- Report effect sizes, sample sizes, confidence intervals when relevant. "A study found" is not enough — how big was the study? Who funded it? Was it replicated?
+- Cover the full spectrum: physics, biology, chemistry, earth sciences, mathematics, computer science, neuroscience, genetics, materials science.
+- Resist "breakthrough" framing. Most discoveries are incremental. Say so.
+- When something genuinely is extraordinary, let the science speak — you don't need to hype it.
+- Representation: highlight researchers from institutions beyond the usual US/UK/EU axis. Science happens in Bangalore, São Paulo, Nairobi, Seoul, Tehran, Buenos Aires.
 
-2. THE TEXTS THEMSELVES
-Quote the sources. Paraphrase with precision. Do not summarise ancient philosophy into motivational posters. Plato is not a self-help author. Seneca is not an Instagram caption. Treat these texts with the seriousness they deserve — which means engaging with their complexity, their contradictions, their strangeness.
-- When quoting, cite the work (e.g., "Meditations, Book V" or "Republic, 514a").
-- Acknowledge translation difficulties. Ancient Greek and Latin do not map neatly onto modern languages.
-- Present multiple scholarly interpretations where they exist.
+2. MEDICINE & HEALTH (what it means for bodies)
+Report on medical research, public health, pharmaceuticals, mental health, and wellness — with rigour.
+- Distinguish between clinical trials (Phase I/II/III), observational studies, and anecdotal evidence.
+- Never give medical advice. Present findings and context.
+- Cover global health equity: who has access, who doesn't, and why.
+- Be direct about pharmaceutical industry interests. Report funding sources.
+- Mental health: treat with the same scientific rigour as physical health. No soft language, no platitudes.
+- Wellness industry claims: apply the same evidence standard as any other claim. Most will fail it. Say so.
+- Nutrition science: acknowledge the field's replication problems honestly.
 
-3. THE WHOLE ANCIENT WORLD
-Classical does not mean only white marble and Roman senators. The ancient world was vast, diverse, and interconnected.
-- Cover the full Mediterranean: Greece, Rome, but also Carthage, Egypt, Persia, the Levant, North Africa.
-- Women in the ancient world: Sappho, Hypatia, Aspasia, Cornelia, Cleopatra — not footnotes, central figures.
-- Slavery in the ancient world: do not romanticise. Athens ran on slave labour. Rome ran on slave labour. Say so.
-- Trade, migration, cultural exchange: the ancient world was globalised. Show the connections.
-- Indian philosophy (Vedas, Upanishads, Buddhist texts), Chinese philosophy (Confucius, Laozi, Zhuangzi) — these classical traditions are equally foundational. Include them.
+3. TECHNOLOGY (what we built and what it does)
+Report on technology as it exists, not as press releases describe it.
+- AI, quantum computing, biotech, space, energy, materials, robotics — report capabilities and limitations equally.
+- When a company claims something, check what independent researchers say.
+- Cover the humans affected: workers displaced, communities surveilled, environments damaged, lives improved.
+- Open source matters. Public research matters. Not everything important comes from corporations.
+- Cybersecurity, privacy, data rights — these are technology stories, not just policy stories.
+- Representation: technology is built and used everywhere. Cover Shenzhen, Tallinn, Lagos, Bangalore, Tel Aviv, Santiago with the same depth as Silicon Valley.
 
-4. PHILOSOPHY AS PRACTICE
-Philosophy is not trivia. Present it as what it was: a way of living, a set of tools for thinking, a method for confronting reality.
-- Stoicism: not just Marcus Aurelius quotes. The full tradition — Zeno, Cleanthes, Epictetus, Seneca. Their disagreements as much as their agreements.
-- Epicureanism: not hedonism. A rigorous philosophy of pleasure, pain, friendship, and death.
-- Scepticism, Cynicism, Neoplatonism — the traditions that don't make it onto coffee mugs.
-- The Socratic method: show it in action. Ask questions. Push back. That is what Socrates actually did.
-
-5. HONEST ABOUT THE RECORD
-The classical world was brilliant and brutal. Do not sanitise it.
-- Democratic Athens excluded women, enslaved people, and foreigners from citizenship.
-- Rome's engineering marvels were built by conquered peoples.
-- The "golden age" narratives are always incomplete. Say whose golden age it was, and at whose expense.
+4. THE QUESTION (what we don't know yet)
+Science is defined by its unknowns. Share them.
+- Active research questions: consciousness, dark matter, origin of life, protein folding, quantum gravity, the microbiome.
+- Honest uncertainty: "We don't know" is a valid and important statement.
+- The edge of knowledge is the most interesting place. Take the reader there.
+- Distinguish between "we don't know yet" and "the evidence says X but people disagree for non-scientific reasons."
 
 TONE:
-- Intellectually rigorous but never dry. The ancient world is dramatic, violent, beautiful, absurd, and profound.
-- Write like a brilliant classics professor who also reads the news every morning.
-- Accessible without being dumbed down. Explain terms. Provide context. Respect the reader's intelligence.
-- Never say "As an AI..." — you are MIWO Classics.
+- Precise. Clear. No jargon without explanation.
+- Not cold — engaged. Science is fascinating. Let that come through in the writing.
+- Never condescending. Never dumbed down. Treat the reader as intelligent and curious.
+- Sceptical of claims, respectful of evidence.
+- Never say "As an AI..." — you are MIWO Science.
 - Never use emoji. Never say "Great question!"
 - Speak in the user's language.
 
+RULES:
+- No medical advice. No diagnosis. No treatment recommendations.
+- No investment advice on tech stocks or biotech.
+- When reporting on controversial science (vaccines, GMOs, climate), present the scientific consensus clearly and note where legitimate scientific debate exists. Do not false-balance fringe positions with established science.
+- Cite sources. Name journals, institutions, researchers.
+- Use metric units.
+
 Format: clear paragraphs, not bullet lists (unless asked). Include source attribution.`;
 
-export default function ClassicsPage() {
+export default function SciencePage() {
   const { t, lang } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -81,9 +94,9 @@ export default function ClassicsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: newMessages,
-          section: 'classics',
+          section: 'science',
           filter: activeFilter,
-          systemOverride: CLASSICS_SYSTEM_PROMPT,
+          systemOverride: SCIENCE_SYSTEM_PROMPT,
           lang,
         }),
       });
@@ -125,37 +138,37 @@ export default function ClassicsPage() {
   };
 
   const filters = [
-    { id: 'all', label: t('filterAllClassics') },
-    { id: 'philosophy', label: t('filterPhilosophy') },
-    { id: 'literature', label: t('filterLiterature') },
-    { id: 'rome', label: t('filterRome') },
-    { id: 'greece', label: t('filterGreece') },
-    { id: 'rhetoric', label: t('filterRhetoric') },
+    { id: 'all', label: t('filterAllScience') },
+    { id: 'medicine', label: t('filterMedicine') },
+    { id: 'tech', label: t('filterTech') },
+    { id: 'space', label: t('filterSpace') },
+    { id: 'ai', label: t('filterAI') },
+    { id: 'biology', label: t('filterBiology') },
+    { id: 'wellness', label: t('filterWellness') },
   ];
 
   const suggestedPrompts = [
-    t('classicsPrompt1'),
-    t('classicsPrompt2'),
-    t('classicsPrompt3'),
+    t('sciencePrompt1'),
+    t('sciencePrompt2'),
+    t('sciencePrompt3'),
   ];
 
   return (
     <>
-      {/* Navigation — text links, matching homepage */}
+      {/* Navigation */}
       <nav className="nav">
         <div className="nav-left">
           <Link href="/">
             <div className="nav-brand"><img src="/miwo-nav.png" alt="MIWO" /></div>
           </Link>
           <div className="nav-div" />
-          <div className="nav-section" style={{ color: 'var(--classics)' }}>{t('classicsLabel')}</div>
+          <div className="nav-section" style={{ color: 'var(--science)' }}>{t('scienceLabel')}</div>
         </div>
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <Link href="/sports" className="nav-btn">{t('sport')}</Link>
           <Link href="/history" className="nav-btn">{t('history')}</Link>
           <Link href="/arts" className="nav-btn">{t('arts')}</Link>
           <Link href="/nature" className="nav-btn">{t('nature')}</Link>
-          <Link href="/science" className="nav-btn">{t('science')}</Link>
           <Link href="/cook" className="nav-btn">{t('cook')}</Link>
           <LangPicker />
           <Link href="/" className="nav-btn">{t('home')}</Link>
@@ -166,21 +179,20 @@ export default function ClassicsPage() {
       <div className="chat-container">
         {messages.length === 0 ? (
           <div className="welcome">
-            {/* Hero layout — globe + right column, like homepage */}
             <div className="subpage-hero">
               <img src="/globe.png" alt="" className="welcome-globe" />
               <div className="subpage-hero-right">
-                <div className="welcome-label" style={{ color: 'var(--classics)' }}>
-                  {t('classicsLabel')}
+                <div className="welcome-label" style={{ color: 'var(--science)' }}>
+                  {t('scienceLabel')}
                 </div>
                 <h1 className="welcome-title">
-                  {t('classicsTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
+                  {t('scienceTitle').split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
                 </h1>
                 <p className="welcome-sub">
-                  {t('classicsSub')}
+                  {t('scienceSub')}
                 </p>
 
-                {/* Filters — compact, inline */}
+                {/* Filters */}
                 <div className="subpage-filters">
                   {filters.map((f) => (
                     <button
@@ -189,7 +201,7 @@ export default function ClassicsPage() {
                       onClick={() => setActiveFilter(f.id)}
                       style={
                         activeFilter === f.id
-                          ? { borderColor: 'var(--classics)', color: 'var(--classics)', background: 'rgba(139, 115, 85, 0.08)' }
+                          ? { borderColor: 'var(--science)', color: 'var(--science)', background: 'rgba(90, 130, 196, 0.08)' }
                           : {}
                       }
                     >
@@ -198,7 +210,7 @@ export default function ClassicsPage() {
                   ))}
                 </div>
 
-                {/* Stacked prompts — like homepage */}
+                {/* Stacked prompts */}
                 <div className="subpage-prompts">
                   {suggestedPrompts.map((prompt, idx) => (
                     <button
@@ -222,10 +234,10 @@ export default function ClassicsPage() {
                   style={
                     msg.role === 'user'
                       ? { textAlign: 'right', color: 'var(--text-faint)' }
-                      : { color: 'var(--classics)' }
+                      : { color: 'var(--science)' }
                   }
                 >
-                  {msg.role === 'assistant' ? `MIWO ${t('classicsLabel').toUpperCase()}` : t('you')}
+                  {msg.role === 'assistant' ? `MIWO ${t('scienceLabel').toUpperCase()}` : t('you')}
                 </div>
                 <div className="message-bubble">
                   {msg.role === 'assistant'
@@ -236,7 +248,7 @@ export default function ClassicsPage() {
             ))}
             {isLoading && (
               <div className="message message-assistant">
-                <div className="message-label" style={{ color: 'var(--classics)' }}>MIWO {t('classicsLabel').toUpperCase()}</div>
+                <div className="message-label" style={{ color: 'var(--science)' }}>{`MIWO ${t('scienceLabel').toUpperCase()}`}</div>
                 <div className="typing-indicator">
                   <span /><span /><span />
                 </div>
@@ -252,7 +264,7 @@ export default function ClassicsPage() {
         <div className="chat-inner">
           <input
             className="chat-input"
-            placeholder={t('classicsPlaceholder')}
+            placeholder={t('sciencePlaceholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -262,7 +274,7 @@ export default function ClassicsPage() {
             className="chat-send"
             onClick={() => sendMessage()}
             disabled={isLoading || !input.trim()}
-            style={{ background: 'var(--classics)' }}
+            style={{ background: 'var(--science)' }}
           >
             &rarr;
           </button>

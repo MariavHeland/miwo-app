@@ -45,6 +45,15 @@ const translations = {
     natureLabel: 'Nature', natureTitle: 'The planet speaks.\nAre we listening?',
     natureSub: 'Climate. Oceans. Forests. Energy. The environmental stories that change everything. Told with science. No greenwash. No false hope. Just what\'s really happening.',
     naturePlaceholder: 'Ask about climate, biodiversity, energy, nature...',
+    // Science
+    science: 'Science', scienceLabel: 'Science & Tech', scienceTitle: 'What we know.\nWhat we just learned.',
+    scienceSub: 'Medicine, technology, space, AI, biology — reported with rigour. No hype, no fear. Just what the evidence says and what we still don\'t know.',
+    sciencePlaceholder: 'Ask about science, medicine, tech, AI, space...',
+    filterAllScience: 'All', filterMedicine: 'Medicine', filterTech: 'Technology',
+    filterSpace: 'Space', filterAI: 'AI', filterBiology: 'Biology', filterWellness: 'Wellness',
+    sciencePrompt1: 'What\'s the biggest science story right now?',
+    sciencePrompt2: 'Latest in AI research — what actually matters?',
+    sciencePrompt3: 'Any medical breakthroughs this week?',
     // Cook
 
     cookLabel: 'Cook', cookTitle: 'Every meal tells\na story.',
@@ -135,6 +144,8 @@ const translations = {
     artsPrompt1: 'What’s happening in the art world right now?',
     artsPrompt2: 'Any major exhibitions opening?',
     artsPrompt3: 'Latest in music and live performance',
+    artistTitle: 'فنان يجب أن تعرفه', artistSub: 'أعمال مميزة من أماكن غير متوقعة. فنان واحد، كل يوم، من أي مكان في العالم.',
+    artistTitle: 'Artist You Should Know', artistSub: 'Remarkable work from unexpected places. One artist, every day, from anywhere in the world.',
     // History filters & prompts
     filterAllHistory: 'All History', filterAncient: 'Ancient', filterMedieval: 'Medieval',
     filterModern: 'Modern', filterOnThisDay: 'On This Day', filterMyths: 'Myths & Legends',
@@ -202,6 +213,15 @@ const translations = {
     natureLabel: 'Natur', natureTitle: 'Der Planet spricht.\nH\u00F6ren wir zu?',
     natureSub: 'Klima. Ozeane. W\u00E4lder. Energie. Die Umweltgeschichten, die alles verändern. Erzählt mit Wissenschaft. Ohne Greenwashing. Ohne falsche Hoffnung. Nur das, was wirklich passiert.',
     naturePlaceholder: 'Frag nach Klima, Biodiversit\u00E4t, Energie, Natur...',
+    // Wissenschaft
+    science: 'Wissenschaft', scienceLabel: 'Wissenschaft & Tech', scienceTitle: 'Was wir wissen.\nWas wir gerade gelernt haben.',
+    scienceSub: 'Medizin, Technologie, Weltraum, KI, Biologie — mit Sorgfalt berichtet. Kein Hype, keine Angst. Nur was die Evidenz sagt und was wir noch nicht wissen.',
+    sciencePlaceholder: 'Frag nach Wissenschaft, Medizin, Tech, KI, Weltraum...',
+    filterAllScience: 'Alle', filterMedicine: 'Medizin', filterTech: 'Technologie',
+    filterSpace: 'Weltraum', filterAI: 'KI', filterBiology: 'Biologie', filterWellness: 'Wellness',
+    sciencePrompt1: 'Was ist die größte Wissenschaftsnachricht gerade?',
+    sciencePrompt2: 'Neuestes in der KI-Forschung — was ist wirklich wichtig?',
+    sciencePrompt3: 'Medizinische Durchbrüche diese Woche?',
 
     cookLabel: 'Kochen', cookTitle: 'Jedes Essen erzählt\neine Geschichte.',
     cookSub: 'Rezepte, Techniken, Zutaten — die Kultur, Geschichte und Freude hinter dem, was wir essen. Von schnellen Wochentags-Mahlzeiten bis zu jahrhundertealten Traditionen. Denn Essen ist nie nur Essen.',
@@ -288,6 +308,7 @@ const translations = {
     artsPrompt1: 'Was passiert gerade in der Kunstwelt?',
     artsPrompt2: 'Gibt es bedeutende Ausstellungseröffnungen?',
     artsPrompt3: 'Neuestes aus Musik und Live-Performance',
+    artistTitle: 'Künstler, den du kennen solltest', artistSub: 'Bemerkenswerte Arbeit von unerwarteten Orten. Ein Künstler, jeden Tag, von überall auf der Welt.',
     // History filters & prompts
     filterAllHistory: 'Alle Geschichte', filterAncient: 'Antike', filterMedieval: 'Mittelalter',
     filterModern: 'Moderne', filterOnThisDay: 'Heute in der Geschichte', filterMyths: 'Mythen & Legenden',
@@ -355,6 +376,15 @@ const translations = {
     natureLabel: 'Naturaleza', natureTitle: 'El planeta habla.\n¿Estamos escuchando?',
     natureSub: 'Clima. Océanos. Bosques. Energía. Las historias ambientales que lo cambian todo. Contadas con ciencia. Sin greenwashing. Sin falsas esperanzas. Solo lo que está pasando realmente.',
     naturePlaceholder: 'Pregunta sobre clima, biodiversidad, energ\u00EDa...',
+    // Ciencia
+    science: 'Ciencia', scienceLabel: 'Ciencia y Tech', scienceTitle: 'Lo que sabemos.\nLo que acabamos de aprender.',
+    scienceSub: 'Medicina, tecnología, espacio, IA, biología — reportado con rigor. Sin hype, sin miedo. Solo lo que dice la evidencia y lo que aún no sabemos.',
+    sciencePlaceholder: 'Pregunta sobre ciencia, medicina, tech, IA, espacio...',
+    filterAllScience: 'Todos', filterMedicine: 'Medicina', filterTech: 'Tecnología',
+    filterSpace: 'Espacio', filterAI: 'IA', filterBiology: 'Biología', filterWellness: 'Bienestar',
+    sciencePrompt1: '¿Cuál es la mayor noticia científica ahora mismo?',
+    sciencePrompt2: 'Lo último en investigación de IA — ¿qué importa realmente?',
+    sciencePrompt3: '¿Algún avance médico esta semana?',
 
     cookLabel: 'Cocina', cookTitle: 'Cada comida cuenta\nuna historia.',
     cookSub: 'Recetas, técnicas, ingredientes — la cultura, historia y alegría detrás de lo que comemos. Desde comidas rápidas de la semana hasta tradiciones centenarias. Porque la comida nunca es solo comida.',
@@ -441,6 +471,7 @@ const translations = {
     artsPrompt1: '¿Qué está pasando en el mundo del arte ahora mismo?',
     artsPrompt2: '¿Alguna exposición importante inaugurando?',
     artsPrompt3: 'Lo último en música y artes escénicas',
+    artistTitle: 'Artista que deberías conocer', artistSub: 'Trabajo notable desde lugares inesperados. Un artista, cada día, de cualquier parte del mundo.',
     // History filters & prompts
     filterAllHistory: 'Toda Historia', filterAncient: 'Antiguo', filterMedieval: 'Medieval',
     filterModern: 'Moderno', filterOnThisDay: 'Un día como hoy', filterMyths: 'Mitos y Leyendas',
@@ -508,6 +539,15 @@ const translations = {
     natureLabel: 'Nature', natureTitle: 'La planète parle.\nÉcoutons-nous?',
     natureSub: 'Climat. Océans. Forêts. Énergie. Les histoires environnementales qui changent tout. Racontées avec science. Pas de greenwashing. Pas de faux espoir. Juste ce qui se passe vraiment.',
     naturePlaceholder: 'Posez une question sur le climat, la biodiversit\u00E9, l\u2019\u00E9nergie...',
+    // Science
+    science: 'Science', scienceLabel: 'Sciences & Tech', scienceTitle: 'Ce que nous savons.\nCe que nous venons d\'apprendre.',
+    scienceSub: 'Médecine, technologie, espace, IA, biologie — rapporté avec rigueur. Pas de battage, pas de peur. Juste ce que disent les preuves et ce que nous ne savons pas encore.',
+    sciencePlaceholder: 'Posez vos questions sur la science, la médecine, la tech, l\'IA, l\'espace...',
+    filterAllScience: 'Tout', filterMedicine: 'Médecine', filterTech: 'Technologie',
+    filterSpace: 'Espace', filterAI: 'IA', filterBiology: 'Biologie', filterWellness: 'Bien-être',
+    sciencePrompt1: 'Quelle est la plus grande nouvelle scientifique en ce moment ?',
+    sciencePrompt2: 'Dernières nouvelles en recherche IA — qu\'est-ce qui compte vraiment ?',
+    sciencePrompt3: 'Des percées médicales cette semaine ?',
 
     cookLabel: 'Cuisine', cookTitle: 'Chaque repas raconte\nune histoire.',
     cookSub: 'Recettes, techniques, ingrédients — la culture, l\'histoire et la joie derrière ce que nous mangeons. Des repas rapides entre semaine aux traditions centenaires. Parce que la nourriture n\'est jamais juste de la nourriture.',
@@ -594,6 +634,7 @@ const translations = {
     artsPrompt1: 'Que se passe-t-il dans le monde de l’art en ce moment ?',
     artsPrompt2: 'Des expositions majeures en cours ?',
     artsPrompt3: 'Les dernières nouvelles en musique et spectacle vivant',
+    artistTitle: 'Artiste à découvrir', artistSub: 'Un travail remarquable venu de lieux inattendus. Un artiste, chaque jour, de n’importe où dans le monde.',
     // History filters & prompts
     filterAllHistory: 'Toute l’Histoire', filterAncient: 'Antiquité', filterMedieval: 'Médiéval',
     filterModern: 'Moderne', filterOnThisDay: 'Ce jour dans l’histoire', filterMyths: 'Mythes et Légendes',
@@ -662,6 +703,15 @@ const translations = {
     natureLabel: 'طبيعة', natureTitle: 'الكوكب يتكلم.\nهل نسمع؟',
     natureSub: 'المناخ. المحيطات. الغابات. الطاقة. القصص البيئية التي تغيّر كل شيء. مروية بالعلم. بلا تزوير. بلا أمل زائف. فقط ما يحدث فعلاً.',
     naturePlaceholder: 'اسأل عن المناخ أو التنوع البيولوجي أو الطاقة أو الطبيعة...',
+    // علوم
+    science: 'علوم', scienceLabel: 'العلوم والتكنولوجيا', scienceTitle: 'ما نعرفه.\nما تعلمناه للتو.',
+    scienceSub: 'الطب، التكنولوجيا، الفضاء، الذكاء الاصطناعي، الأحياء — بدقة وصرامة. بدون مبالغة، بدون خوف. فقط ما تقوله الأدلة وما لا نعرفه بعد.',
+    sciencePlaceholder: 'اسأل عن العلوم، الطب، التكنولوجيا، الذكاء الاصطناعي، الفضاء...',
+    filterAllScience: 'الكل', filterMedicine: 'الطب', filterTech: 'التكنولوجيا',
+    filterSpace: 'الفضاء', filterAI: 'الذكاء الاصطناعي', filterBiology: 'الأحياء', filterWellness: 'العافية',
+    sciencePrompt1: 'ما هو أكبر خبر علمي الآن؟',
+    sciencePrompt2: 'آخر أبحاث الذكاء الاصطناعي — ما المهم فعلاً؟',
+    sciencePrompt3: 'أي اختراقات طبية هذا الأسبوع؟',
     cookLabel: 'طبخ', cookTitle: 'كل طبق\nله قصة.',
     cookSub: 'وصفات وتقنيات ومكونات — الثقافة والتاريخ والفرحة خلف ما نأكل. من وجبات سريعة خلال الأسبوع إلى تقاليد عريقة. لأن الطعام ليس مجرد طعام أبداً.',
     cookPlaceholder: 'اسأل عن أي وصفة أو تقنية أو مطبخ أو مكوّن...',

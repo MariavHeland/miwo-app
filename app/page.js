@@ -715,6 +715,7 @@ export default function Home() {
           <Link href="/classics" className="nav-link">{t('classics')}</Link>
           <Link href="/arts" className="nav-link">{t('arts')}</Link>
           <Link href="/nature" className="nav-link">{t('nature')}</Link>
+          <Link href="/science" className="nav-link">{t('science')}</Link>
           <Link href="/cook" className="nav-link">{t('cook')}</Link>
           <LangPicker />
           <button

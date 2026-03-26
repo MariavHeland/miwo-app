@@ -4,6 +4,39 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLang, LangPicker } from '../i18n';
 
+const ARTS_SYSTEM_PROMPT = `You are MIWO Arts & Culture — the arts, music, theatre, film, and culture desk of MIWO, a conversational news intelligence service.
+
+CORE PRINCIPLE: Art is not decoration. It is how societies process what is happening to them. MIWO covers art as seriously as politics — because it is politics, economics, identity, and power made visible.
+
+FIVE LAWS OF MIWO ARTS:
+
+1. THE WORK FIRST
+Start with what the artist actually made. Describe it. What does it look like, sound like, feel like? Before context, before biography, before meaning — the work itself. If you cannot make the reader see or hear it, you have failed.
+
+2. THE WORLD IT COMES FROM
+Every artwork exists in a time and place. What was happening when it was made? What political, social, economic, technological forces shaped it? Art does not happen in a vacuum. Connect the work to its moment — but let the reader draw their own conclusions.
+
+3. THE ERASED AND THE OVERLOOKED
+Art history as commonly told is incomplete. Women, artists of colour, artists from the Global South, queer artists, disabled artists, indigenous artists — systematically written out or reduced to footnotes. MIWO corrects this. Not by lecturing, but by showing the work. The work speaks for itself.
+- At least half of featured artists should not be white Western men.
+- Cover scenes beyond New York, London, Paris, Berlin. Lagos, Mumbai, São Paulo, Seoul, Mexico City, Beirut, Tbilisi, Dakar — the art world is the whole world.
+- Street art, ceramics, textiles, digital art, sound art, performance — not just painting and sculpture.
+
+4. THE MONEY AND THE POWER
+Art markets, gallery systems, museum politics, streaming economics, publishing industry, festival circuits — follow the money. Who funds what? Who gets shown? Who gets paid? Who owns the platforms? Report these structures without cynicism but without naivety.
+
+5. THE LIVING AND THE NOW
+Prioritise living artists. Prioritise what is happening now. Art history matters, but MIWO's primary job is to show what is being made today, by whom, and why it matters. The dead masters have enough advocates. The living need attention.
+
+TONE:
+- Vivid. Precise. Never pretentious.
+- Write about art the way you would talk to a brilliant friend who doesn't have an MFA — with respect, specificity, and zero jargon.
+- Never say "As an AI..." — you are MIWO Arts.
+- Never use emoji. Never say "Great question!"
+- Speak in the user's language.
+
+Format: clear paragraphs, not bullet lists (unless asked). Include source attribution where relevant.`;
+
 export default function ArtsPage() {
   const { t, lang } = useLang();
   const [messages, setMessages] = useState([]);
@@ -36,8 +69,9 @@ export default function ArtsPage() {
         body: JSON.stringify({
           messages: newMessages,
           section: 'arts',
-          lang,
           filter: activeFilter,
+          systemOverride: ARTS_SYSTEM_PROMPT,
+          lang,
         }),
       });
 
@@ -92,6 +126,8 @@ export default function ArtsPage() {
     t('artsPrompt3'),
   ];
 
+  const artistPrompt = `Today's "Artist You Should Know." Not the famous ones — the ones who deserve to be. Pick one living artist (visual art, music, sculpture, installation, photography, textile, ceramics, street art, dance, anything) who is doing remarkable work but has not yet reached mainstream recognition. They should be from somewhere unexpected — not the usual New York/London/Berlin gallery circuit. Could be Lagos, Tbilisi, Medellín, Dhaka, Beirut, Osaka, Dakar, Reykjavik, anywhere. Give me their name, where they're from, what they do, and why their work matters. Show me what makes them extraordinary. Be specific about technique and vision. End with where to find their work online. Pick someone different each day — draw from every continent, every medium, every tradition. At least half the time, choose someone who is not from a Western country.`;
+
   return (
     <>
       {/* Navigation — text links, matching homepage */}
@@ -106,7 +142,9 @@ export default function ArtsPage() {
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <Link href="/sports" className="nav-btn">{t('sport')}</Link>
           <Link href="/history" className="nav-btn">{t('history')}</Link>
+          <Link href="/classics" className="nav-btn">{t('classics')}</Link>
           <Link href="/nature" className="nav-btn">{t('nature')}</Link>
+          <Link href="/science" className="nav-btn">{t('science')}</Link>
           <Link href="/cook" className="nav-btn">{t('cook')}</Link>
           <LangPicker />
           <Link href="/" className="nav-btn">{t('home')}</Link>
@@ -147,6 +185,43 @@ export default function ArtsPage() {
                       {f.label}
                     </button>
                   ))}
+                </div>
+
+                {/* Daily feature card — Artist of the Day */}
+                <div
+                  onClick={() => sendMessage(artistPrompt)}
+                  style={{
+                    background: 'var(--surface)',
+                    border: '1px solid rgba(196, 154, 90, 0.25)',
+                    borderRadius: 'var(--radius-lg)',
+                    padding: '18px 20px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    textAlign: 'left',
+                    marginTop: '4px',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--art)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(196, 154, 90, 0.25)'; }}
+                >
+                  <div style={{
+                    fontFamily: 'var(--font-sans)', fontSize: '10px', fontWeight: 600,
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    color: 'var(--art)', marginBottom: '6px',
+                  }}>
+                    {t('dailyFeature')}
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 600,
+                    color: 'var(--text)', lineHeight: 1.3, marginBottom: '4px',
+                  }}>
+                    {t('artistTitle')}
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-serif)', fontSize: '13px',
+                    color: 'var(--text-muted)', lineHeight: 1.6,
+                  }}>
+                    {t('artistSub')} →
+                  </div>
                 </div>
 
                 {/* Stacked prompts — like homepage */}
