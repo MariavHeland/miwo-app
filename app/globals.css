@@ -87,7 +87,6 @@ html, body {
   height: 40px;
   width: auto;
   display: block;
-  mix-blend-mode: screen;
 }
 
 .logo {
@@ -576,8 +575,8 @@ html, body {
   opacity: 0.85;
   position: relative;
   z-index: 0;
-  mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
-  -webkit-mask-image: radial-gradient(circle at center, black 25%, transparent 48%);
+  mask-image: radial-gradient(circle at center, black 55%, transparent 78%);
+  -webkit-mask-image: radial-gradient(circle at center, black 55%, transparent 78%);
 }
 .welcome-globe-left {
   margin-right: -130px;
@@ -767,7 +766,6 @@ html, body {
   height: 40px;
   width: auto;
   display: block;
-  mix-blend-mode: screen;
 }
 
 .nav-div {
