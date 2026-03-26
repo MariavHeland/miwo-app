@@ -1,8 +1,8 @@
 :root {
   --bg: #0C0C0B;
-  --copper: #C47D5A;
-  --copper-dim: #A0654A;
-  --text: #EAE6E0;
+  --copper: #C4875A;
+  --copper-dim: #A07040;
+  --text: #D8CFC6;
   --text-dim: #9A9A92;
   --text-secondary: #AAAAAA;
   --text-muted: #888880;
@@ -15,7 +15,7 @@
   --card: #131312;
   --radius-lg: 14px;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-serif: 'Literata', Georgia, serif;
 
   /* Section accent colors */
   --sport: #5A8B6A;
@@ -286,12 +286,12 @@ html, body {
 }
 
 .message.assistant .message-content {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 15px;
   line-height: 1.78;
   color: var(--text);
   max-width: 520px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0em;
 }
 
 .message.assistant .message-content p {
@@ -618,7 +618,7 @@ html, body {
   border-top: 1px solid var(--border);
 }
 .charter-title {
-  font-family: var(--font-serif, Georgia, serif);
+  font-family: var(--font-serif);
   font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 600;
   line-height: 1.2;
@@ -637,7 +637,7 @@ html, body {
   color: var(--text);
   font-weight: 600;
   font-size: 14px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0em;
 }
 .charter-link {
   display: inline-block;
@@ -885,7 +885,7 @@ html, body {
 .message-label.sport { color: var(--sport); }
 
 .message-bubble {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 17px;
   line-height: 1.7;
   color: var(--text);
@@ -1216,7 +1216,7 @@ html, body {
 }
 
 .story-lede {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.7;
   color: var(--text-secondary);
@@ -1224,7 +1224,7 @@ html, body {
 }
 
 .story-detail {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 15px;
   line-height: 1.7;
   color: var(--text-muted);
@@ -1232,7 +1232,7 @@ html, body {
 }
 
 .story-aside {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 13px;
   font-style: italic;
   line-height: 1.7;
@@ -1300,7 +1300,7 @@ html, body {
 }
 
 .odd-text {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.6;
   color: var(--text-muted);
