@@ -522,7 +522,17 @@ html, body {
   cursor: not-allowed;
 }
 
-/* Welcome state — canonical landing page design */
+/* Welcome hero — sits inside messages, scrolls away naturally */
+.welcome-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  padding: 40px 24px 20px;
+}
+
+/* Legacy welcome state (unused but kept for reference) */
 .welcome {
   flex: 1;
   display: flex;

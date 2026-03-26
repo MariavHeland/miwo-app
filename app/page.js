@@ -96,7 +96,6 @@ export default function Home() {
   const [speakingParaIndex, setSpeakingParaIndex] = useState(-1) // which paragraph is currently being read aloud
   // Globe sources are fixed — no random rotation needed
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
-  const [showWelcome, setShowWelcome] = useState(true)
   const [showPrefs, setShowPrefs] = useState(false)
   const [prefs, setPrefs] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -511,9 +510,6 @@ export default function Home() {
     const messageText = text || input
     if (!messageText.trim() || isLoading) return
 
-    // Hide welcome screen when user sends a message
-    setShowWelcome(false)
-
     // Pre-unlock AudioContext on this user gesture so auto-read works after response
     if (autoRead) ensureAudioContext()
 
@@ -639,9 +635,8 @@ export default function Home() {
   // Auto-load briefing on first visit — MIWO opens with news, no question needed
   useEffect(() => {
     if (hasAutoLoadedRef.current) return
-    // If there are saved messages from a previous session, show those (not welcome)
+    // If there are saved messages from a previous session, skip auto-load
     if (messages.length > 0) {
-      setShowWelcome(false)
       hasAutoLoadedRef.current = true
       return
     }
@@ -675,7 +670,6 @@ export default function Home() {
   }
 
   const handlePromptClick = (text) => {
-    setShowWelcome(false)
     setMessages([])
     localStorage.removeItem('miwo-messages')
     setInput(text)
@@ -715,7 +709,7 @@ export default function Home() {
           src="/miwo-nav.png"
           alt="MIWO"
           className="header-logo"
-          onClick={() => { setShowWelcome(true); setMessages([]); localStorage.removeItem('miwo-messages') }}
+          onClick={() => { stopSpeaking(); setMessages([]); localStorage.removeItem('miwo-messages'); hasAutoLoadedRef.current = false; setTimeout(() => { if (sendMessageRef.current) { hasAutoLoadedRef.current = true; sendMessageRef.current(t('prompt1'), [], { hideUserMessage: true }) } }, 100) }}
           style={{ cursor: 'pointer' }}
           title="New conversation"
         />
@@ -726,7 +720,6 @@ export default function Home() {
               stopSpeaking()
               setMessages([])
               localStorage.removeItem('miwo-messages')
-              setShowWelcome(false)
               hasAutoLoadedRef.current = false
               // Trigger fresh briefing
               setTimeout(() => {
@@ -848,85 +841,73 @@ export default function Home() {
         </div>
       </div>
 
-      {showWelcome ? (
-        <div className="welcome">
-          <div className="welcome-identity">
-            <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
-            <img src="/miwo-brand.png" alt="MIWO — my world my news" className="welcome-brand-img" />
-            <img src={GLOBE_BACK} alt="" className="welcome-globe welcome-globe-right" />
-          </div>
-          <div className="welcome-promise">
-            <p>{t('promise1')}</p>
-            <p style={{ marginTop: '6px' }}>{t('promise2')}</p>
-          </div>
-          <div className="welcome-prompts">
-            <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt1'))}>
-              {t('prompt1')}
-            </button>
-            <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt2'))}>
-              {t('prompt2')}
-            </button>
-            <button className="welcome-prompt" onClick={() => handlePromptClick(t('prompt3'))}>
-              {t('prompt3')}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="messages">
-          {messages.map((msg, i) => (
-            <div key={i} className={`message ${msg.role} ${msg.isError ? 'error-msg' : ''}`}>
-              <div className="message-content">
-                {msg.role === 'assistant' ? formatMessage(msg.content, speakingIndex === i) : msg.content}
-              </div>
-              {msg.role === 'assistant' && msg.isError && (
-                <button
-                  className="retry-btn"
-                  onClick={() => {
-                    // Remove the error message and the user message that triggered it
-                    // Pass cleaned messages directly to avoid stale closure
-                    const cleaned = messages.filter(m => m !== msg && !(m.role === 'user' && m.content === msg.retryText && messages.indexOf(m) === i - 1))
-                    setMessages(cleaned)
-                    sendMessage(msg.retryText, cleaned)
-                  }}
-                >
-                  ↻ Try again
-                </button>
-              )}
-              {msg.role === 'assistant' && !msg.isError && (
-                <div className="message-actions">
-                  {speakingIndex === i ? (
-                    <button
-                      className="msg-action-btn speaking"
-                      onClick={stopSpeaking}
-                      title="Stop reading"
-                    >
-                      <StopIcon size={14} />
-                    </button>
-                  ) : (
-                    <button
-                      className="msg-action-btn"
-                      onClick={() => { ensureAudioContext(); speak(msg.content, i) }}
-                      title="Read aloud"
-                    >
-                      <SpeakerIcon size={14} />
-                    </button>
-                  )}
-                </div>
-              )}
+      <div className="messages">
+        {/* Front page identity — shows on first load, scrolls away as user converses */}
+        {!messages.some(m => m.role === 'user') && (
+          <div className="welcome-hero">
+            <div className="welcome-identity">
+              <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
+              <img src="/miwo-brand.png" alt="MIWO — my world my news" className="welcome-brand-img" />
+              <img src={GLOBE_BACK} alt="" className="welcome-globe welcome-globe-right" />
             </div>
-          ))}
-          {isLoading && (
-            <div className="message assistant">
-              <div className="typing">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+            <div className="welcome-promise">
+              <p>{t('promise1')}</p>
+              <p style={{ marginTop: '6px' }}>{t('promise2')}</p>
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      )}
+          </div>
+        )}
+
+        {messages.map((msg, i) => (
+          <div key={i} className={`message ${msg.role} ${msg.isError ? 'error-msg' : ''}`}>
+            <div className="message-content">
+              {msg.role === 'assistant' ? formatMessage(msg.content, speakingIndex === i) : msg.content}
+            </div>
+            {msg.role === 'assistant' && msg.isError && (
+              <button
+                className="retry-btn"
+                onClick={() => {
+                  const cleaned = messages.filter(m => m !== msg && !(m.role === 'user' && m.content === msg.retryText && messages.indexOf(m) === i - 1))
+                  setMessages(cleaned)
+                  sendMessage(msg.retryText, cleaned)
+                }}
+              >
+                ↻ Try again
+              </button>
+            )}
+            {msg.role === 'assistant' && !msg.isError && (
+              <div className="message-actions">
+                {speakingIndex === i ? (
+                  <button
+                    className="msg-action-btn speaking"
+                    onClick={stopSpeaking}
+                    title="Stop reading"
+                  >
+                    <StopIcon size={14} />
+                  </button>
+                ) : (
+                  <button
+                    className="msg-action-btn"
+                    onClick={() => { ensureAudioContext(); speak(msg.content, i) }}
+                    title="Read aloud"
+                  >
+                    <SpeakerIcon size={14} />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+        {isLoading && (
+          <div className="message assistant">
+            <div className="typing">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
 
       <div className="input-area">
         <div className="input-row">
