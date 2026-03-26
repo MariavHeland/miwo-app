@@ -632,23 +632,8 @@ export default function Home() {
   // Keep sendMessage ref current so speech recognition always uses latest version
   sendMessageRef.current = sendMessage
 
-  // Auto-load briefing on first visit — MIWO opens with news, no question needed
-  useEffect(() => {
-    if (hasAutoLoadedRef.current) return
-    // If there are saved messages from a previous session, skip auto-load
-    if (messages.length > 0) {
-      hasAutoLoadedRef.current = true
-      return
-    }
-    // First visit: auto-send briefing request — news starts immediately
-    hasAutoLoadedRef.current = true
-    const timer = setTimeout(() => {
-      if (sendMessageRef.current) {
-        sendMessageRef.current(t('prompt1'), [], { hideUserMessage: true })
-      }
-    }, 300)
-    return () => clearTimeout(timer)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // No auto-load — the "Right now" button is the entry point.
+  // User lands on front page, sees identity, taps "Right now" to get news.
 
   const toggleVoice = () => {
     if (!recognitionRef.current) return
@@ -709,7 +694,7 @@ export default function Home() {
           src="/miwo-nav.png"
           alt="MIWO"
           className="header-logo"
-          onClick={() => { stopSpeaking(); setMessages([]); localStorage.removeItem('miwo-messages'); hasAutoLoadedRef.current = false; setTimeout(() => { if (sendMessageRef.current) { hasAutoLoadedRef.current = true; sendMessageRef.current(t('prompt1'), [], { hideUserMessage: true }) } }, 100) }}
+          onClick={() => { stopSpeaking(); setMessages([]); localStorage.removeItem('miwo-messages') }}
           style={{ cursor: 'pointer' }}
           title="New conversation"
         />
@@ -720,16 +705,8 @@ export default function Home() {
               stopSpeaking()
               setMessages([])
               localStorage.removeItem('miwo-messages')
-              hasAutoLoadedRef.current = false
-              // Trigger fresh briefing
-              setTimeout(() => {
-                if (sendMessageRef.current) {
-                  hasAutoLoadedRef.current = true
-                  sendMessageRef.current(t('prompt1'), [], { hideUserMessage: true })
-                }
-              }, 100)
             }}
-            title={t('home') || 'Home — fresh briefing'}
+            title={t('home') || 'Home'}
           >
             <HomeIcon size={16} />
           </button>
