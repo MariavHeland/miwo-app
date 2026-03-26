@@ -854,6 +854,18 @@ export default function Home() {
               <p>{t('promise1')}</p>
               <p style={{ marginTop: '6px' }}>{t('promise2')}</p>
             </div>
+            <button
+              className="right-now-btn"
+              onClick={() => {
+                stopSpeaking()
+                setMessages([])
+                localStorage.removeItem('miwo-messages')
+                hasAutoLoadedRef.current = true
+                sendMessageRef.current?.(t('prompt1'), [], { hideUserMessage: true })
+              }}
+            >
+              {t('rightNow') || 'Right now'}
+            </button>
           </div>
         )}
 

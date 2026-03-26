@@ -525,16 +525,32 @@ html, body {
   padding: 40px 24px 20px;
 }
 
-/* Legacy welcome state (unused but kept for reference) */
-.welcome {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0;
-  padding: 0 24px 40px;
+/* "Right now" button — the entry point to the briefing */
+.right-now-btn {
+  margin-top: 32px;
+  padding: 14px 48px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--copper);
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 20px rgba(196, 125, 90, 0.3);
+}
+
+.right-now-btn:hover {
+  background: var(--copper-dim);
+  box-shadow: 0 0 30px rgba(196, 125, 90, 0.5);
+  transform: scale(1.03);
+}
+
+.right-now-btn:active {
+  transform: scale(0.98);
 }
 
 /* Identity unit — globes + MIWO wordmark as one mark */
