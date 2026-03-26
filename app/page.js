@@ -843,13 +843,6 @@ export default function Home() {
             >
               {t('rightNow') || 'Right now'}
             </button>
-            <div className="welcome-charter">
-              <h3 className="charter-title">{t('charterTitle')}</h3>
-              <p><strong>{t('charter1label')}</strong><br />{t('charter1')}</p>
-              <p><strong>{t('charter2label')}</strong><br />{t('charter2')}</p>
-              <p><strong>{t('charter3label')}</strong><br />{t('charter3')}</p>
-              <a href="/impressum" className="charter-link">{t('charterLink')} →</a>
-            </div>
           </div>
         )}
 
@@ -900,6 +893,16 @@ export default function Home() {
               <span></span>
               <span></span>
             </div>
+          </div>
+        )}
+        {/* Charter values — appears after the briefing */}
+        {messages.length > 0 && !isLoading && (
+          <div className="welcome-charter">
+            <h3 className="charter-title">{t('charterTitle')}</h3>
+            <p><strong>{t('charter1label')}</strong><br />{t('charter1')}</p>
+            <p><strong>{t('charter2label')}</strong><br />{t('charter2')}</p>
+            <p><strong>{t('charter3label')}</strong><br />{t('charter3')}</p>
+            <a href="/impressum" className="charter-link">{t('charterLink')} →</a>
           </div>
         )}
         <div ref={messagesEndRef} />
