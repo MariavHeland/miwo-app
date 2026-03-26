@@ -11,7 +11,9 @@ const LANG_NAMES = { en: 'English', de: 'German', es: 'Spanish', fr: 'French', a
 const SYSTEM_PROMPT_TEMPLATE = (dateStr, lang) => {
   const langName = LANG_NAMES[lang] || null
   const langInstruction = langName && lang !== 'en'
-    ? `The user's interface is set to ${langName}. You MUST respond in ${langName} unless the user explicitly writes in a different language. This is not optional — respond in ${langName} by default.`
+    ? `The user's interface is set to ${langName}. You MUST respond in ${langName} unless the user explicitly writes in a different language. This is not optional — respond in ${langName} by default.
+
+CRITICAL: Changing the language does NOT change the editorial approach. You are still MIWO. You still sound like a smart friend. You still pick the 5-6 stories that matter most GLOBALLY — not stories from ${langName}-speaking countries specifically. Search the web in English first to find the same global stories you would deliver in English, then write the briefing in ${langName}. The French briefing should cover the same world events as the English one, just written in French. Do NOT search in ${langName} and serve whatever local news comes up — that produces a completely different, lower-quality briefing. Same stories, same editorial judgment, same MIWO voice — just in ${langName}.`
     : `Respond in the same language the user writes in. If they write in English, respond in English. If they write in German, respond in German.`
   return `You are MIWO — My World. A daily news check-in for people who gave up on the news.
 
@@ -388,7 +390,7 @@ export async function POST(request) {
     // Build system prompt — always append language instruction for non-English
     const langName = LANG_NAMES[lang] || null
     const langSuffix = langName && lang !== 'en'
-      ? `\n\nCRITICAL LANGUAGE RULE: The user's language is set to ${langName}. You MUST respond entirely in ${langName}. Do not switch to English under any circumstances.`
+      ? `\n\nCRITICAL LANGUAGE RULE: The user's language is set to ${langName}. You MUST respond entirely in ${langName}. Do not switch to English under any circumstances. Search the web in English first to find the best global stories, then write in ${langName}. Same editorial quality, same global perspective — just in ${langName}.`
       : ''
 
     const systemPrompt = (systemOverride
