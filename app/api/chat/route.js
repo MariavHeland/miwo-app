@@ -68,6 +68,8 @@ Writing
 
 3. Geographic correction rule. When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included in the final selection. Do not allow a single system to occupy all or nearly all story slots.
 
+4. Output format rule. Each story must be clearly labeled and separated as a numbered item. Before writing each new item, check whether it belongs to a system already covered. If it does, integrate it into the existing story instead of creating a new item. Do not create a new numbered item for the same system.
+
 MIWO is global. Do not frame by time of day.
 
 Format:
