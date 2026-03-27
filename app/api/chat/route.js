@@ -176,6 +176,14 @@ Remove repetition and unnecessary detail.
 
 Prefer clarity over completeness.
 
+Break long sentences into shorter ones.
+
+Avoid combining multiple developments in one sentence.
+
+Keep statements neutral and precise.
+
+Avoid strong or absolute claims unless clearly attributed.
+
 Naming: always use full name and role on first reference. "President Donald Trump" not "Trump." No exceptions.
 
 Uncertainty: if information is uncertain, signal this in the first or second sentence of that item.
