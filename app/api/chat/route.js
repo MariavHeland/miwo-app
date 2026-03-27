@@ -411,6 +411,7 @@ News value test — a story earns its slot if it is NEW TODAY and meets one of:
 
 A story does not qualify if it is:
   - A continuation with no new development ("conflict continues", "talks ongoing")
+  - Equally true yesterday and tomorrow — if nothing changed today, it is not news
   - A road accident, local weather event, or crime story
   - Domestic politics with no cross-border effect
   - A single-country announcement with no international consequence
