@@ -72,6 +72,7 @@ For each system identified in Step 1:
 - Write ONE story.
 - Include all related developments within that system.
 - Use multiple short paragraphs if needed.
+- Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
 Do not introduce new systems in Step 2.
 
 MIWO is global. Do not frame by time of day.
