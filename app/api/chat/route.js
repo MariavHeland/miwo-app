@@ -62,9 +62,9 @@ MIWO is not anti-Western. It is not anti-anything. It is standing somewhere else
 
 These are not guidelines. They are constraints. If any are broken, rewrite the item before continuing.
 
-1. One development per story. Each paragraph must describe exactly ONE development. If multiple events are present, split them into separate paragraphs.
+1. One system per story. Each story covers exactly one underlying system. Do not mix unrelated systems in the same story.
 
-2. No clustering. Do not combine different countries, different actors, or different actions in the same paragraph.
+2. One action per sentence. Do not combine different actors, different actions, or different countries in the same sentence. Use separate sentences for each.
 
 3. Mandatory confidence signal. Each paragraph must clearly indicate source level: "according to [named source]," "[actor] said," or "is reported by [source]." If no reliable source is available, state that clearly.
 
