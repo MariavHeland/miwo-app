@@ -56,25 +56,16 @@ These are not guidelines. They are constraints. If any are broken, rewrite the i
 
 ## The Briefing
 
-When generating a briefing:
+When generating a briefing, you will receive a pre-identified list of global event systems.
 
-Output Structure
-
-Step 1 — Identify systems.
-List the underlying global event systems in the current news as short titles only.
-Do not describe events. Do not list multiple items from the same system.
-When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included. Do not allow a single system to occupy all or nearly all story slots.
-Group events by shared underlying cause, not by geography or sector alone.
-Only include systems that have clear global or large-scale regional impact. Do not include isolated or routine events unless they significantly affect broader systems.
-
-Step 2 — Expand.
-For each system identified in Step 1:
+Stage 2 — Story construction.
+For each system in the list:
 - Write ONE story.
 - Include all related developments within that system.
 - Use multiple short paragraphs if needed.
-- Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
+- Each story must contain only one underlying system. Do not combine unrelated systems.
 - Different aspects of the same system (military, political, economic, regional effects) must not be separated into different stories.
-Do not introduce new systems in Step 2.
+Do not introduce systems not in the list. Do not allow a single system to occupy all or nearly all story slots.
 
 MIWO is global. Do not frame by time of day.
 
@@ -360,6 +351,70 @@ async function editorialReview(draft, apiKey, lang) {
 
 
 // ═══════════════════════════════════════════════════════════════
+// STAGE 1 — SYSTEM EXTRACTION
+// Fast Haiku pass: web search → returns system titles only.
+// Output feeds Stage 2 as grounding context.
+// ═══════════════════════════════════════════════════════════════
+
+const STAGE1_PROMPT = `You are a news analyst. Your only task: identify the underlying global event systems in today's news.
+
+Search the web for current breaking news. Always search in English.
+
+Return ONLY a numbered list of system titles. Nothing else.
+
+Rules:
+- Each title: 3–6 words maximum.
+- No descriptions. No events. Titles only.
+- Group by shared underlying cause — not geography or sector alone.
+- Do not list multiple items from the same system.
+- Only include systems with clear global or large-scale regional impact.
+- Maximum 6 systems.
+
+No preamble. No explanation. Just the numbered list.`
+
+function isBriefingRequest(messages) {
+  const lastUser = [...messages].reverse().find(m => m.role === 'user')
+  if (!lastUser) return false
+  const text = (typeof lastUser.content === 'string'
+    ? lastUser.content
+    : String(lastUser.content)).toLowerCase().trim()
+  // Short messages are almost always briefing requests
+  if (text.length < 60) return true
+  const triggers = [
+    'news', 'briefing', 'happening', 'catch me up', 'update', 'what happened',
+    'was passiert', 'nachrichten', 'qué pasó', 'passé', 'heute', 'aktuell',
+    'quoi de neuf', 'was gibt', 'novedades',
+  ]
+  return triggers.some(t => text.includes(t))
+}
+
+async function extractSystems(userMessage, apiKey) {
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 256,
+        system: STAGE1_PROMPT,
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 1 }],
+        messages: [{ role: 'user', content: userMessage }],
+      }),
+    })
+    if (!response.ok) return null
+    const result = await response.json()
+    return result.content?.find(b => b.type === 'text')?.text?.trim() || null
+  } catch {
+    return null // Fail gracefully — Stage 2 runs without context
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
 // Main handler
 // ═══════════════════════════════════════════════════════════════
 
@@ -421,10 +476,26 @@ export async function POST(request) {
       content: typeof m.content === 'string' ? m.content : String(m.content),
     }))
 
-    // ── Single-pass streaming — text flows to client as Sonnet writes it ───
-    // The two-pass (Sonnet → Haiku editorial review) architecture added 5-8s
-    // of latency before the user saw anything. The Sonnet system prompt already
-    // contains all 11 editorial rules. Streaming directly gives instant response.
+    // ── Two-stage workflow for briefing requests ────────────────
+    // Stage 1 (Haiku): search + extract system titles
+    // Stage 2 (Sonnet): write one story per system, streaming
+    let finalMessages = apiMessages
+    if (!systemOverride && isBriefingRequest(messages)) {
+      const lastUserMsg = apiMessages[apiMessages.length - 1]
+      const userText = lastUserMsg?.content || 'What is happening in the world today?'
+      const systems = await extractSystems(userText, apiKey)
+      if (systems) {
+        finalMessages = [
+          ...apiMessages.slice(0, -1),
+          {
+            role: 'user',
+            content: `${userText}\n\n[STAGE 1 — IDENTIFIED SYSTEMS:\n${systems}\n\nWrite one story per system above. Do not add systems. Do not omit systems.]`,
+          },
+        ]
+      }
+    }
+
+    // ── Stage 2: Sonnet streaming ───────────────────────────────
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 45000)
 
@@ -450,7 +521,7 @@ export async function POST(request) {
               max_uses: 1,  // Single focused search — faster, cheaper
             }
           ],
-          messages: apiMessages,
+          messages: finalMessages,
         }),
       })
     } catch (fetchErr) {
