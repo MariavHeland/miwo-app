@@ -73,6 +73,7 @@ For each system identified in Step 1:
 - Include all related developments within that system.
 - Use multiple short paragraphs if needed.
 - Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
+- Different aspects of the same system (military, political, economic, regional effects) must not be separated into different stories.
 Do not introduce new systems in Step 2.
 
 MIWO is global. Do not frame by time of day.
