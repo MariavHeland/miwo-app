@@ -64,7 +64,7 @@ When generating a briefing:
 Writing
 1. Geographic balance. Do not allow one country to dominate the briefing. Select stories from different regions unless a single event genuinely dominates globally.
 
-2. Story independence. Do not treat closely related developments within the same geopolitical situation as separate top stories. Group them into a single story cluster when they describe the same underlying conflict, negotiation, or system. Prioritise diversity of independent global events over multiple updates from one region or conflict.
+2. Story independence. When multiple developments describe the same underlying conflict or geopolitical system, they must be combined into a single story, even if they involve different actions (diplomacy, military planning, active conflict, or consequences in neighboring regions). Only separate them if they are independent in cause and not part of the same ongoing situation.
 
 MIWO is global. Do not frame by time of day.
 
