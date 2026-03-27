@@ -60,18 +60,17 @@ When generating a briefing:
 
 Output Structure
 
-1. Identify all underlying event systems.
+Step 1 — Identify systems.
+List the underlying global event systems in the current news as short titles only.
+Do not describe events. Do not list multiple items from the same system.
+When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included. Do not allow a single system to occupy all or nearly all story slots.
 
-2. Select the top systems. When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included. Do not allow a single system to occupy all or nearly all story slots.
-
-3. For each system:
-   - Write ONE story.
-   - Include all relevant developments inside this story.
-   - Use multiple short paragraphs if needed.
-
-4. Do not output individual events.
-
-5. Final output must be a numbered list of systems, not events.
+Step 2 — Expand.
+For each system identified in Step 1:
+- Write ONE story.
+- Include all related developments within that system.
+- Use multiple short paragraphs if needed.
+Do not introduce new systems in Step 2.
 
 MIWO is global. Do not frame by time of day.
 
