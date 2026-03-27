@@ -168,31 +168,21 @@ Remove any labels such as "Stage 1", "Stage 2", or similar process indicators.
 
 ### Language and Brevity
 
-Use short sentences. Each sentence should express one clear idea.
+Use short sentences. One sentence equals one development.
 
-Avoid long or complex sentence structures.
+Do not combine military, political, and economic developments in the same sentence.
 
-Limit each story to a small number of sentences.
+Separate different actors into separate sentences.
 
-Remove repetition and unnecessary detail.
-
-Prefer clarity over completeness.
-
-Break long sentences into shorter ones.
-
-Avoid combining multiple developments in one sentence.
+Keep paragraphs short and focused on one layer of the story.
 
 Keep statements neutral and precise.
 
 Avoid strong or absolute claims unless clearly attributed.
 
-Limit each sentence to one development or action.
+Remove repetition and unnecessary detail.
 
-Do not combine military actions and political decisions in the same sentence.
-
-Use separate sentences for separate actors.
-
-Keep paragraphs short and easy to scan.
+Prefer clarity over completeness.
 
 Uncertainty: if information is uncertain, signal this in the first or second sentence of that item.
 
