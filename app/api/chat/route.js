@@ -64,6 +64,8 @@ Step 1 — Identify systems.
 List the underlying global event systems in the current news as short titles only.
 Do not describe events. Do not list multiple items from the same system.
 When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included. Do not allow a single system to occupy all or nearly all story slots.
+Group events by shared underlying cause, not by geography or sector alone.
+Only include systems that have clear global or large-scale regional impact. Do not include isolated or routine events unless they significantly affect broader systems.
 
 Step 2 — Expand.
 For each system identified in Step 1:
