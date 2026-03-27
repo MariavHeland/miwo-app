@@ -112,22 +112,14 @@ Do not include weak or low-impact systems as filler.
 
 Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
 
-For each system:
+For each system, write exactly one story of maximum 4 sentences. No exceptions.
 
-First, gather all relevant information. Then compress it into a single news piece before writing.
-
-Do not output intermediate notes, fragments, or multiple paragraphs per system.
-
-Each story must be fully summarized internally before it is written. Only the final compressed version may be shown.
-
-Each story must be a maximum of 3 short lines.
-
-If information exceeds this limit, prioritize in this order:
+If you have more than 4 sentences of material, prioritize:
 1. Human impact — deaths, displacement, suffering.
 2. System impact — what has changed in the broader situation.
 3. Key development — the single most important new fact.
 
-Discard all other details.
+Cut everything else.
 
 All included developments must be clearly connected to the system.
 
@@ -171,7 +163,7 @@ Avoid stacked reporting: each story must read as a coherent narrative, not a lis
 
 Do not number stories.
 
-Each system must be expressed as exactly one news piece of maximum 3 short lines.
+Each system must be expressed as exactly one news piece of maximum 4 sentences.
 
 Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 
