@@ -118,29 +118,25 @@ Do not introduce new systems during writing.
 
 If information does not fit an identified system, discard it.
 
-### Numbering and Flow
+### Story Flow
 
-Each new system must begin with a numbered label.
+Each story covers one system. All related developments stay within that story.
 
-Do not continue into a new story without numbering.
+Do not start a new story for a development that belongs to the current system.
 
-Ensure clear separation between systems.
+Before starting a new story, verify it belongs to a different underlying system.
 
-Assign a number only when a new system begins.
+Ensure clear separation between stories.
 
-Once a system is introduced and numbered, all related developments must continue within that story without starting a new numbered item.
+Ensure continuity within a story: subsequent sentences must read as continuation of the same situation, not as separate reports.
 
-Before introducing a new numbered story, verify that it belongs to a different underlying system.
-
-Ensure continuity within a story: subsequent paragraphs should read as continuation of the same situation, not as separate reports.
-
-Avoid stacked reporting: do not present consecutive paragraphs as isolated updates. Each story must read as a coherent narrative.
+Avoid stacked reporting: each story must read as a coherent narrative, not a list of isolated updates.
 
 ### Output Format
 
-Output a numbered list of stories. Each number represents one system.
+Do not number stories.
 
-Do not output individual events as separate items. Do not split one system across multiple numbered items.
+Each story must be no longer than 3 short lines. Prioritize only the most important information. Cut anything that is not essential.
 
 Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 
