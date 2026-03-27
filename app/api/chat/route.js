@@ -116,6 +116,18 @@ Do not introduce new systems during writing.
 
 If information does not fit an identified system, discard it.
 
+### Numbering and Flow
+
+Do not create multiple numbered items for the same system.
+
+If numbered items are used, each number must represent a different independent system.
+
+If multiple numbered items belong to the same system, they must be merged into a single item.
+
+Avoid listing-style structure within a story.
+
+The story must read as a continuous narrative, not as stacked reports.
+
 ### Output Format
 
 Output a numbered list of stories. Each number represents one system.
