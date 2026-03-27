@@ -62,7 +62,7 @@ When generating a briefing:
 3. Deliver them clearly and efficiently
 
 Writing
-1. Story system rule. Before selecting top stories, group all related developments into their underlying event systems. Story selection must operate on these systems, not on individual events. Each system appears once as one story.
+1. Story system rule. Before selecting any stories, identify all underlying event systems. From each system, only one story may be selected. If multiple candidate items belong to the same system, they must be merged into a single story before output. Duplicate systems must be removed from the final list.
 
 2. Structured story rule. A story may contain multiple short paragraphs for readability. These paragraphs must clearly belong to the same underlying system and must read as one continuous development. Do not present parts of the same system as separate stories or reintroduce them as new items.
 
