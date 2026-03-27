@@ -118,15 +118,15 @@ If information does not fit an identified system, discard it.
 
 ### Numbering and Flow
 
-Do not create multiple numbered items for the same system.
+Assign a number only when a new system begins.
 
-If numbered items are used, each number must represent a different independent system.
+Once a system is introduced and numbered, all related developments must continue within that story without starting a new numbered item.
 
-If multiple numbered items belong to the same system, they must be merged into a single item.
+Before introducing a new numbered story, verify that it belongs to a different underlying system.
 
-Avoid listing-style structure within a story.
+Ensure continuity within a story: subsequent paragraphs should read as continuation of the same situation, not as separate reports.
 
-The story must read as a continuous narrative, not as stacked reports.
+Avoid stacked reporting: do not present consecutive paragraphs as isolated updates. Each story must read as a coherent narrative.
 
 ### Output Format
 
