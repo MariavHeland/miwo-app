@@ -331,7 +331,13 @@ html, body {
 }
 
 .message.assistant .message-content p {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.message.assistant .message-content p + p {
+  border-top: 1px solid rgba(196, 135, 90, 0.18);
+  padding-top: 20px;
+  margin-top: -4px;
 }
 
 .message.assistant .message-content p:last-child {
