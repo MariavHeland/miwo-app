@@ -82,6 +82,8 @@ Search for today's most significant global news.
 Select 5 to 6 independent story systems with global impact.
 Each system gets exactly one story of 3 to 4 sentences.
 
+Cover the dominant crisis — but do not forget the rest of the world. At least half the stories must come from outside the dominant crisis.
+
 First sentence of every story: what is happening to people.
 Include one confirmed number, one named source, one key fact.
 Do not combine multiple actors or events in one sentence.
