@@ -397,12 +397,22 @@ Rules:
 - No descriptions. No events. Titles only.
 - Group by shared underlying cause — not geography or sector alone.
 - Do not list multiple items from the same system.
-- Only include systems with clear global or large-scale regional impact.
 - Maximum 6 systems.
-- Do not default to US domestic politics unless it has direct global consequence.
 - One conflict or crisis = one slot. Do not split the same conflict into multiple items by actor, dimension, or geography.
-- The remaining slots must represent genuinely different global systems. Ensure geographic spread across regions.
-- If you cannot find enough systems with genuine global or large-scale regional impact, output fewer stories. Never fill a slot with a local accident, an individual health story, or a minor event.
+- Ensure geographic spread across regions.
+- If you cannot find enough qualifying systems, output fewer. Never pad.
+
+A system qualifies if it meets at least one of these tests:
+  - Affects tens of thousands of people across multiple countries
+  - Moves major financial markets or global supply chains
+  - Changes the military or diplomatic posture of a national government
+  - Involves a humanitarian crisis at scale (UN agencies responding, mass displacement)
+
+A system does not qualify if it is:
+  - A road accident, avalanche, or local weather event, regardless of casualties
+  - Domestic politics with no cross-border effect
+  - A crime story, even involving public figures
+  - A single-country infrastructure announcement
 
 No preamble. No explanation. Just the numbered list.`
 
