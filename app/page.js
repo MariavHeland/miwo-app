@@ -330,14 +330,14 @@ export default function Home() {
   const lastParaIndexRef = useRef(-1) // track paragraph transitions for pauses
 
   // Generate audio for one chunk of text
-  const generateAudio = useCallback(async (text) => {
+  const generateAudio = useCallback(async (text, voiceOverride) => {
     const cleanText = cleanTextForSpeech(text)
     if (!cleanText) return null
 
     const res = await fetch('/api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: cleanText, voice: voiceName, lang }),
+      body: JSON.stringify({ text: cleanText, voice: voiceOverride || voiceName, lang }),
     })
 
     if (!res.ok) return null
@@ -471,24 +471,42 @@ export default function Home() {
     setSpeakingParaIndex(0)
     setTtsStatus('generating')
 
-    // Split into paragraphs, strip § story markers, then into sentence chunks
-    const paragraphs = text.split(/\n\n+/).filter(p => p.trim() && p.trim() !== '§')
+    // Alternating voices for story presentation — one voice per story system
+    const STORY_VOICES = ['nova', 'atlas']
+    const hasStoryMarkers = text.includes('§')
+
+    // Split by § to get story groups, then paragraphs within each
+    const storyGroups = hasStoryMarkers
+      ? text.split(/\n?§\n?/).filter(s => s.trim())
+      : [text]
+
+    const paragraphs = []
+    const paragraphVoices = []
+    storyGroups.forEach((story, storyIdx) => {
+      const voice = hasStoryMarkers
+        ? STORY_VOICES[storyIdx % STORY_VOICES.length]
+        : voiceName
+      story.split(/\n\n+/).filter(p => p.trim()).forEach(para => {
+        paragraphs.push(para)
+        paragraphVoices.push(voice)
+      })
+    })
 
     // 1. Pre-allocate all slots in order (synchronous)
     const allSlots = []
     for (let pi = 0; pi < paragraphs.length; pi++) {
       const chunks = splitIntoChunks(paragraphs[pi])
       for (const chunk of chunks) {
-        const slot = { url: null, ready: false, paraIndex: pi, text: chunk }
+        const slot = { url: null, ready: false, paraIndex: pi, text: chunk, voice: paragraphVoices[pi] }
         ttsQueueRef.current.push(slot)
         allSlots.push(slot)
       }
     }
 
-    // 2. Generate audio for all slots (concurrent, but order is locked)
+    // 2. Generate audio for all slots with story-assigned voice
     for (const slot of allSlots) {
       if (ttsCancelledRef.current) break
-      const url = await generateAudio(slot.text)
+      const url = await generateAudio(slot.text, slot.voice)
       if (ttsCancelledRef.current) {
         if (url) URL.revokeObjectURL(url)
         break
