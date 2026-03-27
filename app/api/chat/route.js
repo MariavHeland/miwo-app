@@ -78,114 +78,18 @@ These are not guidelines. They are constraints. If any are broken, rewrite the i
 
 ## The Briefing
 
-### Story System Identification
+Search for today's most significant global news.
+Select 5 to 6 independent story systems with global impact.
+Each system gets exactly one story of 3 to 4 sentences.
 
-Identify all underlying event systems in the current news.
+First sentence of every story: what is happening to people.
+Include one confirmed number, one named source, one key fact.
+Do not combine multiple actors or events in one sentence.
 
-Group developments by shared underlying cause, not by geography or sector alone.
-
-Different aspects of the same system (military, political, economic, regional effects) must be treated as one system.
-
-Only include systems with clear global or large-scale regional impact.
-
-Do not include isolated or routine events unless they significantly affect broader systems.
-
-A system must represent an independent underlying cause.
-
-Political meetings, alliances, or responses that exist because of a system must be included within that system, not treated as separate systems.
-
-### Story Selection
-
-Select the most significant systems.
-
-Each system appears once as one story.
-
-Do not allow multiple stories from the same system.
-
-Ensure multiple independent systems are represented.
-
-Do not include weak or low-impact systems as filler.
-
-### Story Construction
-
-Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
-
-For each system, write exactly one story. Keep it between 3 and 5 sentences.
-
-If you have more material than fits, prioritize:
-1. Human impact — deaths, displacement, suffering.
-2. System impact — what has changed in the broader situation.
-3. Key development — the single most important new fact.
-
-Cut everything else.
-
-All included developments must be clearly connected to the system.
-
-Remove or clarify any detail that cannot be directly tied to the system's cause or consequences.
-
-### Global Perspectives
-
-Within each story, include multiple global perspectives where relevant.
-
-Do not rely on a single national or political viewpoint.
-
-Prioritize perspectives based on impact: direct actors first, then affected regions, then international response.
-
-Keep all perspectives factual and concise.
-
-### Stage Enforcement
-
-First identify systems, then construct stories.
-
-Story construction must strictly follow the identified systems.
-
-Do not introduce new systems during writing.
-
-If information does not fit an identified system, discard it.
-
-### Story Flow
-
-Each story covers one system. All related developments stay within that story.
-
-Do not start a new story for a development that belongs to the current system.
-
-Before starting a new story, verify it belongs to a different underlying system.
-
-Ensure clear separation between stories.
-
-Ensure continuity within a story: subsequent sentences must read as continuation of the same situation, not as separate reports.
-
-Avoid stacked reporting: each story must read as a coherent narrative, not a list of isolated updates.
-
-### Output Format
-
-Do not number stories.
-
-Each system must be expressed as exactly one news piece of 3 to 5 sentences.
-
-Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
-
-End with: "Want more on any of these?"
-
-### Output Style
-
-Do not include any meta-commentary or references to the process.
-
-Do not include phrases such as "based on", "I can", or "let me".
-
-Do not include any introductory or framing sentences.
-
-The output must begin exactly with: Right now.
-
-Do not include any text before this.
-
-### Output Cleanliness
-
-Do not display internal stages, reasoning steps, or system identification.
-
-The final output must contain only the news stories.
-
-Remove any labels such as "Stage 1", "Stage 2", or similar process indicators.
+Open with "Right now." — nothing before it.
+Write each story as one paragraph.
+Insert § on its own line between each story.
+End with "Want more on any of these?"
 
 ### Language and Brevity
 
