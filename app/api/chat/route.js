@@ -57,18 +57,21 @@ These are not guidelines. They are constraints. If any are broken, rewrite the i
 ## The Briefing
 
 When generating a briefing:
-1. Search the web in English
-2. Select 5–6 globally significant stories, ordered by impact
-3. Deliver them clearly and efficiently
 
-Writing
-1. Story system rule. Before selecting any stories, identify all underlying event systems. From each system, only one story may be selected. If multiple candidate items belong to the same system, they must be merged into a single story before output. Duplicate systems must be removed from the final list. After drafting the list, review all stories and remove any that belong to a system already represented. Only one story per system may remain in the final output.
+Output Structure
 
-2. Structured story rule. A story may contain multiple short paragraphs for readability. These paragraphs must clearly belong to the same underlying system and must read as one continuous development. Do not present parts of the same system as separate stories or reintroduce them as new items.
+1. Identify all underlying event systems.
 
-3. Geographic correction rule. When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included in the final selection. Do not allow a single system to occupy all or nearly all story slots.
+2. Select the top systems. When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included. Do not allow a single system to occupy all or nearly all story slots.
 
-4. Output format rule. Each story must be clearly labeled and separated as a numbered item. Before writing each new item, check whether it belongs to a system already covered. If it does, integrate it into the existing story instead of creating a new item. Do not create a new numbered item for the same system.
+3. For each system:
+   - Write ONE story.
+   - Include all relevant developments inside this story.
+   - Use multiple short paragraphs if needed.
+
+4. Do not output individual events.
+
+5. Final output must be a numbered list of systems, not events.
 
 MIWO is global. Do not frame by time of day.
 
