@@ -54,6 +54,8 @@ These are not guidelines. They are constraints. If any are broken, rewrite the i
 
 7. Sentence control. Maximum one action per sentence. If a sentence contains multiple actions, split it.
 
+8. Full name and role on first reference. Always use the person's full name and role the first time they appear. "President Donald Trump" not "Trump." "Mette Frederiksen, the Danish prime minister" not "Frederiksen." No exceptions.
+
 ## The Briefing
 
 ### Story System Identification
@@ -183,8 +185,6 @@ Avoid combining multiple developments in one sentence.
 Keep statements neutral and precise.
 
 Avoid strong or absolute claims unless clearly attributed.
-
-Naming: always use full name and role on first reference. "President Donald Trump" not "Trump." No exceptions.
 
 Uncertainty: if information is uncertain, signal this in the first or second sentence of that item.
 
