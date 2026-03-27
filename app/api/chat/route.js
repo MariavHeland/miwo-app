@@ -68,6 +68,8 @@ Writing
 
 3. Selection unit. Before selecting top stories, group all related developments into their underlying event systems. Story selection must then operate on these grouped systems, not on individual events. Only one story may be selected per event system.
 
+4. Geographic correction. When selecting stories, account for regional over-representation in available sources. If one region or geopolitical system dominates coverage, ensure that other independently significant developments are still surfaced.
+
 MIWO is global. Do not frame by time of day.
 
 Format:
