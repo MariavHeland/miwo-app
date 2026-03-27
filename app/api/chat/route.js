@@ -402,6 +402,7 @@ Rules:
 - Do not default to US domestic politics unless it has direct global consequence.
 - One conflict or crisis = one slot. Do not split the same conflict into multiple items by actor, dimension, or geography.
 - The remaining slots must represent genuinely different global systems. Ensure geographic spread across regions.
+- If you cannot find enough systems with genuine global or large-scale regional impact, output fewer stories. Never fill a slot with a local accident, an individual health story, or a minor event.
 
 No preamble. No explanation. Just the numbered list.`
 
