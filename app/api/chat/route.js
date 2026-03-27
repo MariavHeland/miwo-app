@@ -84,9 +84,19 @@ Do not include weak or low-impact systems as filler.
 
 Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
 
-Expand each system into one story. Include all relevant developments within that system. Use multiple short paragraphs if needed.
+For each system:
 
-All paragraphs within a story must clearly belong to the same system and read as one continuous development.
+Write exactly one story.
+
+Structure the story as follows:
+- One opening paragraph summarizing the overall situation.
+- One paragraph covering military developments (if applicable).
+- One paragraph covering political or diplomatic developments (if applicable).
+- One paragraph covering humanitarian or economic impact (if applicable).
+
+All information must be integrated into this single story.
+
+Do not start a new story for any related development.
 
 ### Stage Enforcement
 
