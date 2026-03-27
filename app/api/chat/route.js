@@ -66,7 +66,7 @@ Writing
 
 2. Structured story rule. A story may contain multiple short paragraphs for readability. These paragraphs must clearly belong to the same underlying system and must read as one continuous development. Do not present parts of the same system as separate stories or reintroduce them as new items.
 
-3. Geographic correction rule. When one system dominates coverage, it may remain the leading story. However, ensure that other independently significant systems are still included and not crowded out.
+3. Geographic correction rule. When one system dominates coverage, it may remain the leading story. However, ensure that multiple independent systems are included in the final selection. Do not allow a single system to occupy all or nearly all story slots.
 
 MIWO is global. Do not frame by time of day.
 
