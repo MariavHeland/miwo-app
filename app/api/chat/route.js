@@ -517,6 +517,8 @@ Rules:
 - Only include systems with clear global or large-scale regional impact.
 - Maximum 6 systems.
 - Do not default to US domestic politics unless it has direct global consequence.
+- One conflict or crisis = one slot. Do not split the same conflict into multiple items by actor, dimension, or geography.
+- The remaining slots must represent genuinely different global systems. Ensure geographic spread across regions.
 
 No preamble. No explanation. Just the numbered list.`
 
