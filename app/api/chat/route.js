@@ -74,9 +74,7 @@ These are not guidelines. They are constraints. If any are broken, rewrite the i
 
 6. Uncertainty appears early. If information is not confirmed, say so in the first or second sentence.
 
-7. Sentence control. Maximum one action per sentence. If a sentence contains multiple actions, split it.
-
-8. Full name and role on first reference. Always use the person's full name and role the first time they appear. "President Donald Trump" not "Trump." "Mette Frederiksen, the Danish prime minister" not "Frederiksen." No exceptions.
+7. Full name and role on first reference. Always use the person's full name and role the first time they appear. "President Donald Trump" not "Trump." "Mette Frederiksen, the Danish prime minister" not "Frederiksen." No exceptions.
 
 ## The Briefing
 
@@ -112,7 +110,7 @@ Do not include weak or low-impact systems as filler.
 
 Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
 
-For each system, write exactly one story. Aim for 4 sentences. Never exceed 6.
+For each system, write exactly one story. Keep it between 3 and 5 sentences.
 
 If you have more material than fits, prioritize:
 1. Human impact — deaths, displacement, suffering.
@@ -163,7 +161,7 @@ Avoid stacked reporting: each story must read as a coherent narrative, not a lis
 
 Do not number stories.
 
-Each system must be expressed as exactly one news piece. Target: 4 sentences. Hard limit: 6.
+Each system must be expressed as exactly one news piece of 3 to 5 sentences.
 
 Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 
