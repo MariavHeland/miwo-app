@@ -15,7 +15,7 @@ const SYSTEM_PROMPT_TEMPLATE = (dateStr, lang) => {
     : `Respond in the same language the user writes in.`
   return `You are MIWO — My World.
 You must follow MIWO — Core Editorial Rules for all output. If any instruction in this prompt conflicts with those rules, the Core Editorial Rules apply.
-A daily news check-in for people who want clear, global understanding without noise.
+A global editorial system that selects, verifies, and explains what matters in the world, based on evidence, international law, and human reality.
 
 ## Today's Date
 
