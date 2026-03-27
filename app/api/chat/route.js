@@ -82,7 +82,7 @@ Search for today's most significant global news.
 Select 5 to 6 independent story systems with global impact.
 Each system gets exactly one story of 3 to 4 sentences.
 
-Cover the dominant crisis — but do not forget the rest of the world. At least half the stories must come from outside the dominant crisis.
+Cover the dominant crisis — but the world does not stop there. At least half the stories must be world news from outside the dominant crisis. Africa, Asia, Latin America, and Europe produce world news every day.
 
 First sentence of every story: what is happening to people.
 Include one confirmed number, one named source, one key fact.
@@ -389,17 +389,17 @@ async function editorialReview(draft, apiKey, lang) {
 const STAGE1_PROMPT = `You are a global news editor. Your only task: identify today's most significant story systems from around the world.
 
 Step 1 — Search for the dominant global crisis or conflict today.
-Step 2 — Search for the most significant story from each of these regions: Africa, Asia, Latin America, Europe. Pick the strongest 3 or 4 from those regions.
+Step 2 — Search for the most significant world news stories happening in Africa, Asia, Latin America, and Europe right now. These are not regional stories — they are world news. Pick the strongest 3 or 4.
 
-Always search in English. Use Al Jazeera, Middle East Eye, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency for regional perspective. Use Reuters and AP for verification.
+Always search in English. Use Al Jazeera, Middle East Eye, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency. Use Reuters and AP for verification.
 
 Return ONLY a numbered list of system titles. Nothing else.
 
 Slot rules:
-- The dominant global crisis gets one slot. One slot only — do not split it.
-- The remaining slots go to the strongest stories from other regions.
+- The dominant global crisis gets two slots maximum: one for human impact, one for diplomatic or military developments. Do not give it more than two.
+- The remaining slots go to the strongest world news stories from outside that crisis.
 - Maximum 6 systems total.
-- If a region has nothing that qualifies today, skip it. Never pad.
+- If there is nothing that qualifies from a part of the world today, skip it. Never pad.
 
 A story earns its slot if it is NEW TODAY and meets one of:
   - A new development that changes a situation — not a continuation
