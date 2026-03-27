@@ -386,35 +386,32 @@ async function editorialReview(draft, apiKey, lang) {
 // Output feeds Stage 2 as grounding context.
 // ═══════════════════════════════════════════════════════════════
 
-const STAGE1_PROMPT = `You are a news editor. Your only task: identify today's most significant global story systems.
+const STAGE1_PROMPT = `You are a global news editor. Your only task: identify today's most significant story systems from around the world.
 
-Use your first search for the dominant global crisis or conflict.
-Use your second search specifically for significant global stories OUTSIDE that dominant crisis — different regions, different topics.
+Step 1 — Search for the dominant global crisis or conflict today.
+Step 2 — Search for the most significant story from each of these regions: Africa, Asia, Latin America, Europe. Pick the strongest 3 or 4 from those regions.
 
-Always search in English. Search Al Jazeera, Middle East Eye, Dawn, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency for non-Western perspective. Use Reuters and AP for verification.
+Always search in English. Use Al Jazeera, Middle East Eye, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency for regional perspective. Use Reuters and AP for verification.
 
 Return ONLY a numbered list of system titles. Nothing else.
 
-Rules:
-- Each title: 3–6 words maximum. No descriptions. Titles only.
-- One conflict or crisis = one slot. Do not split the same conflict by actor, dimension, or geography.
-- At least 3 of the 6 systems must come from outside the dominant crisis.
-- Ensure geographic spread. No region should dominate more than 2 slots.
-- If you cannot find enough qualifying systems, output fewer. Never pad.
+Slot rules:
+- The dominant global crisis gets one slot. One slot only — do not split it.
+- The remaining slots go to the strongest stories from other regions.
+- Maximum 6 systems total.
+- If a region has nothing that qualifies today, skip it. Never pad.
 
-News value test — a story earns its slot if it is NEW TODAY and meets one of:
-  - A new development that changes a situation (not just continuation of yesterday)
-  - Affects tens of thousands of people across multiple countries
+A story earns its slot if it is NEW TODAY and meets one of:
+  - A new development that changes a situation — not a continuation
+  - Affects tens of thousands of people
   - Moves major financial markets or global supply chains
-  - A decision or policy change with immediate global consequence
+  - A decision or policy change with immediate consequence beyond one country
   - A humanitarian crisis newly reported or newly escalated
 
 A story does not qualify if it is:
-  - A continuation with no new development ("conflict continues", "talks ongoing")
   - Equally true yesterday and tomorrow — if nothing changed today, it is not news
-  - A road accident, local weather event, or crime story
+  - A local accident, weather event, or crime story
   - Domestic politics with no cross-border effect
-  - A single-country announcement with no international consequence
 
 No preamble. No explanation. Just the numbered list.`
 
