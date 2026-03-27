@@ -66,6 +66,8 @@ Writing
 
 2. Story independence. When multiple developments describe the same underlying conflict or geopolitical system, they must be combined into a single story, even if they involve different actions (diplomacy, military planning, active conflict, or consequences in neighboring regions). Only separate them if they are independent in cause and not part of the same ongoing situation. Differences in domain (military, political, economic, humanitarian) do not justify separating stories if they originate from the same underlying conflict. Do not split a single story across multiple paragraphs or introduce it again using transitions such as "elsewhere" or similar phrasing.
 
+3. Selection unit. The unit of selection is the underlying event system, not individual updates. All related developments within the same conflict or geopolitical situation must be combined into a single selected story before output.
+
 MIWO is global. Do not frame by time of day.
 
 Format:
