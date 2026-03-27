@@ -136,7 +136,15 @@ Avoid stacked reporting: each story must read as a coherent narrative, not a lis
 
 Do not number stories.
 
-Each story must be no longer than 3 short lines. Prioritize only the most important information. Cut anything that is not essential.
+Each system must be expressed as exactly one news piece.
+
+A news piece is limited to a maximum of 3 short lines total.
+
+Do not split one system into multiple 3-line blocks.
+
+All key developments must be compressed into a single 3-line story.
+
+Prioritize only the most important information. Cut anything that is not essential.
 
 Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 
