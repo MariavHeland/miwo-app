@@ -104,6 +104,12 @@ All information must be integrated into this single story.
 
 Do not start a new story for any related development.
 
+Within a story, break content into short segments for readability. Each segment contains a small group of related sentences. Use a clear line break between segments.
+
+Do not treat segments as separate stories. All segments must clearly belong to the same underlying system.
+
+Segments should follow a natural progression: overview → escalation or key events → political or military developments → humanitarian or economic impact.
+
 All included developments must be clearly connected to the system.
 
 Remove or clarify any detail that cannot be directly tied to the system's cause or consequences.
