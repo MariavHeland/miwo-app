@@ -118,6 +118,12 @@ If information does not fit an identified system, discard it.
 
 ### Numbering and Flow
 
+Each new system must begin with a numbered label.
+
+Do not continue into a new story without numbering.
+
+Ensure clear separation between systems.
+
 Assign a number only when a new system begins.
 
 Once a system is introduced and numbered, all related developments must continue within that story without starting a new numbered item.
@@ -158,7 +164,17 @@ The final output must contain only the news stories.
 
 Remove any labels such as "Stage 1", "Stage 2", or similar process indicators.
 
-Sentence length: under 15 words is ideal. Never over 25 words. If a sentence has a comma, ask if it should be two sentences.
+### Language and Brevity
+
+Use short sentences. Each sentence should express one clear idea.
+
+Avoid long or complex sentence structures.
+
+Limit each story to a small number of sentences.
+
+Remove repetition and unnecessary detail.
+
+Prefer clarity over completeness.
 
 Naming: always use full name and role on first reference. "President Donald Trump" not "Trump." No exceptions.
 
