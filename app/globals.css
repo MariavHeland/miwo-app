@@ -1,3 +1,36 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MIWO SACRED DESIGN SPEC — DO NOT CHANGE WITHOUT EXPLICIT APPROVAL
+   git tag: design-v1 (locked 2026-03-27)
+   ═══════════════════════════════════════════════════════════════════
+
+   BRAND COLORS (exact hex — not approximate)
+   Background:    #0C0C0B  (near-black warm)
+   Copper:        #C4875A  (brand accent, never brighter/darker)
+   Copper dim:    #A07040  (hover states only)
+   Body text:     #D8CFC6  (warm off-white — NOT #EAE6E0, too bright)
+   Dim text:      #9A9A92  (secondary labels, captions)
+
+   TYPOGRAPHY
+   Headlines:     'Literata' serif — story titles, welcome-title, odd-title
+   Everything else: 'Inter' sans-serif — body, bubbles, nav, inputs, charter
+   Body size:     15px / line-height 1.78  (never go below 14px or above 16px)
+   Max reading width: 660px for assistant messages
+
+   LAYOUT
+   Content column: max-width 1100px default, 1320px at 1400px+ screens
+   Page padding:   48px sides (32px < 1100px, 20px < 900px)
+   Never remove flex-shrink:0 from .header-logo or .nav-brand — logo disappears
+
+   ASSETS (all transparent PNG)
+   Nav logo:    /miwo-nav.png         (400×223, 37KB)
+   Brand mark:  /miwo-brand.png       (1440×590, 281KB)
+   Globe left:  /globe-front.png      (600×600, 347KB)
+   Globe right: /globe-back.png       (600×600, 340KB)
+   Section symbols: /symbol-{section}.jpeg or .png
+
+   TO RESTORE: git checkout design-v1 -- app/globals.css app/page.js
+   ═══════════════════════════════════════════════════════════════════ */
+
 :root {
   --bg: #0C0C0B;
   --copper: #C4875A;
