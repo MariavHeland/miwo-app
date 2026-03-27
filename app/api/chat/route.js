@@ -412,6 +412,9 @@ A story does not qualify if it is:
   - Equally true yesterday and tomorrow — if nothing changed today, it is not news
   - A local accident, weather event, or crime story
   - Domestic politics with no cross-border effect
+  - An individual person's health, legal, or personal situation
+  - A domestic exam, administrative announcement, or infrastructure update
+  - A local story given false global relevance by mentioning an unrelated global crisis
 
 No preamble. No explanation. Just the numbered list.`
 
