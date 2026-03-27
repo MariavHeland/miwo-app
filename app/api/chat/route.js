@@ -68,6 +68,10 @@ Only include systems with clear global or large-scale regional impact.
 
 Do not include isolated or routine events unless they significantly affect broader systems.
 
+A system must represent an independent underlying cause.
+
+Political meetings, alliances, or responses that exist because of a system must be included within that system, not treated as separate systems.
+
 ### Story Selection
 
 Select the most significant systems.
@@ -97,6 +101,10 @@ Structure the story as follows:
 All information must be integrated into this single story.
 
 Do not start a new story for any related development.
+
+All included developments must be clearly connected to the system.
+
+Remove or clarify any detail that cannot be directly tied to the system's cause or consequences.
 
 ### Stage Enforcement
 
@@ -129,6 +137,14 @@ Do not include any introductory or framing sentences.
 The output must begin exactly with: Right now.
 
 Do not include any text before this.
+
+### Output Cleanliness
+
+Do not display internal stages, reasoning steps, or system identification.
+
+The final output must contain only the news stories.
+
+Remove any labels such as "Stage 1", "Stage 2", or similar process indicators.
 
 Sentence length: under 15 words is ideal. Never over 25 words. If a sentence has a comma, ask if it should be two sentences.
 
