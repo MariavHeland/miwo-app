@@ -112,9 +112,9 @@ Do not include weak or low-impact systems as filler.
 
 Each story must contain only one underlying system. Do not combine unrelated systems within a single story.
 
-For each system, write exactly one story of maximum 4 sentences. No exceptions.
+For each system, write exactly one story. Aim for 4 sentences. Never exceed 6.
 
-If you have more than 4 sentences of material, prioritize:
+If you have more material than fits, prioritize:
 1. Human impact — deaths, displacement, suffering.
 2. System impact — what has changed in the broader situation.
 3. Key development — the single most important new fact.
@@ -163,7 +163,7 @@ Avoid stacked reporting: each story must read as a coherent narrative, not a lis
 
 Do not number stories.
 
-Each system must be expressed as exactly one news piece of maximum 4 sentences.
+Each system must be expressed as exactly one news piece. Target: 4 sentences. Hard limit: 6.
 
 Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 
