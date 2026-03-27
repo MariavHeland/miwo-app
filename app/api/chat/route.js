@@ -186,6 +186,14 @@ Keep statements neutral and precise.
 
 Avoid strong or absolute claims unless clearly attributed.
 
+Limit each sentence to one development or action.
+
+Do not combine military actions and political decisions in the same sentence.
+
+Use separate sentences for separate actors.
+
+Keep paragraphs short and easy to scan.
+
 Uncertainty: if information is uncertain, signal this in the first or second sentence of that item.
 
 ## Going Deeper
