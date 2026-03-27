@@ -384,35 +384,34 @@ async function editorialReview(draft, apiKey, lang) {
 // Output feeds Stage 2 as grounding context.
 // ═══════════════════════════════════════════════════════════════
 
-const STAGE1_PROMPT = `You are a news analyst. Your only task: identify the underlying global event systems in today's news.
+const STAGE1_PROMPT = `You are a news editor. Your only task: identify today's most significant global story systems.
 
-Search the web for current breaking news. Always search in English.
+Use your first search for the dominant global crisis or conflict.
+Use your second search specifically for significant global stories OUTSIDE that dominant crisis — different regions, different topics.
 
-Search non-Western sources first: Al Jazeera, Middle East Eye, Dawn, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency, Gulf News. Use Reuters and AP for verification. Do not let US or UK headlines set the agenda.
+Always search in English. Search Al Jazeera, Middle East Eye, Dawn, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency for non-Western perspective. Use Reuters and AP for verification.
 
 Return ONLY a numbered list of system titles. Nothing else.
 
 Rules:
-- Each title: 3–6 words maximum.
-- No descriptions. No events. Titles only.
-- Group by shared underlying cause — not geography or sector alone.
-- Do not list multiple items from the same system.
-- Maximum 6 systems.
-- One conflict or crisis = one slot. Do not split the same conflict into multiple items by actor, dimension, or geography.
-- Ensure geographic spread across regions.
+- Each title: 3–6 words maximum. No descriptions. Titles only.
+- One conflict or crisis = one slot. Do not split the same conflict by actor, dimension, or geography.
+- At least 3 of the 6 systems must come from outside the dominant crisis.
+- Ensure geographic spread. No region should dominate more than 2 slots.
 - If you cannot find enough qualifying systems, output fewer. Never pad.
 
-A system qualifies if it meets at least one of these tests:
+News value test — a story earns its slot if it is NEW TODAY and meets one of:
+  - A new development that changes a situation (not just continuation of yesterday)
   - Affects tens of thousands of people across multiple countries
   - Moves major financial markets or global supply chains
-  - Changes the military or diplomatic posture of a national government
-  - Involves a humanitarian crisis at scale (UN agencies responding, mass displacement)
+  - A decision or policy change with immediate global consequence
+  - A humanitarian crisis newly reported or newly escalated
 
-A system does not qualify if it is:
-  - A road accident, avalanche, or local weather event, regardless of casualties
+A story does not qualify if it is:
+  - A continuation with no new development ("conflict continues", "talks ongoing")
+  - A road accident, local weather event, or crime story
   - Domestic politics with no cross-border effect
-  - A crime story, even involving public figures
-  - A single-country infrastructure announcement
+  - A single-country announcement with no international consequence
 
 No preamble. No explanation. Just the numbered list.`
 
@@ -445,7 +444,7 @@ async function extractSystems(userMessage, apiKey) {
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 256,
         system: STAGE1_PROMPT,
-        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 1 }],
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }],
         messages: [{ role: 'user', content: userMessage }],
       }),
     })
