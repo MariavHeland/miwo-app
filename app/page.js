@@ -743,6 +743,15 @@ export default function Home() {
       {showPrefs && (
         <div className="prefs-panel">
           <div className="prefs-section">
+            <div className="prefs-label">{t('voice')}</div>
+            <div className="prefs-chips">
+              {[['nova','Nova'],['atlas','Atlas'],['cleo','Cleo'],['sol','Sol'],['iris','Iris']].map(([v, label]) => (
+                <button key={v} className={`pref-chip ${voiceName === v ? 'active' : ''}`}
+                  onClick={() => setVoiceName(v)}>{label}</button>
+              ))}
+            </div>
+          </div>
+          <div className="prefs-section">
             <div className="prefs-label">{t('prefRegions')}</div>
             <div className="prefs-chips">
               {['Europe', 'Middle East', 'Asia', 'Africa', 'Americas', 'Oceania'].map(r => (
@@ -772,52 +781,6 @@ export default function Home() {
           <div className="prefs-hint">{t('prefHint')}</div>
         </div>
       )}
-
-      {/* Voice picker — always visible */}
-      <div className="voice-settings">
-        <div className="voice-settings-row">
-          <div className="voice-settings-label">
-            {t('voice')}
-            {lang && lang !== 'en' && (
-              <span style={{ fontSize: '11px', color: 'var(--copper-dim)', marginLeft: '6px', fontStyle: 'italic' }}>
-                {lang.toUpperCase()}
-              </span>
-            )}
-          </div>
-          <div className="voice-options">
-            <button
-              className={`voice-option ${voiceName === 'nova' ? 'active' : ''}`}
-              onClick={() => setVoiceName('nova')}
-            >
-              Nova
-            </button>
-            <button
-              className={`voice-option ${voiceName === 'atlas' ? 'active' : ''}`}
-              onClick={() => setVoiceName('atlas')}
-            >
-              Atlas
-            </button>
-            <button
-              className={`voice-option ${voiceName === 'cleo' ? 'active' : ''}`}
-              onClick={() => setVoiceName('cleo')}
-            >
-              Cleo
-            </button>
-            <button
-              className={`voice-option ${voiceName === 'sol' ? 'active' : ''}`}
-              onClick={() => setVoiceName('sol')}
-            >
-              Sol
-            </button>
-            <button
-              className={`voice-option ${voiceName === 'iris' ? 'active' : ''}`}
-              onClick={() => setVoiceName('iris')}
-            >
-              Iris
-            </button>
-          </div>
-        </div>
-      </div>
 
       <div className="messages">
         {/* Front page identity — shows on first load, scrolls away as user converses */}

@@ -291,7 +291,7 @@ html, body {
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 0;
+  padding: 32px 0 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -326,6 +326,7 @@ html, body {
   line-height: 1.78;
   color: var(--text);
   max-width: 660px;
+  margin: 0 auto;
   letter-spacing: 0em;
 }
 
@@ -361,6 +362,9 @@ html, body {
 /* Message action buttons (speaker) */
 .message-actions {
   margin-top: 6px;
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: auto;
   opacity: 0;
   transition: opacity 0.2s;
 }
