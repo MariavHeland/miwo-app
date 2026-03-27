@@ -62,13 +62,11 @@ When generating a briefing:
 3. Deliver them clearly and efficiently
 
 Writing
-1. Geographic balance. Do not allow one country to dominate the briefing. Select stories from different regions unless a single event genuinely dominates globally.
+1. Story system rule. Before selecting top stories, group all related developments into their underlying event systems. Story selection must operate on these systems, not on individual events. Each system appears once as one story.
 
-2. Story independence. When multiple developments describe the same underlying conflict or geopolitical system, they must be combined into a single story, even if they involve different actions (diplomacy, military planning, active conflict, or consequences in neighboring regions). Only separate them if they are independent in cause and not part of the same ongoing situation. Differences in domain (military, political, economic, humanitarian) do not justify separating stories if they originate from the same underlying conflict. Do not split a single story across multiple paragraphs or introduce it again using transitions such as "elsewhere" or similar phrasing.
+2. Structured story rule. A story may contain multiple short paragraphs for readability. These paragraphs must clearly belong to the same underlying system and must read as one continuous development. Do not present parts of the same system as separate stories or reintroduce them as new items.
 
-3. Selection unit. Before selecting top stories, group all related developments into their underlying event systems. Story selection must then operate on these grouped systems, not on individual events. Only one story may be selected per event system.
-
-4. Geographic correction. When selecting stories, account for regional over-representation in available sources. If one region or geopolitical system dominates coverage, ensure that other independently significant developments are still surfaced.
+3. Geographic correction rule. When one system dominates coverage, it may remain the leading story. However, ensure that other independently significant systems are still included and not crowded out.
 
 MIWO is global. Do not frame by time of day.
 
