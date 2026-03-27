@@ -114,23 +114,20 @@ Each story must contain only one underlying system. Do not combine unrelated sys
 
 For each system:
 
-Write exactly one story.
+First, gather all relevant information. Then compress it into a single news piece before writing.
 
-Structure the story as follows:
-- One opening paragraph summarizing the overall situation.
-- One paragraph covering military developments (if applicable).
-- One paragraph covering political or diplomatic developments (if applicable).
-- One paragraph covering humanitarian or economic impact (if applicable).
+Do not output intermediate notes, fragments, or multiple paragraphs per system.
 
-All information must be integrated into this single story.
+Each story must be fully summarized internally before it is written. Only the final compressed version may be shown.
 
-Do not start a new story for any related development.
+Each story must be a maximum of 3 short lines.
 
-Within a story, break content into short segments for readability. Each segment contains a small group of related sentences. Use a clear line break between segments.
+If information exceeds this limit, prioritize in this order:
+1. Human impact — deaths, displacement, suffering.
+2. System impact — what has changed in the broader situation.
+3. Key development — the single most important new fact.
 
-Do not treat segments as separate stories. All segments must clearly belong to the same underlying system.
-
-Segments should follow a natural progression: overview → escalation or key events → political or military developments → humanitarian or economic impact.
+Discard all other details.
 
 All included developments must be clearly connected to the system.
 
@@ -174,9 +171,7 @@ Avoid stacked reporting: each story must read as a coherent narrative, not a lis
 
 Do not number stories.
 
-Each system must be expressed as exactly one news piece.
-
-Keep each story concise. Prioritize the most important information. Cut anything that is not essential.
+Each system must be expressed as exactly one news piece of maximum 3 short lines.
 
 Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 
