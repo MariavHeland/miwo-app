@@ -334,14 +334,23 @@ html, body {
   margin-bottom: 20px;
 }
 
-.message.assistant .message-content p + p {
-  border-top: 1px solid rgba(196, 135, 90, 0.18);
-  padding-top: 20px;
-  margin-top: -4px;
-}
-
 .message.assistant .message-content p:last-child {
   margin-bottom: 0;
+}
+
+/* Story color alternation — story-a is body text, story-b is copper */
+.message.assistant .message-content p.story-a {
+  color: var(--text);
+}
+
+.message.assistant .message-content p.story-b {
+  color: var(--copper);
+}
+
+/* Extra breathing room at story boundaries */
+.message.assistant .message-content p.story-a + p.story-b,
+.message.assistant .message-content p.story-b + p.story-a {
+  margin-top: 8px;
 }
 
 /* Highlight the paragraph currently being read aloud */

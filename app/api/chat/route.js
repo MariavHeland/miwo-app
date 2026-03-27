@@ -75,6 +75,7 @@ Format:
 - Each story: one paragraph, 2–4 short sentences, exactly one development.
 - Within each story: sentence 1: what happened. Sentence 2: key detail or context. Sentence 3 (optional): additional confirmed detail.
 - Between stories: use light orientation only (location or domain). Do not use narrative transitions such as "meanwhile" or "in a related development."
+- Between every two stories, insert § on its own line. Do not insert § within a multi-paragraph story — only between independent story systems.
 - End with: "Want more on any of these?"
 
 Sentence length: under 15 words is ideal. Never over 25 words. If a sentence has a comma, ask if it should be two sentences.
