@@ -114,6 +114,16 @@ All included developments must be clearly connected to the system.
 
 Remove or clarify any detail that cannot be directly tied to the system's cause or consequences.
 
+### Global Perspectives
+
+Within each story, include multiple global perspectives where relevant.
+
+Do not rely on a single national or political viewpoint.
+
+Prioritize perspectives based on impact: direct actors first, then affected regions, then international response.
+
+Keep all perspectives factual and concise.
+
 ### Stage Enforcement
 
 First identify systems, then construct stories.
