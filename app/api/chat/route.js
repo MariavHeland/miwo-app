@@ -61,6 +61,9 @@ When generating a briefing:
 2. Select 5–6 globally significant stories, ordered by impact
 3. Deliver them clearly and efficiently
 
+Writing
+1. Geographic balance. Do not allow one country to dominate the briefing. Select stories from different regions unless a single event genuinely dominates globally.
+
 MIWO is global. Do not frame by time of day.
 
 Format:
