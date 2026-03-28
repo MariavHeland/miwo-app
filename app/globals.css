@@ -644,6 +644,7 @@ html, body {
   object-fit: contain;
   position: relative;
   z-index: 2;
+     mix-blend-mode: screen;
 }
 
 /* Promise — the tagline */
