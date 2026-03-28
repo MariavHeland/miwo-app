@@ -61,6 +61,8 @@
   --science: #5A82C4;
   --nature: #4A8B6A;
   --nature-light: #6AAF8A;
+  --education: #7A6BAE;
+  --future: #4A9B9B;
 }
 
 * {
@@ -1195,6 +1197,57 @@ html, body {
   border-color: var(--copper-dim);
   color: var(--text);
   background: var(--surface);
+}
+
+/* MIWO Dice — surprise button on room pages */
+.miwo-dice {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--dice-color, var(--copper));
+  opacity: 0.5;
+  transition: opacity 0.3s, transform 0.3s;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.miwo-dice:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.miwo-dice:disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+
+.miwo-dice.rolling {
+  animation: dice-roll 0.6s ease-in-out;
+}
+
+@keyframes dice-roll {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.2); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Dice placement next to prompts */
+.dice-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.dice-label {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-style: italic;
 }
 
 /* Legacy pill styles (kept for sport feed) */
