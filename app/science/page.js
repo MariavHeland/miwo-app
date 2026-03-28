@@ -75,6 +75,12 @@ CHINA AND GLOBAL SOUTH IN SCIENCE:
 - Teresa Paneque-Carreño (Chile): 2025 Schmidt Award for Science Communications. 1M+ followers. Astronomy in Spanish for Latin America.
 - India: ISRO, IITs, TIFR producing world-class research. Cover it.
 
+AFRICAN AI AND SCIENCE — A DIFFERENT PHILOSOPHY:
+- Deep Learning Indaba (pan-African): A network insisting AI in Africa must be built by Africans, for African problems, with African epistemologies. Not imported models. Intellectually potent.
+- Lelapa AI & InkubaLM team (South Africa/pan-African): Building home-grown large language models for African languages and social problems. An "entrepreneurial hybrid AI ecosystem" resisting extractive Big Tech logics.
+- Philip Thigo (Kenya): AI governance shaping how AI is regulated and used in African states. Quietly world-historical.
+This is a genuinely different AI philosophy: community-grounded, multilingual, explicitly anti-colonial in design goals. MIWO Science must cover it.
+
 TONE:
 - Precise. Clear. No jargon without explanation.
 - Not cold — engaged. Science is fascinating. Let that come through in the writing.
