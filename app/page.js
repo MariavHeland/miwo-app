@@ -811,7 +811,7 @@ export default function Home() {
           <div className="welcome-hero">
             <div className="welcome-identity">
               <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
-              <img src="/miwo-brand.png" alt="MIWO — my world my news" className="welcome-brand-img" />
+                        <img src="/miwo-brand.png" alt="MIWO" className="welcome-wordmark" />
               <img src={GLOBE_BACK} alt="" className="welcome-globe welcome-globe-right" />
             </div>
             <div className="welcome-promise">
