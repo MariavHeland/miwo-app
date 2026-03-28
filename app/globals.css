@@ -535,8 +535,8 @@ html, body {
 
 .voice-btn.listening {
   border-color: var(--copper);
-  background: var(--copper);
-  color: var(--bg);
+    background: transparent;
+    color: var(--copper);
   animation: breathe 2s infinite ease-in-out;
 }
 
@@ -637,7 +637,7 @@ html, body {
   margin-left: -90px;
 }
 
-.welcome-brand-img {
+.welcome-brand-img, .welcome-wordmark {
   width: clamp(520px, 48vw, 720px);
   height: auto;
   display: block;
@@ -764,11 +764,11 @@ html, body {
   .welcome-globe-right {
     margin-left: -40px;
   }
-  .welcome-brand-img {
+      .welcome-brand-img, .welcome-wordmark {
     width: clamp(240px, 65vw, 340px);
   }
   .welcome-identity {
-    margin-bottom: 24px;
+            margin-bottom: 24px;
   }
   .welcome-right {
     max-width: 100%;
