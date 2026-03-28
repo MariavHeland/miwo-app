@@ -51,8 +51,8 @@
   --font-serif: 'Literata', Georgia, serif;
 
   /* Section accent colors */
-  --sport: #C4875A;
-  --sport-light: #A07040;
+  --sport: #5A8B6A;
+  --sport-light: #7AB88E;
   --odd: #8B7A5A;
   --history: #A08860;
   --art: #C49A5A;
@@ -213,7 +213,7 @@ html, body {
 }
 
 .voice-option:hover:not(:disabled) {
-  border: 1px solid var(--copper);
+  border-color: var(--copper-dim);
   color: var(--text);
 }
 
@@ -271,7 +271,7 @@ html, body {
 }
 
 .pref-chip:hover {
-  border: 1px solid var(--copper);
+  border-color: var(--copper-dim);
   color: var(--text);
 }
 
@@ -295,11 +295,12 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  scroll-behavior: smooth;
 }
 
 .message {
   max-width: 100%;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
@@ -327,11 +328,17 @@ html, body {
   color: var(--text);
   max-width: 660px;
   margin: 0 auto;
-  letter-spacing: 0em;
+  letter-spacing: 0.005em;
 }
 
 .message.assistant .message-content p {
   margin-bottom: 20px;
+  animation: paragraphIn 0.6s ease forwards;
+}
+
+@keyframes paragraphIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .message.assistant .message-content p:last-child {
@@ -411,10 +418,11 @@ html, body {
 
 .msg-action-btn.speaking {
   color: var(--copper);
-  border: 1px solid var(--copper);
-  background: transparent;
+  border-color: var(--copper-dim);
+  background: rgba(196, 125, 90, 0.1);
   animation: pulse-speak 1.5s infinite ease-in-out;
 }
+
 @keyframes pulse-speak {
   0%, 100% { opacity: 0.8; }
   50% { opacity: 1; }
@@ -452,7 +460,7 @@ html, body {
 .typing span {
   width: 6px;
   height: 6px;
-  background: var(--copper);
+  background: linear-gradient(135deg, #3d1a00 0%, #8B4513 25%, #CD853F 50%, #8B4513 75%, #3d1a00 100%);
   border-radius: 50%;
   animation: pulse 1.4s infinite ease-in-out;
 }
@@ -466,10 +474,39 @@ html, body {
 }
 
 /* Input area */
+/* Copper image icons */
+.copper-icon {
+  display: block;
+  object-fit: contain;
+}
+.copper-mic {
+  width: 44px;
+  height: 44px;
+}
+.copper-send {
+  width: 40px;
+  height: 40px;
+}
+
 .input-area {
   position: relative;
   padding: 16px 0 24px;
   border-top: 1px solid var(--border);
+}
+
+.tts-status-badge {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(196,125,90,0.15);
+  color: #C47D5A;
+  font-size: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(196,125,90,0.3);
+  white-space: nowrap;
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -479,25 +516,42 @@ html, body {
 
 .input-row {
   display: flex;
-  gap: 10px;
-  align-items: flex-end;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Chatbox wrapper — copper frame image around the textarea */
+.chatbox-wrapper {
+  flex: 1;
+  position: relative;
+  min-height: 52px;
+}
+
+.chatbox-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .input-field {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 16px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 14px 20px;
   color: var(--text);
   font-family: 'Inter', sans-serif;
   font-size: 15px;
   line-height: 1.5;
   resize: none;
   outline: none;
-  min-height: 46px;
+  min-height: 52px;
   max-height: 120px;
-  transition: border-color 0.2s;
 }
 
 .input-field::placeholder {
@@ -505,69 +559,63 @@ html, body {
 }
 
 .input-field:focus {
-  border-color: var(--copper);
-  box-shadow: 0 0 0 3px rgba(196, 125, 90, 0.08);
   outline: none;
 }
 
-/* Voice button */
+/* Voice button — copper microphone image */
 .voice-btn {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-dim);
+  width: 52px;
+  height: 52px;
+  border: none;
+  background: transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
   flex-shrink: 0;
+  padding: 0;
 }
 
 .voice-btn:hover {
-  border-color: var(--copper);
-  color: var(--copper);
-  box-shadow: 0 0 8px rgba(196, 125, 90, 0.12);
+  transform: scale(1.08);
+  filter: brightness(1.2);
 }
 
 .voice-btn.listening {
-  border-color: var(--copper);
-    background: transparent;
-    color: var(--copper);
   animation: breathe 2s infinite ease-in-out;
 }
 
 @keyframes breathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 125, 90, 0.3); }
-  50% { box-shadow: 0 0 0 10px rgba(196, 125, 90, 0); }
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.4); }
 }
 
-/* Send button */
+/* Send button — copper arrow image */
 .send-btn {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   border: none;
-  background: var(--copper);
-  color: var(--bg);
+  background: transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
   flex-shrink: 0;
+  padding: 0;
 }
 
 .send-btn:hover {
-  background: var(--copper-dim);
-  box-shadow: 0 0 12px rgba(196, 125, 90, 0.25);
+  transform: scale(1.08);
+  filter: brightness(1.2);
 }
 
 .send-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+  filter: none;
+  transform: none;
 }
 
 /* Welcome hero — sits inside messages, scrolls away naturally */
@@ -577,33 +625,27 @@ html, body {
   align-items: center;
   text-align: center;
   gap: 0;
-  padding: 10px 24px 40px;
+  padding: 10vh 24px 40px;
+  min-height: 60vh;
+  justify-content: center;
 }
 
-/* "Right now" button — the entry point to the briefing */
-.right-now-btn {
-  margin-top: 24px;
-  padding: 14px 48px;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-    color: var(--copper);
-    background: transparent;
-    border: 1px solid var(--copper);
-  border-radius: 40px;
-      transition: all 0.25s ease;
-    box-shadow: none;
+/* "Right now" button — copper image asset */
+.right-now-img {
+  margin-top: 32px;
+  width: clamp(200px, 22vw, 300px);
+  height: auto;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  filter: drop-shadow(0 0 20px rgba(196, 125, 90, 0.25));
 }
 
-.right-now-btn:hover {
-    background: rgba(196, 135, 90, 0.08);
-    box-shadow: none;
+.right-now-img:hover {
+  filter: drop-shadow(0 0 30px rgba(196, 125, 90, 0.45)) brightness(1.1);
   transform: scale(1.03);
 }
 
-.right-now-btn:active {
+.right-now-img:active {
   transform: scale(0.98);
 }
 
@@ -614,37 +656,32 @@ html, body {
   justify-content: center;
   position: relative;
   z-index: 1;
-  margin-bottom: 36px;
+  margin-bottom: 48px;
 }
 
 .welcome-globe {
-  width: 130px;
-  height: 130px;
+  width: clamp(140px, 16vw, 220px);
+  height: auto;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 0.85;
   position: relative;
   z-index: 0;
-     align-self: flex-start;
-     margin-top: 20px;
-  align-self: flex-start;   margin-top: 20px;   mask-image: radial-gradient(circle at center, black 55%, transparent 78%);
-  -webkit-align-self: flex-start;   margin-top: 20px;   mask-image: radial-gradient(circle at center, black 55%, transparent 78%);
 }
 .welcome-globe-left {
-  margin-right: -55px;
+  margin-right: -20px;
 }
 .welcome-globe-right {
-  margin-left: -55px;
+  margin-left: -20px;
 }
 
-.welcome-brand-img, .welcome-wordmark {
-  width: clamp(520px, 48vw, 720px);
+/* Wordmark image — MIWO + "my world my news" */
+.welcome-wordmark-img {
+  width: clamp(360px, 40vw, 600px);
   height: auto;
   display: block;
   object-fit: contain;
   position: relative;
   z-index: 2;
-     mix-blend-mode: screen;
 }
 
 /* Promise — the tagline */
@@ -652,8 +689,8 @@ html, body {
   position: relative;
   z-index: 1;
   text-align: center;
-  margin-bottom: 40px;
-  max-width: 400px;
+  margin-bottom: 8px;
+  max-width: 500px;
 }
 .welcome-promise p {
   font-family: var(--font-sans);
@@ -664,16 +701,21 @@ html, body {
   margin: 0;
 }
 
-/* Charter section — values below the news */
+/* Charter section — sits quietly at the end of the news, never jumps */
 .welcome-charter {
-  max-width: 680px;
-  margin: 32px auto 0;
+  max-width: 660px;
+  margin: 48px auto 0;
   padding: 28px 0;
   text-align: center;
   border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: charterAppear 1s ease 2s forwards;
+}
+@keyframes charterAppear {
+  to { opacity: 1; }
 }
 .charter-title {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 600;
   line-height: 1.2;
@@ -708,13 +750,10 @@ html, body {
   opacity: 0.8;
 }
 
-/* Gentle fade in/out while news is loading */
+/* While loading, charter stays invisible — no breathing/trembling */
 .charter-breathing {
-  animation: charterBreath 3s ease-in-out infinite;
-}
-@keyframes charterBreath {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
+  opacity: 0 !important;
+  animation: none !important;
 }
 
 .welcome-prompts {
@@ -756,23 +795,33 @@ html, body {
     max-width: 90%;
   }
   .welcome-globe {
-    width: 100px;
-    height: 100px;
+    width: 90px;
   }
   .welcome-globe-left {
-    margin-right: -40px;
+    margin-right: -10px;
   }
   .welcome-globe-right {
-    margin-left: -40px;
+    margin-left: -10px;
   }
-      .welcome-brand-img, .welcome-wordmark {
-    width: clamp(240px, 65vw, 340px);
+  .welcome-wordmark-img {
+    width: clamp(200px, 55vw, 320px);
   }
   .welcome-identity {
-            margin-bottom: 24px;
+    margin-bottom: 24px;
   }
-  .welcome-right {
-    max-width: 100%;
+  .welcome-hero {
+    padding-top: 5vh;
+  }
+  .right-now-img {
+    width: clamp(160px, 45vw, 220px);
+  }
+  .copper-mic {
+    width: 36px;
+    height: 36px;
+  }
+  .copper-send {
+    width: 32px;
+    height: 32px;
   }
   .nav { padding: 0 16px; }
   .nav-btn { padding: 6px 10px; font-size: 11px; }
@@ -1012,7 +1061,7 @@ html, body {
   height: 46px;
   border-radius: 50%;
   border: none;
-  background: var(--copper);
+  background: linear-gradient(135deg, #3d1a00 0%, #8B4513 25%, #CD853F 50%, #8B4513 75%, #3d1a00 100%);
   color: var(--bg);
   font-size: 18px;
   cursor: pointer;
@@ -1043,7 +1092,7 @@ html, body {
 }
 
 .welcome-title {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: 48px;
   font-weight: 400;
   line-height: 1.15;
@@ -1061,8 +1110,8 @@ html, body {
 }
 
 .subpage-hero .welcome-globe {
-  width: 130px;
-  height: 130px;
+  width: 200px;
+  height: 200px;
   flex-shrink: 0;
 }
 
@@ -1143,7 +1192,7 @@ html, body {
 }
 
 .subpage-prompt:hover {
-  border: 1px solid var(--copper);
+  border-color: var(--copper-dim);
   color: var(--text);
   background: var(--surface);
 }
@@ -1170,7 +1219,7 @@ html, body {
 }
 
 .prompt-pill:hover {
-  border: 1px solid var(--copper);
+  border-color: var(--copper-dim);
   color: var(--text);
 }
 
@@ -1212,7 +1261,7 @@ html, body {
 .typing-indicator span {
   width: 6px;
   height: 6px;
-  background: var(--copper);
+  background: linear-gradient(135deg, #3d1a00 0%, #8B4513 25%, #CD853F 50%, #8B4513 75%, #3d1a00 100%);
   border-radius: 50%;
   animation: pulse 1.4s infinite ease-in-out;
 }
@@ -1265,7 +1314,7 @@ html, body {
 }
 
 .story-headline {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: 20px;
   font-weight: 600;
   line-height: 1.4;
@@ -1349,7 +1398,7 @@ html, body {
 }
 
 .odd-title {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
@@ -1387,7 +1436,7 @@ html, body {
 }
 .lang-btn.active {
   color: var(--copper);
-  border: 1px solid var(--copper);
+  border-color: var(--copper-dim);
   background: rgba(196, 125, 90, 0.08);
 }
 

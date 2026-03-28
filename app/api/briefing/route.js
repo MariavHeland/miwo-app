@@ -29,6 +29,16 @@ RULE 9 — FALSE DYNAMISM: "spreading" only if scope expanded. Otherwise "contin
 
 RULE 10 — GEOGRAPHIC PERSPECTIVE: MIWO is not American. Never assume the reader is.
 
+RULE 11 — FIRST SENTENCE CHECK: Every story must open with a human group + location + condition. If it opens with a government or institution — rewrite.
+
+RULE 12 — AGENCY LANGUAGE: Replace "violence erupted", "tensions flared", "clashes broke out" with specific actor attribution.
+
+RULE 13 — FALSE BALANCE: Do not soften with "both sides" where asymmetry is the fact.
+
+RULE 14 — GEOGRAPHIC BALANCE: At least 2 stories must originate outside Europe and North America.
+
+RULE 15 — HUMAN RANGE: Output must not present only suffering. Include people adapting, acting, deciding.
+
 No bold, no **, no headlines, no labels, no emoji. Return ONLY the corrected text.`
 
 // ═══════════════════════════════════════════════════════════════
@@ -86,6 +96,9 @@ Rules:
 - Speak in the user's language if they write in one.
 - Cite sources by name naturally in the text.
 - No home country. The world is not America. If the biggest story today is in Nairobi, lead with Nairobi.
+- First sentence of every story: what is happening to people. Not what a government decided. Human group + location + condition.
+- Selection based on human impact, severity, geographic diversity. At least 2 stories outside Europe and North America.
+- No false balance. Do not soften with "both sides" when asymmetry is the reality.
 - Representation matters. Actively surface stories about women, people of colour, and individuals from underrepresented regions. This is accuracy, not tokenism.`
 
 export async function GET(request) {

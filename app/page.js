@@ -4,24 +4,16 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useLang, LangPicker } from './i18n'
 
-// SVG Icons
+// Copper image icons (generated assets)
 function MicIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-      <line x1="12" y1="19" x2="12" y2="23"/>
-      <line x1="8" y1="23" x2="16" y2="23"/>
-    </svg>
+    <img src="/miwo-microphone.png" alt="Speak" className="copper-icon copper-mic" />
   )
 }
 
 function SendIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="22" y1="2" x2="11" y2="13"/>
-      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-    </svg>
+    <img src="/miwo-arrow.png" alt="Send" className="copper-icon copper-send" />
   )
 }
 
@@ -147,10 +139,17 @@ export default function Home() {
     })
   }
 
-  // Auto-scroll to bottom
+  // Auto-scroll — only when a NEW message appears or loading starts.
+  // During streaming (same message count, content growing), don't force scroll.
+  // This stops the "trembling" effect where every token push scrolls the page.
+  const prevMsgCountRef = useRef(0)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' })
-  }, [messages, isLoading])
+    const count = messages.length
+    if (count !== prevMsgCountRef.current || isLoading) {
+      prevMsgCountRef.current = count
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages.length, isLoading])
 
   // Auto-resize textarea
   useEffect(() => {
@@ -811,15 +810,17 @@ export default function Home() {
           <div className="welcome-hero">
             <div className="welcome-identity">
               <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
-                        <img src="/miwo-brand.png" alt="MIWO" className="welcome-wordmark" />
+              <img src="/miwo-wordmark.png" alt="MIWO — my world my news" className="welcome-wordmark-img" />
               <img src={GLOBE_BACK} alt="" className="welcome-globe welcome-globe-right" />
             </div>
             <div className="welcome-promise">
               <p>{t('promise1')}</p>
               <p style={{ marginTop: '6px' }}>{t('promise2')}</p>
             </div>
-            <button
-              className="right-now-btn"
+            <img
+              src="/miwo-rightnow.png"
+              alt={t('rightNow') || 'Right now'}
+              className="right-now-img"
               onClick={() => {
                 stopSpeaking()
                 setMessages([])
@@ -827,9 +828,7 @@ export default function Home() {
                 hasAutoLoadedRef.current = true
                 sendMessageRef.current?.(t('prompt1'), [], { hideUserMessage: true })
               }}
-            >
-              {t('rightNow') || 'Right now'}
-            </button>
+            />
           </div>
         )}
 
@@ -896,6 +895,11 @@ export default function Home() {
       </div>
 
       <div className="input-area">
+        {ttsStatus && (
+          <div className="tts-status-badge">
+            {ttsStatus === 'generating' ? t('voiceGenerating') : ttsStatus === 'quota' ? t('voiceQuotaReached') : t('voicePlaying')}
+          </div>
+        )}
         <div className="input-row">
           <button
             className={`voice-btn ${isListening ? 'listening' : ''}`}
@@ -904,25 +908,18 @@ export default function Home() {
           >
             <MicIcon />
           </button>
-          {ttsStatus && (
-            <div style={{
-              position: 'absolute', top: '-36px', left: '50%', transform: 'translateX(-50%)',
-              background: 'rgba(196,125,90,0.15)', color: '#C47D5A', fontSize: '12px',
-              padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(196,125,90,0.3)',
-              whiteSpace: 'nowrap', animation: 'pulse 1.5s ease-in-out infinite',
-            }}>
-              {ttsStatus === 'generating' ? t('voiceGenerating') : ttsStatus === 'quota' ? t('voiceQuotaReached') : t('voicePlaying')}
-            </div>
-          )}
-          <textarea
-            ref={textareaRef}
-            className="input-field"
-            placeholder={isListening ? '...' : t('talkTo')}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={1}
-          />
+          <div className="chatbox-wrapper">
+            <img src="/miwo-chatbox.png" alt="" className="chatbox-frame" />
+            <textarea
+              ref={textareaRef}
+              className="input-field"
+              placeholder={isListening ? '...' : t('talkTo')}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              rows={1}
+            />
+          </div>
           <button
             className="send-btn"
             onClick={() => sendMessage()}
