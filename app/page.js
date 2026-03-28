@@ -739,6 +739,8 @@ export default function Home() {
           <Link href="/nature" className="nav-link">{t('nature')}</Link>
           <Link href="/science" className="nav-link">{t('science')}</Link>
           <Link href="/cook" className="nav-link">{t('cook')}</Link>
+          <Link href="/education" className="nav-link">{t('education')}</Link>
+          <Link href="/future" className="nav-link">{t('future')}</Link>
           <LangPicker />
           <button
             className={`header-btn auto-read-btn ${autoRead ? 'active' : ''}`}
@@ -810,7 +812,7 @@ export default function Home() {
           <div className="welcome-hero">
             <div className="welcome-identity">
               <img src={GLOBE_FRONT} alt="" className="welcome-globe welcome-globe-left" />
-              <img src="/miwo-wordmark.png" alt="MIWO — my world my news" className="welcome-wordmark-img" />
+              <img src="/miwo-brand.png" alt="MIWO — my world my news" className="welcome-wordmark-img" />
               <img src={GLOBE_BACK} alt="" className="welcome-globe welcome-globe-right" />
             </div>
             <div className="welcome-promise">

@@ -627,14 +627,14 @@ html, body {
   align-items: center;
   text-align: center;
   gap: 0;
-  padding: 10vh 24px 40px;
-  min-height: 60vh;
+  padding: 4vh 24px 24px;
+  min-height: 50vh;
   justify-content: center;
 }
 
 /* "Right now" button — copper image asset */
 .right-now-img {
-  margin-top: 32px;
+  margin-top: 16px;
   width: clamp(200px, 22vw, 300px);
   height: auto;
   cursor: pointer;
