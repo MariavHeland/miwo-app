@@ -255,7 +255,7 @@ Never say "As an AI." Keep it warm, knowledgeable, and genuinely respectful of e
                   onClick={() => setPantryOpen(!pantryOpen)}
                   style={pantryOpen ? { background: 'rgba(196, 90, 90, 0.15)', borderColor: 'var(--cooking)' } : {}}
                 >
-                  <span className="cook-fridge-icon">🧊</span>
+                  <img src="/fridge-globe.png" alt="" className="cook-fridge-img" />
                   <span className="cook-fridge-text">
                     <strong>{t('whatDoYouHave')}</strong>
                     <span className="cook-fridge-sub">Tell us what's in your fridge — we'll find recipes</span>
