@@ -51,8 +51,8 @@
   --font-serif: 'Literata', Georgia, serif;
 
   /* Section accent colors */
-  --sport: #5A8B6A;
-  --sport-light: #7AB88E;
+  --sport: #C4875A;
+  --sport-light: #A07040;
   --odd: #8B7A5A;
   --history: #A08860;
   --art: #C49A5A;
@@ -672,7 +672,7 @@ html, body {
   border-top: 1px solid var(--border);
 }
 .charter-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 600;
   line-height: 1.2;
@@ -1042,7 +1042,7 @@ html, body {
 }
 
 .welcome-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 48px;
   font-weight: 400;
   line-height: 1.15;
@@ -1264,7 +1264,7 @@ html, body {
 }
 
 .story-headline {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
   line-height: 1.4;
@@ -1348,7 +1348,7 @@ html, body {
 }
 
 .odd-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
