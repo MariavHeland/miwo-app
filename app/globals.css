@@ -631,10 +631,10 @@ html, body {
   -webkit-mask-image: radial-gradient(circle at center, black 55%, transparent 78%);
 }
 .welcome-globe-left {
-  margin-right: -130px;
+  margin-right: -90px;
 }
 .welcome-globe-right {
-  margin-left: -130px;
+  margin-left: -90px;
 }
 
 .welcome-brand-img {
@@ -759,10 +759,10 @@ html, body {
     height: 100px;
   }
   .welcome-globe-left {
-    margin-right: -55px;
+    margin-right: -40px;
   }
   .welcome-globe-right {
-    margin-left: -55px;
+    margin-left: -40px;
   }
   .welcome-brand-img {
     width: clamp(240px, 65vw, 340px);
