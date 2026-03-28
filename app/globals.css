@@ -620,8 +620,8 @@ html, body {
 }
 
 .welcome-globe {
-  width: 200px;
-  height: 200px;
+  width: 130px;
+  height: 130px;
   object-fit: contain;
   flex-shrink: 0;
   opacity: 0.85;
@@ -631,10 +631,10 @@ html, body {
   -webkit-mask-image: radial-gradient(circle at center, black 55%, transparent 78%);
 }
 .welcome-globe-left {
-  margin-right: -90px;
+  margin-right: -55px;
 }
 .welcome-globe-right {
-  margin-left: -90px;
+  margin-left: -55px;
 }
 
 .welcome-brand-img, .welcome-wordmark {
@@ -1060,8 +1060,8 @@ html, body {
 }
 
 .subpage-hero .welcome-globe {
-  width: 200px;
-  height: 200px;
+  width: 130px;
+  height: 130px;
   flex-shrink: 0;
 }
 
