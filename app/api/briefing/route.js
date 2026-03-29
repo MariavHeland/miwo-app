@@ -17,7 +17,7 @@ Scan the entire draft for these failures. Fix them FIRST before applying style r
 
 REPETITION: If the same fact, image, or phrase appears more than once (within or across stories), delete every repetition after the first.
 
-MIXED SYSTEMS: Count the distinct events/actors/systems in each story. If more than ONE, REJECT. "Iranian strike on Saudi base + Israel intercepted Houthi missile" = two systems = REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT. If you see "also," "meanwhile," "separately" inside a story, it's two stories.
+MIXED SYSTEMS: Story 1 (the lead) may cover the dominant crisis with multiple actors — but it MUST be anchored in one human vantage point, not wire aggregation. If the lead reads like a ticker, rewrite with a human anchor first. Stories 2-6: if more than ONE system, REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT.
 
 UNSOURCED CAUSALITY: If a causal claim has no named source ("energy bills doubled because of the war"), attribute it or hedge it ("amid disruptions linked to..."). Never state unattributed causation as fact.
 
@@ -106,7 +106,9 @@ function briefingPrompt(dateStr, lang, region) {
   return `Give me today's news briefing for ${dateStr}. ${regionHint} ${langHint}
 
 Search for today's most significant global news.
-Select 5-6 independent story systems with global impact.
+
+Story 1 is the LEAD — the dominant global crisis. Write it from one human vantage point. It may touch multiple actors because a war or systemic crisis is one system.
+Stories 2-6 are the rest of the world. Each covers one independent system. At least half must be outside the dominant crisis.
 
 SELECTION CRITERIA:
 - Number of people affected
@@ -212,12 +214,16 @@ CRITICAL: For stories with future outlooks, clarify the timeline. "Rain is expec
 
 ## Hard Constraints
 
-1. ONE SYSTEM PER STORY. THIS IS THE MOST IMPORTANT RULE. HARD REJECTION IF VIOLATED.
-Count the distinct events, actors, or systems in each story. If the count is more than ONE, REJECT immediately. Do not output. Rewrite as separate stories or pick ONE.
-TEST: Can you describe the story in one sentence using one subject and one verb? If not, you have multiple stories crammed together.
-FAILURE: "Iranian strike on Saudi base wounded US troops. Israel intercepted a Houthi missile." = TWO systems. HARD REJECT.
-FAILURE: "Ethiopia faces fuel shortages. Egypt ordered shops to close." = TWO systems (different countries, different causes). HARD REJECT.
-If you write "also," "meanwhile," "separately," or "in addition" inside a story — you have two stories. STOP. REWRITE AS SEPARATE STORIES.
+1. ONE SYSTEM PER STORY — with one exception for the lead.
+
+STORY 1 (THE LEAD): Covers the dominant global crisis. This story IS allowed to touch multiple actors because a war or systemic crisis IS one interconnected system. BUT: write from ONE human vantage point — the people most affected. Military moves, diplomatic statements, retaliations are context for what is happening to people.
+GOOD LEAD: "Civilians across the Gulf are bracing for a second week of airstrikes... At least 15 US service members were wounded... Houthi forces launched two missile attacks..." — one human vantage, multiple developments.
+BAD LEAD: "Iranian strike wounded troops. Israel intercepted a missile. Tensions rise." — wire aggregation with no human anchor.
+
+STORIES 2-6: Strictly one system per story. If more than one, REJECT.
+FAILURE: "Ethiopia fuel + Egypt curfew" = TWO systems. REJECT.
+FAILURE: "UN task force + Kenyan tea + Aluminium Bahrain" = THREE systems. REJECT.
+If you write "also," "meanwhile," "separately" inside stories 2-6 — split them.
 2. One action per sentence. Do not combine different actors or countries in one sentence. If multiple regions face the same crisis (e.g., fuel shortages in Ethiopia, Kenya, Tanzania), list them in one sentence ONLY if they are consequences of the SAME underlying system.
 3. MANDATORY CONFIDENCE SIGNAL — EVERY CLAIM REQUIRES EXPLICIT RE-ATTRIBUTION. Every claim must carry a named source attached to THAT CLAIM ALONE. "According to [named source]" or "[named actor] said." Attribution CANNOT be implicit or carried forward from earlier sentences. Every single claim requires its own attribution.
 FAILURE EXAMPLE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months." The second sentence has no attribution. REJECT. REWRITE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months, according to Reuters."

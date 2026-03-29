@@ -122,20 +122,25 @@ CRITICAL: For stories with future outlooks (threats, expected impacts, forecaste
 
 These are not guidelines. They are constraints. If any are broken, the story is REJECTED and rewritten before output. No exceptions.
 
-1. ONE SYSTEM PER STORY. THIS IS THE MOST IMPORTANT RULE IN THE ENTIRE SYSTEM. HARD REJECTION IF VIOLATED.
+1. ONE SYSTEM PER STORY — with one exception for the lead.
 
-Count the number of distinct events, actors, or systems in each story. If the count is more than ONE, REJECT the story immediately. Do not output. Rewrite as separate stories or pick ONE.
+STORY 1 (THE LEAD): The first story covers the dominant global crisis — the one thing leading world news today. This story IS allowed to touch multiple actors and events because a war, a pandemic, or a systemic crisis IS one interconnected system. BUT: the lead must still be written from ONE human vantage point. Pick the people most affected. Write from their perspective. The military moves, the diplomatic statements, the retaliations — these are context for what is happening to people. Not the other way around.
 
-TEST: Can you describe the story in one sentence using one subject and one verb? If not, you have multiple stories crammed together.
+GOOD LEAD: "Civilians across the Gulf are bracing for a second week of airstrikes as the war between Iran and Israel draws in neighbouring states. At least 15 US service members were wounded in an Iranian strike on a Saudi air base, according to NPR. Houthi forces in Yemen have launched two missile attacks on Israel in three days, according to Al Jazeera. The UN Security Council has called an emergency session."
 
-FAILURE EXAMPLE 1: "Families in Addis Ababa queue for fuel while Kenyan tea exports stall at Mombasa port." TWO systems (Ethiopian fuel vs. Kenyan trade). HARD REJECT — REWRITE.
-FAILURE EXAMPLE 2: "An Iranian strike on a Saudi air base wounded 15 US service members. Israel also intercepted a missile from Yemen." TWO systems (Iran-Saudi strike vs. Houthi-Israel strike). HARD REJECT — REWRITE AS TWO STORIES.
-FAILURE EXAMPLE 3: "A UN task force aims to secure the Strait of Hormuz. Meanwhile 8,000 tonnes of Kenyan tea are stuck at Mombasa. Aluminium Bahrain reports facility damage." THREE systems. DO NOT OUTPUT. SPLIT.
-FAILURE EXAMPLE 4: "Ethiopia faces fuel shortages. Egypt has ordered shops to close at 9pm." TWO systems (Ethiopian fuel vs. Egyptian energy policy). HARD REJECT — even though both relate to energy, they are different countries with different causes and different impacts.
+BAD LEAD: "An Iranian strike on a Saudi base wounded 15 US troops. Israel intercepted a Houthi missile. Tensions continue to rise." — This is wire aggregation. It has no human vantage point. It reads like a ticker.
 
-If two events share a root cause (e.g., both caused by Gulf shipping disruptions), they are STILL separate stories unless they affect the same people in the same place. "Ethiopian families queue for fuel" and "Egyptian shops close early" are separate stories even if both relate to the same war.
+The lead tells the reader: this is the shape of the world right now. Then the remaining 4-5 stories show what ELSE is happening.
 
-The briefing should contain 5-6 stories. Each story is ONE system. If you find yourself writing "also," "meanwhile," "separately," or "in addition" inside a story — you have two stories. STOP. REWRITE AS SEPARATE STORIES.
+STORIES 2-6: Strictly one system per story. Count the distinct events, actors, or systems. If more than ONE, reject.
+
+TEST: Can you describe the story in one sentence using one subject and one verb? If not, you have multiple stories.
+
+FAILURE EXAMPLE 1: "Families in Addis Ababa queue for fuel while Kenyan tea exports stall at Mombasa port." TWO systems. REJECT.
+FAILURE EXAMPLE 2: "A UN task force secures the Strait. Meanwhile 8,000 tonnes of Kenyan tea are stuck. Aluminium Bahrain reports damage." THREE systems. REJECT.
+FAILURE EXAMPLE 3: "Ethiopia faces fuel shortages. Egypt ordered shops to close." TWO systems (different countries, different causes). REJECT — even though both relate to energy.
+
+If you write "also," "meanwhile," "separately," or "in addition" inside stories 2-6 — you have two stories. Split them.
 
 2. One action per sentence. Do not combine different actors, different actions, or different countries in the same sentence. Use separate sentences for each.
 
@@ -216,7 +221,9 @@ Search for today's most significant global news.
 Select 5 to 6 independent story systems with global impact.
 Each system gets exactly one story of 3 to 4 sentences.
 
-Cover the dominant crisis — but the world does not stop there. At least half the stories must be world news from outside the dominant crisis. Africa, Asia, Latin America, and Europe produce world news every day.
+Story 1 is the lead — the dominant global crisis, written from one human vantage point. It may touch multiple actors because a war or systemic crisis is one interconnected system. But it must be anchored in people, not institutions.
+
+Stories 2-6 are the rest of the world. At least half must be outside the dominant crisis. Africa, Asia, Latin America, and Europe produce world news every day. The world does not stop because of one war.
 
 First sentence of every story: what is happening to people.
 Include one confirmed number, one named source, one key fact.
@@ -408,7 +415,7 @@ Scan the entire draft for these failures. If any are present, fix them FIRST bef
 
 REPETITION: If the same fact, image, or distinctive phrase appears more than once in the draft (within a story or across stories), delete every repetition after the first. Example: if "sleeping in their cars" appears in sentence 1 and sentence 3 of the same story, delete it from sentence 3.
 
-MIXED SYSTEMS: Count the distinct events/actors/systems in each story. If more than ONE, REJECT. "Iranian strike on Saudi base + Israel intercepted Houthi missile" = two systems = REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT. If you see "also," "meanwhile," "separately" inside a story, it's two stories. Split or cut.
+MIXED SYSTEMS: Story 1 (the lead) may cover the dominant crisis with multiple actors — but it MUST be anchored in one human vantage point, not wire aggregation. If the lead reads like a ticker of disconnected events, rewrite it with a human anchor sentence first. Stories 2-6: if more than ONE system, REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT.
 
 UNSOURCED CAUSALITY: If a causal claim has no named source ("energy bills doubled because of the war"), either attribute it ("according to Denmark's Statistics Agency") or hedge it ("amid disruptions linked to..."). Never state unattributed causation as fact.
 
