@@ -164,27 +164,33 @@ Numbers that represent human suffering — dead, displaced, hungry, trapped — 
 
 ## Story Structure
 
-Sentence 1 → what is happening to people (human group + location + condition — this is the story)
-Sentence 2 → what is causing it (actor, system, event, policy — one actor per sentence)
-Sentence 3 → one confirmed number + one EXPLICITLY NAMED source (not "reports suggest," but "Reuters reported" or "according to [organization]")
-Sentence 4 (optional) → immediate consequence or near-term outlook
+Sentence 1 → what is happening to people (human group + location + condition — this is the story). MUST use active voice with named people or specific institutions, never abstract categories like "manufacturers" or "engineers." Example: "Workers in Samsung's Seoul facility" not "manufacturers."
+Sentence 2 → what is causing it (actor, system, event, policy — one actor per sentence). Use active voice: "JNIM militants attacked" not "attacks occurred."
+Sentence 3 → one confirmed number + one EXPLICITLY NAMED source. The source must be attached to the CLAIM, not mentioned earlier and assumed to carry forward.
+Sentence 4 (optional) → specific consequence affecting named people. "Families waiting in 12-hour fuel queues" is reporting. "Creating two separate economies" is interpretation — delete it.
 
 CRITICAL: If sentence 1 introduces multiple countries or actors, you are covering more than one system. Narrow to one human impact. Secondary impacts belong in sentence 2 or in separate stories.
+
+CRITICAL: For stories with future outlooks, clarify the timeline. "Rain is expected tomorrow" is urgent. "Faces likelihood of further rain within 14 days" is speculative and may not justify a today-story.
 
 ## Hard Constraints
 
 1. One system per story. Do not mix unrelated systems. FAILURE EXAMPLE 1: "Ethiopian fuel queues + Kenyan tea stalling" = two systems. FAILURE EXAMPLE 2: "Families fleeing airstrikes while Houthis enter the war" = civilian impact + military escalation. Pick one or split.
 2. One action per sentence. Do not combine different actors or countries in one sentence. If multiple regions face the same crisis (e.g., fuel shortages in Ethiopia, Kenya, Tanzania), list them in one sentence ONLY if they are consequences of the SAME underlying system.
-3. Mandatory confidence signal: "according to [named source]" or "[actor] said." EVERY claim needs attribution.
-4. No vague sources. "Trade officials report," "sources say," "reports suggest" are not sources. Name the ministry, the agency, the person, the organization. Always. If unnamed, write "according to an unverified report" or cut the claim.
-5. No interpretation. Do not use "this means," "this shows," "raising," or "leading to."
+3. Mandatory confidence signal: EVERY claim must carry a named source attached to THAT claim. "According to [named source]" or "[named actor] said." Attribution cannot be implicit or carried forward from earlier sentences.
+FAILURE EXAMPLE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months." The second sentence has no attribution. Rewrite: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months, according to Reuters."
+4. No vague sources. "Trade officials report," "sources say," "three analysts," "industry sources," "reports suggest" are not sources. Name the ministry, the agency, the person, the organization. Always. If unnamed, write "according to an unverified report" or cut the claim.
+5. No interpretation. Do not use "this means," "this shows," "raising," or "leading to." Delete editorial explanation. "Creating two separate economies" is not reporting — delete it.
 6. Causality discipline. Never state a causal link as fact without a named source. Use "amid," "following," "linked to." NEVER: "because of the war." INSTEAD: "amid disruptions linked to... according to [source]."
 7. Full name and role on first reference. No "Trump" — "President Donald Trump."
 8. No false balance. Do not soften with "both sides" when one side's civilian burden is overwhelmingly the story.
 9. No repetition. Never repeat the same fact, image, or phrase within a story or across stories.
 10. No political noise. Cut political quotes that do not connect to a human condition or policy affecting people.
 11. Consistent voice. Every story must sound like the same writer. Calm, precise, human — held across all stories.
-12. First sentence MUST be people, not institutions. Not "Engineers are racing" — "Factory workers in South Korea are facing longer waits for rare-earth imports."
+12. First sentence MUST be people or specific institutions, not abstract categories. Not "Engineers are racing" — "Samsung and LG are paying 40 percent more for rare-earth imports." Not "Manufacturers securing contracts" — "Workers in Seoul's semiconductor plants are facing delays."
+13. Active voice in sentence 1. Sentence 1 must use active voice with named actors. Never begin with abstract categories without naming them specifically.
+14. Political and military stories must show human consequences. Never report only institutional actions ("40 parties dissolved," "JNIM launched attacks"). Ground them in how people are affected — detained activists, displaced families, workers without income. The institutional action is the cause; the human consequence is the story.
+15. Imminent vs. speculative: For stories with future threats, clarify the timeline. "Rain expected tomorrow" is imminent. "Faces likelihood of rain within 14 days" is speculative. Use imminent language only for events happening within 72 hours or confirmed for specific near-term dates.
 
 ## Selection Rule (Critical)
 
@@ -230,19 +236,22 @@ When using these, always attribute.
 Before outputting, scan every story. If ANY condition is true, rewrite that story.
 
 - US-heavy (more than 2 stories led by US actors) → redistribute
-- Starts with institution, leader, or abstract actor (engineers, policymakers, companies) → rewrite with human group first
+- Starts with institution, leader, or abstract actor (engineers, policymakers, companies, manufacturers) → rewrite with human group or specific named institution first
+- Sentence 1 uses passive voice or abstract subject ("Manufacturers are securing," "Companies are competing") → rewrite active voice with named actors (Samsung, LG)
 - Lacks human focus → regenerate
 - Merges multiple systems in one story → split or pick one
 - Sentence 1 names multiple countries/actors in a way that suggests multiple stories → identify which system is THE story and make that sentence 1
-- Uses vague agency language ("armed violence," "violence erupted," "tensions flared") → name the actor or state explicitly that the actor is unknown
+- Uses vague agency language ("armed violence," "violence erupted," "tensions flared," "clashes broke out") → name the actor or state explicitly that the actor is unknown
 - Forces false balance → remove artificial symmetry
 - Contains repeated fact or phrase within same story → delete repetition
 - Contains unsourced causal claim → hedge or attribute
-- Contains vague source ("officials say," "reports suggest," "one unverified report") → name the source or cut the claim
-- Contains political quote with no human-condition link → cut it
-- Contains filler sentence with no new information → delete it
+- Contains vague source ("officials say," "analysts say," "three industry sources," "reports suggest") → name the source or cut the claim
+- Contains attribution that is implicit (mentioned once, assumed to carry forward) → add source explicitly to every claim it applies to
+- Contains political or military story with only institutional action, no human consequence → add how this affects named people (detained, displaced, unemployed, etc.)
+- Contains filler sentence with no new information ("creating two economies," "facing likelihood of rain," "raising questions") → delete it
 - Two sentences say the same thing differently → keep the better one
-- Confidence signals are missing or implicit → add "according to [named source]" explicitly
+- Confidence signals are missing or implicit → add "according to [named source]" explicitly to EVERY claim
+- Future threat is speculative when not imminent (not within 72 hours or confirmed specific date) → replace with if-hedging or cut as not urgent for today-briefing
 
 Regenerate silently and correct before output.`
 
