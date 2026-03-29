@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { rejectionGate, createGateFixPrompt } from '../lib/rejectionGate.js'
 
 export const maxDuration = 60 // Vercel serverless timeout for triangulation
 
@@ -523,6 +524,46 @@ Generate the refined briefing. No commentary. Just the clean output.`
 }
 
 // ═══════════════════════════════════════════════════════════════
+// Helper: fix specific gate failures (called after rejection gate)
+// ═══════════════════════════════════════════════════════════════
+
+async function fixGateFailures(draft, failures, apiKey) {
+  const fixPrompt = createGateFixPrompt(draft, failures)
+
+  try {
+    const response = await fetchWithTimeout('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2048,
+        system: 'You are MIWO\'s quality fixer. Make minimal surgical fixes to address specific editorial failures. Return only corrected text, no commentary.',
+        messages: [
+          { role: 'user', content: fixPrompt }
+        ],
+      }),
+      timeout: 20000,
+    })
+
+    if (!response.ok) {
+      console.error('[BRIEFING] Gate fix failed:', response.status)
+      return draft
+    }
+
+    const result = await response.json()
+    const fixed = result.content?.[0]?.text
+    return fixed || draft
+  } catch (error) {
+    console.error('[BRIEFING] Gate fix error:', error.message)
+    return draft
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // Detect if triangulation providers are available
 // ═══════════════════════════════════════════════════════════════
 
@@ -669,6 +710,32 @@ export async function GET(request) {
       }
     } catch (reviewErr) {
       console.error('Editorial review error:', reviewErr.message, '— using unedited draft')
+    }
+
+    // ── STEP 4: Hard Rejection Gate (programmatic checks) ──────
+    // Checks for vague sources, loaded language, story structure, geographic anchors, etc.
+    if (text) {
+      const gateResult = rejectionGate(text)
+      if (!gateResult.passed) {
+        console.log('[BRIEFING] Gate failures detected:', gateResult.failures)
+        console.log('[BRIEFING] Attempting automated fixes…')
+        text = await fixGateFailures(text, gateResult.failures, apiKey)
+
+        // Run gate again to verify
+        const retryResult = rejectionGate(text)
+        if (!retryResult.passed) {
+          console.warn('[BRIEFING] Gate still failing after retry:', retryResult.failures)
+        } else {
+          console.log('[BRIEFING] Gate passed after fixes')
+        }
+      } else {
+        console.log('[BRIEFING] Hard rejection gate: PASSED')
+      }
+
+      // Log warnings (not failures)
+      if (gateResult.warnings && gateResult.warnings.length > 0) {
+        console.log('[BRIEFING] Gate warnings:', gateResult.warnings)
+      }
     }
 
     // Cache the result

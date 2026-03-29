@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { rejectionGate, createGateFixPrompt } from './lib/rejectionGate.js'
 
 // ═══════════════════════════════════════════════════════════════
 // PASS 1 — THE WRITER
@@ -687,6 +688,45 @@ async function editorialReview(draft, apiKey, lang) {
   return edited || draft
 }
 
+// ═══════════════════════════════════════════════════════════════
+// Helper: fix specific gate failures (called after rejection gate)
+// ═══════════════════════════════════════════════════════════════
+
+async function fixGateFailures(draft, failures, apiKey, lang) {
+  const langName = LANG_NAMES[lang] || null
+  const langLock = langName && lang !== 'en'
+    ? `CRITICAL: The text below is in ${langName}. You MUST return the corrected text in ${langName}. Do NOT translate or switch to English under any circumstances.\n\n`
+    : ''
+
+  const fixPrompt = createGateFixPrompt(draft, failures)
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2048,
+      system: 'You are MIWO\'s quality fixer. Make minimal surgical fixes to address specific editorial failures. Return only corrected text, no commentary.',
+      messages: [
+        { role: 'user', content: langLock + fixPrompt }
+      ],
+    }),
+  })
+
+  if (!response.ok) {
+    console.error('[CHAT] Gate fix failed:', response.status)
+    return draft // Return unmodified if fix attempt fails
+  }
+
+  const result = await response.json()
+  const fixed = result.content?.[0]?.text
+  return fixed || draft
+}
+
 
 // ═══════════════════════════════════════════════════════════════
 // STAGE 1 — SYSTEM EXTRACTION
@@ -924,7 +964,7 @@ export async function POST(request) {
     const isBriefing = !systemOverride && isBriefingRequest(messages)
 
     if (isBriefing) {
-      // ── BRIEFING PATH: collect → review → send ──────────────
+      // ── BRIEFING PATH: collect → review → gate → send ──────
       const draft = await collectStreamText(anthropicResponse)
 
       // Run editorial review — this is the quality gate
@@ -935,7 +975,32 @@ export async function POST(request) {
         console.log('[CHAT] Editorial review complete')
       }
 
-      // Send the reviewed text as a single response
+      // Run hard rejection gate — checks for vague sources, loaded language, structure, etc.
+      if (finalText) {
+        const gateResult = rejectionGate(finalText)
+        if (!gateResult.passed) {
+          console.log('[CHAT] Gate failures detected:', gateResult.failures)
+          console.log('[CHAT] Attempting automated fixes…')
+          finalText = await fixGateFailures(finalText, gateResult.failures, apiKey, lang)
+
+          // Run gate again to verify
+          const retryResult = rejectionGate(finalText)
+          if (!retryResult.passed) {
+            console.warn('[CHAT] Gate still failing after retry:', retryResult.failures)
+          } else {
+            console.log('[CHAT] Gate passed after fixes')
+          }
+        } else {
+          console.log('[CHAT] Hard rejection gate: PASSED')
+        }
+
+        // Log warnings (not failures)
+        if (gateResult.warnings && gateResult.warnings.length > 0) {
+          console.log('[CHAT] Gate warnings:', gateResult.warnings)
+        }
+      }
+
+      // Send the reviewed and gated text as a single response
       return new Response(finalText, {
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
