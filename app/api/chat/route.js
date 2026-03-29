@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { rejectionGate, createGateFixPrompt } from './lib/rejectionGate.js'
+import { rejectionGate, createGateFixPrompt } from '../lib/rejectionGate.js'
 
 // ═══════════════════════════════════════════════════════════════
 // PASS 1 — THE WRITER
