@@ -417,15 +417,16 @@ REPETITION: If the same fact, image, or distinctive phrase appears more than onc
 
 MIXED SYSTEMS: Story 1 (the lead) may cover the dominant crisis with multiple actors — but it MUST be anchored in one human vantage point, not wire aggregation. If the lead reads like a ticker of disconnected events, rewrite it with a human anchor sentence first. Stories 2-6: if more than ONE system, REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT.
 
-UNSOURCED CAUSALITY: If a causal claim has no named source ("energy bills doubled because of the war"), either attribute it ("according to Denmark's Statistics Agency") or hedge it ("amid disruptions linked to..."). Never state unattributed causation as fact.
+UNSOURCED CAUSALITY: Scan for "because of the war," "wegen des Krieges," "caused by the conflict," or any causal claim without a named source. For EACH one found: attach a named source ("according to Egypt's energy ministry") or DELETE the causal claim and replace with a time marker ("since March," "seit März"). Do NOT hedge with "linked to" — that is still a causal claim without a source. Either NAME who says it caused it, or just state the fact without the cause.
+EXAMPLE FIX: "Energierechnungen haben sich wegen des Krieges verdoppelt" → "Energierechnungen haben sich seit März verdoppelt, laut Ägyptens Statistikbehörde. Die Regierung führt den Anstieg auf gestörte Öllieferungen aus dem Golf zurück."
 
-VAGUE SOURCES: "Trade officials report," "sources say," "officials confirm" — these are not sources. Replace with named person, named agency, or named organisation. If you cannot name the source, write "according to one unverified report" or cut the claim.
+VAGUE SOURCES: Scan for "trade officials," "Handelsbeamte," "officials say," "Beamte sagen," "sources say," "Quellen sagen," "reports suggest," "analysts say." For EACH one found: replace with a NAMED agency, ministry, or person. Not "trade officials say ships cannot leave" but "Kenya's Maritime Authority says ships cannot leave" or "the Port of Mombasa authority says." If you cannot find the real source in the text, DELETE the sentence. Do not keep vague-sourced claims.
 
-POLITICAL NOISE: If a quote from a politician does not connect to a human condition or policy affecting people, cut it entirely. "Trump says America is winning" adds nothing. Cut it. "Denmark's PM announced emergency fuel subsidies" connects to people — keep it.
+POLITICAL NOISE: A protest story qualifies for MIWO ONLY if it shows: (a) a specific human condition that changed (not just "people marched"), (b) a named consequence (arrests, policy response, economic disruption), and (c) a counter-claim from the other side. "Millions expected to protest against Trump" with no consequence, no arrests, no policy change, no counter-claim = political theatre, not MIWO content. DELETE the story entirely and note that a story slot is now empty.
 
-SELECTION FAILURE: If any story is celebrity news (athlete DUI, actor arrest), political rhetoric without human consequence, or wire-service aggregation (3+ events crammed into one item) — cut the entire story. It should not have been selected.
+SELECTION FAILURE: If any story is celebrity news, political rhetoric without measurable human consequence, or wire-service aggregation — DELETE the entire story. Do not try to fix it. Just remove it. It is better to return 4 strong stories than 5 with one weak one.
 
-LOADED LANGUAGE: Scan for and DELETE: fury, outrage, authoritarian, law-trampling, slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped. These are tabloid/opinion words. Replace with neutral reporting language or delete the sentence.
+LOADED LANGUAGE: Scan for and DELETE these words in ANY language: fury/Wut/Ärger, outrage/Empörung, authoritarian/autoritär, law-trampling, slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped. Also in German: "autoritäre Neigungen," "gesetzestretend." These are tabloid/opinion words. Replace with neutral reporting language or delete the sentence.
 
 VISUAL STRUCTURE: Each story should be layered — one sentence per line, not a dense paragraph block. If a story is one big paragraph, break it: one sentence per line. The reader should see the structure instantly.
 

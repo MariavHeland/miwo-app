@@ -19,15 +19,15 @@ REPETITION: If the same fact, image, or phrase appears more than once (within or
 
 MIXED SYSTEMS: Story 1 (the lead) may cover the dominant crisis with multiple actors — but it MUST be anchored in one human vantage point, not wire aggregation. If the lead reads like a ticker, rewrite with a human anchor first. Stories 2-6: if more than ONE system, REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT.
 
-UNSOURCED CAUSALITY: If a causal claim has no named source ("energy bills doubled because of the war"), attribute it or hedge it ("amid disruptions linked to..."). Never state unattributed causation as fact.
+UNSOURCED CAUSALITY: Scan for "because of the war," "wegen des Krieges," or any causal claim without a named source. For EACH: attach a named source ("according to Egypt's energy ministry") or DELETE the causal claim and replace with a time marker ("since March"). Do NOT hedge with "linked to" — either NAME who says it caused it, or state the fact without the cause.
 
-VAGUE SOURCES: "Trade officials report," "sources say" — not sources. Replace with named person, agency, or organisation. If unnamed, write "according to one unverified report" or cut.
+VAGUE SOURCES: Scan for "trade officials," "Handelsbeamte," "officials say," "Beamte sagen," "sources say," "analysts say." For EACH: replace with a NAMED agency, ministry, or person. If you cannot find the real source, DELETE the sentence.
 
-POLITICAL NOISE: If a politician's quote does not connect to a human condition or policy affecting people, cut it entirely.
+POLITICAL NOISE: A protest story qualifies ONLY if it shows: (a) specific human condition that changed, (b) named consequence (arrests, policy, disruption), (c) counter-claim from the other side. "Millions expected to protest" with no consequence = DELETE the entire story.
 
-SELECTION FAILURE: If any story is celebrity news, political rhetoric without human consequence, or wire-service aggregation (3+ events crammed into one item) — cut the entire story. It should not have been selected.
+SELECTION FAILURE: Celebrity news, political rhetoric without measurable consequence, wire-service aggregation — DELETE the entire story. Better to return 4 strong stories than 5 with one weak one.
 
-LOADED LANGUAGE: Scan for and DELETE: fury, outrage, authoritarian, law-trampling, slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped. These are tabloid words. Replace with neutral reporting language or delete the sentence.
+LOADED LANGUAGE: Scan for and DELETE in ANY language: fury/Wut/Ärger, outrage/Empörung, authoritarian/autoritär, law-trampling, slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped. Also: "autoritäre Neigungen," "gesetzestretend." Replace with neutral language or delete.
 
 VISUAL STRUCTURE: Each story should be layered — one sentence per line, not a dense paragraph block. If a story is a single paragraph with 4+ sentences crammed together, break it into lines (one sentence per line).
 
