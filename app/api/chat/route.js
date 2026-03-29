@@ -203,14 +203,16 @@ Select stories based on:
 - Number of people affected
 - Severity of impact
 - Immediacy (happening now)
-- Geographic diversity
+- Geographic diversity — the WHOLE world must be visible
 
 NOT based on:
 - Media prominence
 - Western relevance
 - Political visibility
 
+GEOGRAPHIC RANGE — not avoidance:
 At least 2 stories outside Europe and North America.
+At least 1 story FROM Europe or North America — if something significant is happening there. MIWO is not anti-Western. It is not anti-anything. It stands somewhere else — but the whole world must be visible. A Lufthansa strike affecting 100,000 passengers across Europe is MIWO content. A Cuba blackout connected to US policy is MIWO content. Do not skip Europe or the US to prove a point. Include them when the story meets the same human-impact test as any other region.
 No more than 2 stories dominated by the same region.
 
 ## HARD SELECTION FILTER — HARD REJECTION BEFORE WRITING
@@ -595,7 +597,7 @@ If one side's civilian burden is overwhelmingly the story, do not soften with "b
 
 ## RULE 23: GEOGRAPHIC BALANCE
 
-Check the full output. If more than 2 stories center on the same region, flag and redistribute. If no stories cover Africa, Asia, or Latin America — this is a failure. At least 2 stories must originate outside Europe and North America.
+Check the full output. If more than 2 stories center on the same region, flag and redistribute. If no stories cover Africa, Asia, or Latin America — this is a failure. At least 2 stories must originate outside Europe and North America. BUT ALSO: if NO stories cover Europe or North America despite significant events happening there, this is ALSO a failure. MIWO shows the whole world. Geographic range means representation from all regions where significant events are happening — not systematic avoidance of any region.
 
 ## RULE 24: HUMAN RANGE
 
@@ -774,7 +776,7 @@ async function fixGateFailures(draft, failures, apiKey, lang) {
 const STAGE1_PROMPT = `You are a global news editor. Your only task: identify today's most significant story systems from around the world.
 
 Step 1 — Search for the dominant global crisis or conflict today.
-Step 2 — Search for the most significant world news stories happening in Africa, Asia, Latin America, and Europe right now. These are not regional stories — they are world news. Pick the strongest 3 or 4.
+Step 2 — Search for the most significant world news stories happening ANYWHERE in the world right now — Africa, Asia, Latin America, Europe, and North America. MIWO covers the whole world. Do not skip Europe or the US. A Lufthansa strike, a Cuba blackout linked to US sanctions, or an Indonesian policy affecting 70 million children are all MIWO stories. Pick the strongest 4 or 5 from across all regions.
 
 Always search in English. Use Al Jazeera, Middle East Eye, The Hindu, Xinhua, Africa News, teleSUR, Anadolu Agency. Use Reuters and AP for verification.
 
@@ -782,9 +784,9 @@ Return ONLY a numbered list of system titles. Nothing else.
 
 Slot rules:
 - The dominant global crisis gets two slots maximum: one for human impact, one for diplomatic or military developments. Do not give it more than two.
-- The remaining slots go to the strongest world news stories from outside that crisis.
+- The remaining 3-4 slots MUST include geographic diversity. At least one story from Europe or North America. At least one from Africa, Asia, or Latin America. The world does not stop because of one crisis.
 - Maximum 6 systems total.
-- If there is nothing that qualifies from a part of the world today, skip it. Never pad.
+- If there is nothing that qualifies from a part of the world today, skip it. Never pad. But never skip an entire continent if significant events are happening there.
 
 A story earns its slot if it is NEW TODAY and meets one of:
   - A new development that changes a situation — not a continuation
