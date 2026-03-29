@@ -895,9 +895,33 @@ export async function POST(request) {
       )
     }
 
-    // ── Pipe Anthropic SSE stream → client as raw text ─────────
-    // Extract only text_delta events and forward them immediately.
-    // The user sees words appearing as Sonnet writes them.
+    // ── Collect Sonnet output, run editorial review, then send ──
+    // For briefing requests: collect full text → editorial review → send
+    // For non-briefing requests: stream directly (follow-up questions etc.)
+    const isBriefing = !systemOverride && isBriefingRequest(messages)
+
+    if (isBriefing) {
+      // ── BRIEFING PATH: collect → review → send ──────────────
+      const draft = await collectStreamText(anthropicResponse)
+
+      // Run editorial review — this is the quality gate
+      let finalText = draft
+      if (draft && isNewsContent(messages, draft)) {
+        console.log('[CHAT] Running editorial review on briefing draft…')
+        finalText = await editorialReview(draft, apiKey, lang)
+        console.log('[CHAT] Editorial review complete')
+      }
+
+      // Send the reviewed text as a single response
+      return new Response(finalText, {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      })
+    }
+
+    // ── NON-BRIEFING PATH: stream directly ──────────────────
+    // Follow-up questions, deeper dives, fact-checks — stream for speed
     const encoder = new TextEncoder()
     const readable = new ReadableStream({
       async start(streamController) {
