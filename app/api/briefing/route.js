@@ -17,13 +17,19 @@ Scan the entire draft for these failures. Fix them FIRST before applying style r
 
 REPETITION: If the same fact, image, or phrase appears more than once (within or across stories), delete every repetition after the first.
 
-MIXED SYSTEMS: If one story paragraph contains two unrelated events, split into separate stories or cut the weaker one.
+MIXED SYSTEMS: Count the distinct events/actors/systems in each story. If more than ONE, REJECT. "Iranian strike on Saudi base + Israel intercepted Houthi missile" = two systems = REJECT. "Ethiopia fuel + Egypt curfew" = two systems = REJECT. If you see "also," "meanwhile," "separately" inside a story, it's two stories.
 
 UNSOURCED CAUSALITY: If a causal claim has no named source ("energy bills doubled because of the war"), attribute it or hedge it ("amid disruptions linked to..."). Never state unattributed causation as fact.
 
 VAGUE SOURCES: "Trade officials report," "sources say" — not sources. Replace with named person, agency, or organisation. If unnamed, write "according to one unverified report" or cut.
 
 POLITICAL NOISE: If a politician's quote does not connect to a human condition or policy affecting people, cut it entirely.
+
+SELECTION FAILURE: If any story is celebrity news, political rhetoric without human consequence, or wire-service aggregation (3+ events crammed into one item) — cut the entire story. It should not have been selected.
+
+LOADED LANGUAGE: Scan for and DELETE: fury, outrage, authoritarian, law-trampling, slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped. These are tabloid words. Replace with neutral reporting language or delete the sentence.
+
+VISUAL STRUCTURE: Each story should be layered — one sentence per line, not a dense paragraph block. If a story is a single paragraph with 4+ sentences crammed together, break it into lines (one sentence per line).
 
 WRITING QUALITY: Read every sentence. If it sounds like a press release, a corporate memo, or a bad Wikipedia summary — rewrite it. Clear subjects, active verbs, concrete details. No filler.
 
@@ -109,11 +115,14 @@ SELECTION CRITERIA:
 - At least 2 stories outside Europe and North America
 
 STORY FORMAT:
-- 3-4 sentences per story
-- First sentence: what is happening to people (human group + location + condition)
+- 3-4 sentences per story, each sentence on its own line (layered, not a paragraph block)
+- Line 1: what is happening to people (human group + location + condition)
+- Line 2: what is causing it (one actor, one system)
+- Line 3: scale + named source
+- Line 4 (optional): consequence or outlook
 - Include one confirmed number and one named source
 - One event per story only
-- Start each story with "Right now."
+- Start with "Right now."
 
 Use § between stories.
 End with "Want more on any of these?"`
@@ -203,7 +212,12 @@ CRITICAL: For stories with future outlooks, clarify the timeline. "Rain is expec
 
 ## Hard Constraints
 
-1. One system per story. Do not mix unrelated systems. FAILURE EXAMPLE 1: "Ethiopian fuel queues + Kenyan tea stalling" = two systems. FAILURE EXAMPLE 2: "Families fleeing airstrikes while Houthis enter the war" = civilian impact + military escalation. Pick one or split.
+1. ONE SYSTEM PER STORY. THIS IS THE MOST IMPORTANT RULE.
+Count the distinct events, actors, or systems in each story. If the count is more than ONE, REJECT.
+TEST: Can you describe the story in one sentence using one subject and one verb? If not, you have multiple stories.
+FAILURE: "Iranian strike on Saudi base wounded US troops. Israel intercepted a Houthi missile." = TWO systems. REJECT.
+FAILURE: "Ethiopia faces fuel shortages. Egypt ordered shops to close." = TWO systems (different countries, different causes). REJECT.
+If you write "also," "meanwhile," "separately," or "in addition" inside a story — you have two stories. Split them.
 2. One action per sentence. Do not combine different actors or countries in one sentence. If multiple regions face the same crisis (e.g., fuel shortages in Ethiopia, Kenya, Tanzania), list them in one sentence ONLY if they are consequences of the SAME underlying system.
 3. Mandatory confidence signal: EVERY claim must carry a named source attached to THAT claim. "According to [named source]" or "[named actor] said." Attribution cannot be implicit or carried forward from earlier sentences. If a claim is derived from a source mentioned earlier, the derived claim needs its own attribution unless the source explicitly stated it.
 FAILURE EXAMPLE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months." The second sentence has no attribution. Rewrite: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months, according to Reuters."
@@ -239,6 +253,14 @@ NOT based on:
 
 At least 2 stories outside Europe and North America.
 No more than 2 stories dominated by the same region.
+
+## HARD SELECTION FILTER — REJECT BEFORE WRITING
+
+REJECT celebrity news. No athletes, actors, musicians unless the story involves a system affecting millions.
+REJECT political rhetoric without human consequence. Loaded language like "fury," "authoritarian bent," "law-trampling" is opinion journalism, not MIWO.
+REJECT government-announcement-only stories unless framed as human impact. "Egypt ordered shops to close" → "Shop workers in Cairo are losing evening income."
+REJECT wire-service aggregation. Do not combine 3-4 related wire stories into one item. That is news summary. MIWO selects ONE system.
+BANNED WORDS (unless quoting a named source): fury, outrage, authoritarian, law-trampling, regime (unless attributed), slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped.
 
 ## Human Range Rule
 
