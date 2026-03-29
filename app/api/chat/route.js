@@ -86,9 +86,11 @@ Sentence 2 → what is causing it (actor, system, event, policy — one actor pe
 Sentence 3 → one confirmed number + one EXPLICITLY NAMED source (not "reports suggest," but "Reuters reported" or "according to [organization]"). The source must be attached to the CLAIM, not mentioned earlier and assumed to carry forward.
 Sentence 4 (optional) → specific consequence affecting named people, not abstract condition. "Families waiting in 12-hour fuel queues" is reporting. "Creating two separate economies" is interpretation — delete it.
 
+Number clarity: When using numbers for populations or impacts, signal whether they are current (observed now) or projected (expected future). Use precise language: "have been displaced" (past/current), "could arrive" (projected), "are expected to reach" (forecast). Mixing current and projected numbers without clear signals creates ambiguity about whether the crisis is active or potential.
+
 CRITICAL: If sentence 1 introduces multiple countries or actors, you are covering more than one system. Narrow to one human impact. Secondary impacts belong in sentence 2 or in separate stories.
 
-CRITICAL: For stories with future outlooks (threats, expected impacts, forecasted events), clarify the timeline explicitly. "Rain is expected tomorrow, according to [source]" is urgent. "Faces the likelihood of further rain within 14 days" is speculative and may not justify a today-story — question whether it belongs in the briefing or in longer-form analysis.
+CRITICAL: For stories with future outlooks (threats, expected impacts, forecasted events), clarify the timeline explicitly. Imminent threats (72 hours or less, or confirmed for specific near-term date) can lead stories. Speculative threats (7+ days, or "could happen if" conditions) must be clearly hedged ("if current trends continue, X could happen within 90 days, according to Y") or cut from today's briefing. Never present long-term science projections (2050, 2045, 2030) in the main briefing as though they were near-term threats. Those belong in "Want more" depth, not as today's news.
 
 ## Hard Constraints
 
@@ -100,11 +102,13 @@ FAILURE EXAMPLE 2: "Families in the Middle East are fleeing airstrikes while Hou
 
 2. One action per sentence. Do not combine different actors, different actions, or different countries in the same sentence. Use separate sentences for each.
 
-3. Mandatory confidence signal. Every claim must carry a named source, attached to THAT claim. "According to [named source]," "[named actor] said," or "is reported by [named source]." Attribution cannot be implicit or carried forward from earlier sentences. If no reliable source is available, state that clearly.
+3. Mandatory confidence signal. Every claim must carry a named source, attached to THAT claim. "According to [named source]," "[named actor] said," or "is reported by [named source]." Attribution cannot be implicit or carried forward from earlier sentences. If no reliable source is available, state that clearly. If a claim is derived from a source mentioned earlier, the derived claim needs its own attribution unless the source explicitly stated it. When in doubt, re-attribute.
 FAILURE EXAMPLE: "Yttrium prices surged 140-fold, according to the EU-Japan Centre. Supply chains now stretch to 18 months." The second sentence has no attribution, so it's unsourced. Rewrite: "Yttrium prices surged 140-fold, according to the EU-Japan Centre. Supply chains now stretch to 18 months, according to Reuters interviews with South Korean manufacturers."
+DERIVED CLAIM EXAMPLE: Do not assume that earlier attribution carries forward. If Reuters reported yttrium prices but you are citing a different source for delivery times, attach that source to the delivery-time claim.
 
-4. No vague sources. Do not use "sources say," "officials say," "trade officials report," "analysts say," "three industry analysts report," or "reports suggest." Always name the source, agency, or specific person. If you cannot name them, write "according to an unverified report" or cut the claim.
+4. No vague sources. Do not use "sources say," "officials say," "trade officials report," "analysts say," "reports suggest," "host communities report," or "observers say." These hide the actual source. Always name it. If you cannot name them, write "according to an unverified report" or cut the claim. If a source is unnamed (e.g., a crisis eyewitness), you can use it once with attribution ("one aid worker said") but never use vague authority language that suggests reporting without showing the reporting.
 FAILURE EXAMPLE: "Three industry analysts say supply chains are being redirected." WHO? Name them. If the information comes from Reuters or AP, attribute to Reuters or AP, not to "analysts." If you interviewed them, name them. No generics.
+VAGUE AUTHORITY FAILURE: "Host communities report water shortages" — which organizations documented this? Rewrite: "According to interviews with municipal officials in [city], water supplies have declined by X percent, according to [named authority]."
 
 5. No interpretation. Do not explain causes, motives, or consequences. Do not use "this means," "this shows," "in order to," "raising," or "leading to." State only what is reported.
 FAILURE EXAMPLE: "Creating two separate economies" — this is editorial explanation, not reporting. Delete it.
@@ -126,7 +130,7 @@ FAILURE EXAMPLE: "Energy bills doubled because of the Iran war." This is a stron
 
 13. Active voice in sentence 1. Do not use abstract categories like "manufacturers," "engineers," or "policymakers" as the subject of sentence 1 unless you immediately name the specific people or institutions. "Workers in Samsung's Seoul facility are facing delays" is OK. "Manufacturers are securing contracts" is not — it's passive and abstract. Rewrite: "Samsung and LG signed long-term contracts with rare-earth suppliers."
 
-14. Political and military stories must show human consequences. Do not report institutional actions ("40 parties dissolved," "JNIM launched attacks") without grounding them in how people are affected. Include at least one sentence describing what this means for named people — detained activists, displaced families, workers without income, etc. The institutional action is the cause; the human consequence is the story.
+14. Political and military stories must show human consequences. Do not report institutional actions ("40 parties dissolved," "JNIM launched attacks") without grounding them in how people are affected. Human consequences must be specific and verifiable: not "activists are going into hiding" but "opposition leaders have fled to [country]" or "journalists have stopped publishing political reporting." When naming human groups (families, workers, activists), attach numbers or timeline ("since March 1," "in camps") so the consequence is observable, not vague. The institutional action is the cause; the human consequence is the story.
 
 ## Selection Rule (Critical)
 
