@@ -243,15 +243,15 @@ Each system gets exactly one story of 3 to 4 sentences.
 
 A MIWO briefing has a shape. It is not a list of disconnected stories. The reader must see how the world fits together.
 
-STORY 1 — THE LEAD: What is the dominant crisis right now? Set it in 3-4 sentences from one human vantage point. This tells the reader: this is the shape of the world today.
+STORY 1 — THE LEAD: What is the dominant crisis right now? Set it in 3-4 sentences from one human vantage point. This tells the reader: this is the shape of the world today. The lead MAY include one powerful consequence (fuel shortages, displacement) woven into the same story block — but it stays ONE story, not a list.
 
-STORIES 2-5 — CONSEQUENCES OR ELSEWHERE:
-If a story is a CONSEQUENCE of the lead crisis (fuel shortages, port disruptions, energy curfews), say so explicitly in sentence 2. Use a short connector: "The fuel shortage is a direct consequence of disrupted Gulf shipping." or "This is one of the cascading effects of the conflict."
-The reader must see the thread. If 4 out of 5 stories connect to the same war, that IS the story — make the connection visible, don't hide it behind separate headlines.
+STORY 2 — ONE MORE ANGLE on the lead crisis, if warranted. Diplomatic response, military development, or a specific regional consequence. Maximum TWO stories on the same root crisis. After story 2, the lead crisis is DONE for this briefing.
 
-If a story is UNRELATED to the lead crisis, signal the shift: "Elsewhere," "Outside the conflict," "In other news." The reader needs to know they're moving to a different part of the world.
+STORIES 3-5 — ELSEWHERE: These MUST be genuinely independent story systems. Not downstream effects of the lead. Not "also connected to the war." Completely different crises, policies, events from different parts of the world. Signal the shift: "Elsewhere," "Outside the conflict," "In other news."
 
-At least 1-2 stories must be genuinely outside the dominant crisis. The world does not stop.
+CRITICAL: If 4 out of 5 stories connect to the same war, you have not written a briefing — you have written a war report. MIWO is a WORLD briefing. The reader must see the whole world, not one crisis from five angles. Ethiopia fuel + Egypt curfew + Kenya tea + Thailand rationing = FOUR stories about ONE crisis. That is not geographic diversity. That is one crisis wearing different hats.
+
+At least 2-3 stories must be genuinely outside the dominant crisis. The world does not stop.
 
 STORY ORDER: Order stories THEMATICALLY, not chronologically. If the lead is a war, and Stories 2-3 are consequences of that war (fuel shortages, port closures), place them consecutively so the reader sees the cascade. Then signal the shift: "Elsewhere" or "Outside the conflict." The reader should finish the briefing understanding the SHAPE of the world, not just a list of events.
 
@@ -783,10 +783,13 @@ Always search in English. Use Al Jazeera, Middle East Eye, The Hindu, Xinhua, Af
 Return ONLY a numbered list of system titles. Nothing else.
 
 Slot rules:
-- The dominant global crisis gets two slots maximum: one for human impact, one for diplomatic or military developments. Do not give it more than two.
-- The remaining 3-4 slots MUST include geographic diversity. At least one story from Europe or North America. At least one from Africa, Asia, or Latin America. The world does not stop because of one crisis.
+- The dominant global crisis gets TWO slots maximum. Not three, not four. TWO. One for human impact, one for diplomatic or military developments. CONSEQUENCES of that crisis (fuel shortages in Ethiopia, port delays in Kenya, energy curfews in Egypt) count as the SAME crisis and eat into those two slots. Do not give the same root crisis five stories by reporting its consequences separately — pick the ONE most powerful consequence and fold it into the lead.
+- The remaining 3-4 slots MUST be COMPLETELY DIFFERENT story systems — not downstream effects of the lead crisis. These must be genuinely independent stories from different parts of the world.
+- At least one story from Europe or North America. At least one from Africa, Asia, or Latin America. The world does not stop because of one crisis.
 - Maximum 6 systems total.
 - If there is nothing that qualifies from a part of the world today, skip it. Never pad. But never skip an entire continent if significant events are happening there.
+
+CRITICAL: If you find yourself selecting 4+ stories that all connect to the same root cause (war, pandemic, climate event), STOP. You are not selecting diverse systems — you are selecting one crisis from multiple angles. Pick the two most powerful angles for the lead, then find genuinely DIFFERENT stories for the remaining slots.
 
 A story earns its slot if it is NEW TODAY and meets one of:
   - A new development that changes a situation — not a continuation
