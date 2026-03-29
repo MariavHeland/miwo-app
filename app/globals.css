@@ -1616,3 +1616,60 @@ html, body {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   HEADLINES PREVIEW — fast headlines while full briefing assembles
+   ═══════════════════════════════════════════════════════════════ */
+
+.headlines-preview {
+  animation: headlinesFadeIn 0.4s ease-out;
+}
+
+.headlines-label {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-bottom: 14px;
+}
+
+.headlines-text {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 2.0;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+.assembling-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.assembling-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--copper);
+  animation: assemblePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes headlinesFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes assemblePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+

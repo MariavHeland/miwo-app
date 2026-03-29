@@ -80,6 +80,8 @@ export default function Home() {
   })
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [headlines, setHeadlines] = useState('')        // fast headlines while briefing assembles
+  const [isAssembling, setIsAssembling] = useState(false) // true while full briefing is being built
   const [isListening, setIsListening] = useState(false)
   const [speakingIndex, setSpeakingIndex] = useState(-1)
   const [autoRead, setAutoRead] = useState(false)
@@ -591,6 +593,8 @@ export default function Home() {
 
         setMessages([...displayMessages, { role: 'assistant', content: '' }])
         setIsLoading(false)
+        setIsAssembling(false)
+        setHeadlines('')
 
         while (true) {
           const { done, value } = await reader.read()
@@ -826,8 +830,19 @@ export default function Home() {
               onClick={() => {
                 stopSpeaking()
                 setMessages([])
+                setHeadlines('')
+                setIsAssembling(true)
                 localStorage.removeItem('miwo-messages')
                 hasAutoLoadedRef.current = true
+                // Fire headlines in parallel with the full briefing
+                fetch('/api/headlines', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ lang }),
+                })
+                  .then(r => r.ok ? r.json() : null)
+                  .then(data => { if (data?.headlines) setHeadlines(data.headlines) })
+                  .catch(() => {})
                 sendMessageRef.current?.(t('prompt1'), [], { hideUserMessage: true })
               }}
             />
@@ -874,7 +889,18 @@ export default function Home() {
             )}
           </div>
         ))}
-        {isLoading && (
+        {/* Headlines + assembling state — shows while full briefing is being built */}
+        {(isAssembling || isLoading) && headlines && messages.filter(m => m.role === 'assistant' && m.content).length === 0 && (
+          <div className="message assistant headlines-preview">
+            <div className="headlines-label">{lang === 'de' ? 'Schlagzeilen gerade' : lang === 'es' ? 'Titulares ahora' : lang === 'fr' ? 'Titres en ce moment' : 'Headlines right now'}</div>
+            <div className="headlines-text">{headlines}</div>
+            <div className="assembling-label">
+              <span className="assembling-dot"></span>
+              {lang === 'de' ? 'MIWO recherchiert und prüft Quellen\u2026' : lang === 'es' ? 'MIWO investiga y verifica fuentes\u2026' : lang === 'fr' ? 'MIWO recherche et vérifie les sources\u2026' : 'MIWO is researching and verifying sources\u2026'}
+            </div>
+          </div>
+        )}
+        {isLoading && !headlines && (
           <div className="message assistant">
             <div className="typing">
               <span></span>
