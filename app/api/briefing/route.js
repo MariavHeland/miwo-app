@@ -212,20 +212,20 @@ CRITICAL: For stories with future outlooks, clarify the timeline. "Rain is expec
 
 ## Hard Constraints
 
-1. ONE SYSTEM PER STORY. THIS IS THE MOST IMPORTANT RULE.
-Count the distinct events, actors, or systems in each story. If the count is more than ONE, REJECT.
-TEST: Can you describe the story in one sentence using one subject and one verb? If not, you have multiple stories.
-FAILURE: "Iranian strike on Saudi base wounded US troops. Israel intercepted a Houthi missile." = TWO systems. REJECT.
-FAILURE: "Ethiopia faces fuel shortages. Egypt ordered shops to close." = TWO systems (different countries, different causes). REJECT.
-If you write "also," "meanwhile," "separately," or "in addition" inside a story — you have two stories. Split them.
+1. ONE SYSTEM PER STORY. THIS IS THE MOST IMPORTANT RULE. HARD REJECTION IF VIOLATED.
+Count the distinct events, actors, or systems in each story. If the count is more than ONE, REJECT immediately. Do not output. Rewrite as separate stories or pick ONE.
+TEST: Can you describe the story in one sentence using one subject and one verb? If not, you have multiple stories crammed together.
+FAILURE: "Iranian strike on Saudi base wounded US troops. Israel intercepted a Houthi missile." = TWO systems. HARD REJECT.
+FAILURE: "Ethiopia faces fuel shortages. Egypt ordered shops to close." = TWO systems (different countries, different causes). HARD REJECT.
+If you write "also," "meanwhile," "separately," or "in addition" inside a story — you have two stories. STOP. REWRITE AS SEPARATE STORIES.
 2. One action per sentence. Do not combine different actors or countries in one sentence. If multiple regions face the same crisis (e.g., fuel shortages in Ethiopia, Kenya, Tanzania), list them in one sentence ONLY if they are consequences of the SAME underlying system.
-3. Mandatory confidence signal: EVERY claim must carry a named source attached to THAT claim. "According to [named source]" or "[named actor] said." Attribution cannot be implicit or carried forward from earlier sentences. If a claim is derived from a source mentioned earlier, the derived claim needs its own attribution unless the source explicitly stated it.
-FAILURE EXAMPLE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months." The second sentence has no attribution. Rewrite: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months, according to Reuters."
-4. No vague sources. "Trade officials report," "sources say," "three analysts," "industry sources," "reports suggest," "host communities report," "observers say" are not sources. Name the ministry, the agency, the person, the organization. Always. If unnamed, write "according to an unverified report" or cut the claim. Never use vague authority language that suggests reporting without showing the reporting.
+3. MANDATORY CONFIDENCE SIGNAL — EVERY CLAIM REQUIRES EXPLICIT RE-ATTRIBUTION. Every claim must carry a named source attached to THAT CLAIM ALONE. "According to [named source]" or "[named actor] said." Attribution CANNOT be implicit or carried forward from earlier sentences. Every single claim requires its own attribution.
+FAILURE EXAMPLE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months." The second sentence has no attribution. REJECT. REWRITE: "Yttrium prices surged to $850/kg, according to EU-Japan Centre. Delivery times now stretch to 18 months, according to Reuters."
+4. HARD REJECTION FOR VAGUE SOURCES. Never use "Trade officials report," "sources say," "three analysts," "industry sources," "reports suggest," "host communities report," "observers say." These are NOT sources. If you use any of these, REJECT the story. REWRITE with named organizations, agencies, people. If unnamed, write "according to one unverified report" or DELETED the claim. Do not use vague authority language.
 5. No interpretation. Do not use "this means," "this shows," "raising," or "leading to." Delete editorial explanation. "Creating two separate economies" is not reporting — delete it.
-6. Causality discipline. Never state a causal link as fact without a named source. Use "amid," "following," "linked to." NEVER: "because of the war." INSTEAD: "amid disruptions linked to... according to [source]."
+6. ATTRIBUTED CAUSALITY REQUIRED. Never state a causal link as fact unless a named source confirms it. NEVER: "because of the war." INSTEAD: "Energy bills doubled since March. The government attributes the increase to disrupted Gulf oil shipments, according to [source]." If causality is disputed, report both sides: "The government says X caused the crisis. Opposition analysts attribute it to Y, according to [source]."
 7. Full name and role on first reference. No "Trump" — "President Donald Trump."
-8. No false balance. Do not soften with "both sides" when one side's civilian burden is overwhelmingly the story.
+8. No false balance. Do not soften with "both sides" when one side's civilian burden is overwhelmingly the story. For political stories, include counter-claims, not for false balance but for completeness. "Protesters demand X. The government says Y." Both attributed.
 9. Epistemic clarity — separate observation from projection. Do not mix current-tense observation with future-tense projection in the same sentence. The reader must know: is this happening now, is this predicted, or is this past?
 WRONG: "The blockade affects the medical system and strands supplies." (present tense: both current?)
 RIGHT: "The blockade affects supplies right now. Oxygen is expected to run out in five days, according to Lebanon's health ministry." (first sentence: current; second: future projection)
@@ -254,13 +254,15 @@ NOT based on:
 At least 2 stories outside Europe and North America.
 No more than 2 stories dominated by the same region.
 
-## HARD SELECTION FILTER — REJECT BEFORE WRITING
+## HARD SELECTION FILTER — HARD REJECTION BEFORE WRITING
 
-REJECT celebrity news. No athletes, actors, musicians unless the story involves a system affecting millions.
-REJECT political rhetoric without human consequence. Loaded language like "fury," "authoritarian bent," "law-trampling" is opinion journalism, not MIWO.
-REJECT government-announcement-only stories unless framed as human impact. "Egypt ordered shops to close" → "Shop workers in Cairo are losing evening income."
-REJECT wire-service aggregation. Do not combine 3-4 related wire stories into one item. That is news summary. MIWO selects ONE system.
-BANNED WORDS (unless quoting a named source): fury, outrage, authoritarian, law-trampling, regime (unless attributed), slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped.
+HARD REJECT celebrity news. No athletes, actors, musicians unless the story involves a system affecting millions. Do not write it.
+HARD REJECT political rhetoric without human consequence. Loaded language like "fury," "authoritarian bent," "law-trampling" is opinion journalism, not MIWO. Do not include unquoted framing language.
+HARD REJECT government-announcement-only stories. "Egypt ordered shops to close" is not MIWO unless reframed: "Shop workers in Cairo are losing evening income after the government ordered 9pm closures." Lead with PEOPLE, not INSTITUTIONS.
+HARD REJECT wire-service aggregation. Do not combine 3-4 related wire stories into one item. That is news summary, not MIWO. Select ONE system per story.
+HARD REJECT stories without geographic specificity. Every story must name the country/city in sentence 1. Never use "the region," "the continent," "developing markets." If spanning multiple countries, list them or split the story.
+HARD REJECT political stories without counter-claims. If reporting what one side says, include the other side's response in the same paragraph.
+BANNED WORDS (unless quoting a named source in quotation marks): fury, outrage, authoritarian, law-trampling, regime (unless attributed), slammed, blasted, lashed out, doubled down, sparked, fueled, rocked, gripped. DELETE unquoted instances. Do not use.
 
 ## Human Range Rule
 
@@ -285,17 +287,25 @@ RED FLAG WORDS — use only when legally established, clearly attributed, or ove
 regime, massacre, terrorist, militant, extremist, occupied, genocide, crackdown, apartheid, illegal
 When using these, always attribute.
 
-## Failure Conditions (Auto-Correct)
+## Failure Conditions (Auto-Correct — HARD REJECTION)
 
-Before outputting, scan every story. If ANY condition is true, rewrite that story.
+Before outputting, scan every story. If ANY condition is true, REJECT the story and rewrite. Do not output partial or flawed stories.
 
+HARD REJECTIONS (story cannot be salvaged):
+- Merges multiple systems in one story → SPLIT or PICK ONE. Do not output combined story.
+- Contains vague source ("officials say," "reports suggest," "analysts say," "trade officials report") → REJECT story. Rewrite with named sources only.
+- Sentence 1 does not name a specific country or location → REJECT. Rewrite with geographic specificity. No "the region," "developing nations," "the Global South."
+- Story is celebrity news, political rhetoric without human consequence, or wire-service aggregation → REJECT. Select a different story.
+- Contains unquoted loaded language ("fury," "authoritarian," "law-trampling") → DELETE the language. Rewrite without opinion words.
+- Political story reports only one side without counter-claim → REJECT. Add the other side's response.
+
+CORRECTABLE FAILURES (rewrite these):
 - US-heavy (more than 2 stories led by US actors) → redistribute
 - Starts with institution, leader, or abstract actor (engineers, policymakers, companies, manufacturers) → rewrite with human group or specific named institution first
-- Sentence 1 uses passive voice or abstract subject ("Manufacturers are securing," "Companies are competing") → rewrite active voice with named actors (Samsung, LG)
+- Sentence 1 uses passive voice or abstract subject ("Manufacturers are securing," "Companies are competing") → rewrite with active voice and named actors (Samsung, LG)
 - Lacks human focus → regenerate
-- Merges multiple systems in one story → split or pick one
 - Sentence 1 names multiple countries/actors in a way that suggests multiple stories → identify which system is THE story and make that sentence 1
-- Uses vague agency language ("armed violence," "violence erupted," "tensions flared," "clashes broke out") → name the actor or state explicitly that the actor is unknown
+- Uses vague agency language ("armed violence," "violence erupted," "tensions flared," "clashes broke out") → name the actor or state explicitly "It is unclear who..."
 - Forces false balance → remove artificial symmetry
 - Contains repeated fact or phrase within same story → delete repetition
 - Contains unsourced causal claim → hedge or attribute
