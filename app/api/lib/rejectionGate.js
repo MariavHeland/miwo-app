@@ -24,6 +24,11 @@ function checkVagueSources(text) {
     /\bindustry\s+sources/gi,
     /\b(?:three|multiple|some)\s+(?:industry\s+)?analysts/gi,
 
+    // Aggregator chains (Round 4 fix)
+    /\bnews\s+aggregators?\s+(?:citing|say|report)/gi,
+    /\bmedia\s+reports?\s+(?:citing|suggest)/gi,
+    /\bdigital\s+rights\s+monitors?\s+(?:suggest|say)/gi,
+
     // German
     /\bBeamte\s+sagen/gi,
     /\bHandelsbeamte/gi,
@@ -31,6 +36,11 @@ function checkVagueSources(text) {
     /\bAnalysten\s+sagen/gi,
     /\bBerichte\s+deuten/gi,
     /\bBeobachter\s+sagen/gi,
+    // German vague patterns (Round 6 fix)
+    /\bExperten\s+sagen/gi,
+    /\bBeobachter\s+zufolge/gi,
+    /\bDigitalexperten\s+warnen/gi,
+    /\blaut\s+Berichten/gi,
   ]
 
   for (const pattern of vaguePatterns) {
@@ -55,8 +65,14 @@ function checkLoadedLanguage(text) {
     'fury', 'outrage', 'authoritarian', 'law-trampling', 'law-trample',
     'slammed', 'blasted', 'lashed out', 'doubled down', 'sparked', 'fueled',
     'rocked', 'gripped',
+    // Speculative/emotional verbs (Round 1 fix)
+    'scrambling', 'reeling', 'grappling', 'gearing up',
+    // Editorial colour words (Round 1 fix)
+    'cascading',
     // German
-    'wut', 'empörung', 'autoritär', 'autoritäre\s+neigungen', 'gesetzestretend'
+    'wut', 'empörung', 'autoritär', 'autoritäre\s+neigungen', 'gesetzestretend',
+    // German loaded language (Round 6 fix)
+    'verschärfend', 'entfesselt', 'erschüttern', 'entfachen'
   ]
 
   // Remove quoted text first (simple approach: anything between quotes)
@@ -175,8 +191,45 @@ function checkConsequenceLayer(text) {
 }
 
 /**
+ * CHECK 6: NAKED CLAIMS (Round 8 fix)
+ * Checks that factual claim sentences contain attribution markers.
+ * Looks for sentences with numbers/dates that lack "according to" / "per" / "laut" etc.
+ */
+function checkNakedClaims(text) {
+  const warnings = []
+
+  // Split by § and check each story
+  const stories = text.split(/§\s*/).filter(s => s.trim())
+
+  // Attribution markers that indicate a source is present
+  const attrMarkers = [
+    /according to/i, /per\s/i, /laut\s/i, /zufolge/i,
+    /\bsaid\b/i, /\bsays\b/i, /\bsagt\b/i, /reported\b/i,
+    /\bstated\b/i, /\btold\b/i, /\bcited\b/i,
+  ]
+
+  for (let i = 0; i < stories.length; i++) {
+    const lines = stories[i].split('\n').filter(l => l.trim().length > 0)
+    for (const line of lines) {
+      // Check if line contains a numerical claim (number + people/dollars/tonnes/percent)
+      const hasNumClaim = /\d+[\s,.]*(million|billion|thousand|percent|people|killed|dead|displaced|tonnes|dollars|euros)/i.test(line)
+      if (hasNumClaim) {
+        const hasAttribution = attrMarkers.some(marker => marker.test(line))
+        if (!hasAttribution) {
+          // Truncate for readability
+          const shortLine = line.trim().substring(0, 80)
+          warnings.push(`Possible naked claim (number without attribution): "${shortLine}..."`)
+        }
+      }
+    }
+  }
+
+  return warnings
+}
+
+/**
  * Main rejection gate function
- * Runs all 5 checks and returns { passed: boolean, failures: string[], warnings: string[] }
+ * Runs all 6 checks and returns { passed: boolean, failures: string[], warnings: string[] }
  */
 export function rejectionGate(text) {
   const failures = []
@@ -196,6 +249,9 @@ export function rejectionGate(text) {
 
   // Check 5: Consequence layer (warning only)
   warnings.push(...checkConsequenceLayer(text))
+
+  // Check 6: Naked claims (warning only — numbers without attribution)
+  warnings.push(...checkNakedClaims(text))
 
   const passed = failures.length === 0
 
