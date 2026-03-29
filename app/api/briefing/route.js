@@ -31,7 +31,11 @@ LOADED LANGUAGE: Scan for and DELETE in ANY language: fury/Wut/Ärger, outrage/E
 
 VISUAL STRUCTURE: Each story should be layered — one sentence per line, not a dense paragraph block. If a story is a single paragraph with 4+ sentences crammed together, break it into lines (one sentence per line).
 
-WRITING QUALITY: Read every sentence. If it sounds like a press release, a corporate memo, or a bad Wikipedia summary — rewrite it. Clear subjects, active verbs, concrete details. No filler.
+HEADLINE STACKING: If a story describes a situation but never says what happens next to the people, it's headlines not reporting. Every story MUST have a consequence sentence. "Tea stuck at port" — and then what? Income lost? Harvest rotting? ADD consequence or flag as incomplete.
+
+CONNECTED STORIES: If multiple stories connect to the same root crisis, make the thread visible in sentence 2: "This is a direct consequence of..." The reader must see the shape.
+
+WRITING QUALITY: Read every sentence. If it sounds like a press release or bad Wikipedia — rewrite it. Clear subjects, active verbs, concrete details. No filler.
 
 ## STYLE RULES
 
@@ -107,8 +111,14 @@ function briefingPrompt(dateStr, lang, region) {
 
 Search for today's most significant global news.
 
-Story 1 is the LEAD — the dominant global crisis. Write it from one human vantage point. It may touch multiple actors because a war or systemic crisis is one system.
-Stories 2-6 are the rest of the world. Each covers one independent system. At least half must be outside the dominant crisis.
+BRIEFING ARCHITECTURE — the briefing has a shape, not a list:
+
+Story 1 = THE LEAD. The dominant global crisis, from one human vantage point.
+Stories 2-5 = CONSEQUENCES OR ELSEWHERE.
+  If connected to the lead crisis, say so: "The fuel shortage is a direct consequence of disrupted Gulf shipping."
+  If unrelated, signal the shift: "Elsewhere," "Outside the conflict."
+  The reader must see how the world fits together.
+At least 1-2 stories must be genuinely outside the dominant crisis.
 
 SELECTION CRITERIA:
 - Number of people affected
@@ -116,12 +126,11 @@ SELECTION CRITERIA:
 - Geographic diversity
 - At least 2 stories outside Europe and North America
 
-STORY FORMAT:
-- 3-4 sentences per story, each sentence on its own line (layered, not a paragraph block)
+STORY FORMAT (4 layers, each on its own line):
 - Line 1: what is happening to people (human group + location + condition)
-- Line 2: what is causing it (one actor, one system)
+- Line 2: what is causing it — and if connected to the lead, say so explicitly
 - Line 3: scale + named source
-- Line 4 (optional): consequence or outlook
+- Line 4: what happens next for THESE people (NOT optional — every story must answer "and then what?")
 - Include one confirmed number and one named source
 - One event per story only
 - Start with "Right now."
